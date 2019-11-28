@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="kubernetes,helm," />
 
 
 
@@ -79,14 +79,19 @@
 
 
 
-<meta name="description" content="小小攻城獅技術宅">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Anson Tech Note">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;tags&#x2F;docker&#x2F;index.html">
+<meta name="description" content="預先準備需要一台NAS，手邊一台Synology就拿來用了，或是自建一台VM使用NFS服務(不建議) 透過helm建立nfs storageclasee1helm repo add stable  https:&#x2F;&#x2F;kubernetes-charts.storage.googleapis.com2helm repo update3helm install --set nfs.server&#x3D;10">
+<meta name="keywords" content="kubernetes,helm">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kubernetes-storageclass-nfs">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;28&#x2F;kubernetes-storageclass-nfs&#x2F;index.html">
 <meta property="og:site_name" content="Anson Tech Note">
-<meta property="og:description" content="小小攻城獅技術宅">
+<meta property="og:description" content="預先準備需要一台NAS，手邊一台Synology就拿來用了，或是自建一台VM使用NFS服務(不建議) 透過helm建立nfs storageclasee1helm repo add stable  https:&#x2F;&#x2F;kubernetes-charts.storage.googleapis.com2helm repo update3helm install --set nfs.server&#x3D;10">
 <meta property="og:locale" content="zh-tw">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;28&#x2F;kubernetes-storageclass-nfs&#x2F;kube-nfs-client.jpg">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;28&#x2F;kubernetes-storageclass-nfs&#x2F;nfs-client-status.jpg">
+<meta property="og:updated_time" content="2019-11-28T09:47:23.863Z">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;28&#x2F;kubernetes-storageclass-nfs&#x2F;kube-nfs-client.jpg">
 
 
 
@@ -116,13 +121,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/tags/docker/"/>
+  <link rel="canonical" href="http://yoursite.com/2019/11/28/kubernetes-storageclass-nfs/"/>
 
 
 
 
 
-  <title>標籤: docker | Anson Tech Note</title>
+  <title>kubernetes-storageclass-nfs | Anson Tech Note</title>
   
 
 
@@ -141,7 +146,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -259,82 +264,159 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block tag">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>docker<small>標籤</small>
-        </h1>
-      </div>
+  
 
-      
-        
+  
+  
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/28/kubernetes-storageclass-nfs/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Anson Lin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/docker-avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Anson Tech Note">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2019/11/28/kubeadm/" itemprop="url">
-              
-                <span itemprop="name">透過kubeadm佈署Kubernetes集群</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">kubernetes-storageclass-nfs</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2019-11-28T16:00:00+08:00"
-              content="2019-11-28" >
-          11-28
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">發表於</span>
+              
+              <time title="創建於" itemprop="dateCreated datePublished" datetime="2019-11-28T19:00:00+08:00">
+                2019-11-28
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-        
+      
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+      
+        <img src="/2019/11/28/kubernetes-storageclass-nfs/kube-nfs-client.jpg" class=""> 
 
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2019/11/28/vmware-harbor/" itemprop="url">
-              
-                <span itemprop="name">自建Docker Image倉庫 - VMware Harbor</span>
-              
-            </a>
-        
-      </h2>
+<h3 id="預先準備"><a href="#預先準備" class="headerlink" title="預先準備"></a>預先準備</h3><p>需要一台NAS，手邊一台Synology就拿來用了，或是自建一台VM使用NFS服務(不建議)</p>
+<h3 id="透過helm建立nfs-storageclasee"><a href="#透過helm建立nfs-storageclasee" class="headerlink" title="透過helm建立nfs storageclasee"></a>透過helm建立nfs storageclasee</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">helm repo add stable  https://kubernetes-charts.storage.googleapis.com</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">helm repo update</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">helm install --<span class="built_in">set</span> nfs.server=10.40.141.130 --<span class="built_in">set</span> nfs.path=/volume1/k8ssc --<span class="built_in">set</span> storageClass.defaultClass=<span class="literal">true</span> --generate-name stable/nfs-client-provisioner</span></pre></td></tr></table></figure>
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2019-11-28T14:00:00+08:00"
-              content="2019-11-28" >
-          11-28
-        </time>
-      </div>
 
-    </header>
-  </article>
+<h3 id="確認佈署狀況"><a href="#確認佈署狀況" class="headerlink" title="確認佈署狀況"></a>確認佈署狀況</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">kubectl get sc</span></pre></td></tr></table></figure>
+<img src="/2019/11/28/kubernetes-storageclass-nfs/nfs-client-status.jpg" class=""> 
 
+
+<p>more info: <a href="https://github.com/helm/charts/tree/master/stable/nfs-client-provisioner" target="_blank" rel="noopener">Helm NFS Client provisioner</a></p>
 
       
     </div>
+    
+    
+    
 
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/kubernetes/" rel="tag"># kubernetes</a>
+          
+            <a href="/tags/helm/" rel="tag"># helm</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/11/28/kubernetes-helm/" rel="next" title="kubernetes的套件管理工具-Helm(v3)">
+                <i class="fa fa-chevron-left"></i> kubernetes的套件管理工具-Helm(v3)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -342,6 +424,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -362,8 +448,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            本站概覽
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -440,6 +535,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#預先準備"><span class="nav-number">1.</span> <span class="nav-text">預先準備</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#透過helm建立nfs-storageclasee"><span class="nav-number">2.</span> <span class="nav-text">透過helm建立nfs storageclasee</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#確認佈署狀況"><span class="nav-number">3.</span> <span class="nav-text">確認佈署狀況</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -593,6 +704,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 

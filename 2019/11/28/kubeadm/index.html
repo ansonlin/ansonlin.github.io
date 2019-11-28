@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="kubernetes,docker," />
 
 
 
@@ -79,14 +79,18 @@
 
 
 
-<meta name="description" content="小小攻城獅技術宅">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Anson Tech Note">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;tags&#x2F;docker&#x2F;index.html">
+<meta name="description" content="安裝kubeadm  安裝前必備 Hardware每一台至少有2 GB或以上的記憶體(依應用而定)、2顆 CPU、節點之間網路連接正常  OSCentOS 7&#x2F;Redhat 7  hostname、MAC、UUID   check MAC address 1ip link 2or3ifconfig -a  check UUID 1sudo cat &#x2F;sys&#x2F;class&#x2F;dmi&#x2F;id&#x2F;product">
+<meta name="keywords" content="kubernetes,docker">
+<meta property="og:type" content="article">
+<meta property="og:title" content="透過kubeadm佈署Kubernetes集群">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;28&#x2F;kubeadm&#x2F;index.html">
 <meta property="og:site_name" content="Anson Tech Note">
-<meta property="og:description" content="小小攻城獅技術宅">
+<meta property="og:description" content="安裝kubeadm  安裝前必備 Hardware每一台至少有2 GB或以上的記憶體(依應用而定)、2顆 CPU、節點之間網路連接正常  OSCentOS 7&#x2F;Redhat 7  hostname、MAC、UUID   check MAC address 1ip link 2or3ifconfig -a  check UUID 1sudo cat &#x2F;sys&#x2F;class&#x2F;dmi&#x2F;id&#x2F;product">
 <meta property="og:locale" content="zh-tw">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;28&#x2F;kubeadm&#x2F;kubeadm-stacked-color.png">
+<meta property="og:updated_time" content="2019-11-28T09:06:17.012Z">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;28&#x2F;kubeadm&#x2F;kubeadm-stacked-color.png">
 
 
 
@@ -116,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/tags/docker/"/>
+  <link rel="canonical" href="http://yoursite.com/2019/11/28/kubeadm/"/>
 
 
 
 
 
-  <title>標籤: docker | Anson Tech Note</title>
+  <title>透過kubeadm佈署Kubernetes集群 | Anson Tech Note</title>
   
 
 
@@ -141,7 +145,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -259,82 +263,235 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block tag">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>docker<small>標籤</small>
-        </h1>
-      </div>
+  
 
-      
-        
+  
+  
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/28/kubeadm/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Anson Lin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/docker-avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Anson Tech Note">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2019/11/28/kubeadm/" itemprop="url">
-              
-                <span itemprop="name">透過kubeadm佈署Kubernetes集群</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">透過kubeadm佈署Kubernetes集群</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2019-11-28T16:00:00+08:00"
-              content="2019-11-28" >
-          11-28
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">發表於</span>
+              
+              <time title="創建於" itemprop="dateCreated datePublished" datetime="2019-11-28T16:00:00+08:00">
+                2019-11-28
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-        
+      
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+      
+        <h2 id="安裝kubeadm"><a href="#安裝kubeadm" class="headerlink" title="安裝kubeadm"></a>安裝kubeadm</h2><img src="/2019/11/28/kubeadm/kubeadm-stacked-color.png" class=""> 
+<h3 id="安裝前必備"><a href="#安裝前必備" class="headerlink" title="安裝前必備"></a>安裝前必備</h3><ol>
+<li><p>Hardware<br>每一台至少有2 GB或以上的記憶體(依應用而定)、2顆 CPU、節點之間網路連接正常</p>
+</li>
+<li><p>OS<br>CentOS 7/Redhat 7</p>
+</li>
+<li><p>hostname、MAC、UUID</p>
+</li>
+</ol>
+<p>check MAC address</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">ip link </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">or</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">ifconfig -a</span></pre></td></tr></table></figure>
 
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2019/11/28/vmware-harbor/" itemprop="url">
-              
-                <span itemprop="name">自建Docker Image倉庫 - VMware Harbor</span>
-              
-            </a>
-        
-      </h2>
+<p>check UUID</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">sudo cat /sys/class/dmi/id/product_uuid</span></pre></td></tr></table></figure>
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2019-11-28T14:00:00+08:00"
-              content="2019-11-28" >
-          11-28
-        </time>
-      </div>
+<ol start="4">
+<li>Require Ports(Inbound)</li>
+</ol>
+<p>Control-plane node(s) ports</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">TCP  6443  		==&gt; Kubernetes API Server</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">TCP  2379-2380		==&gt; etcd server client API</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">TCP  10250-10252	==&gt; Self</span></pre></td></tr></table></figure>
 
-    </header>
-  </article>
+<p>Worker node(s) ports</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">TCP  10250		==&gt; Kubernetes API</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">TCP  30000-32767	==&gt; NodePort Service</span></pre></td></tr></table></figure>
 
+<ol start="5">
+<li>Container Runtime</li>
+</ol>
+<p>Docker </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ sudo yum install docker</span></pre></td></tr></table></figure>
+
+<ol start="6">
+<li>Disable SWAP &amp; Check br_netfilter module</li>
+</ol>
+<p>Disable Swap</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">cat &lt;&lt;EOF &gt;  /etc/sysctl.d/k8s.conf</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">net.bridge.bridge-nf-call-ip6tables = 1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">net.bridge.bridge-nf-call-iptables = 1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">net.ipv4_ip_forward = 1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">vm.swappiness = 0</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">vm.max_map_count=262144</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">EOF</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">sysctl --system</span></pre></td></tr></table></figure>
+
+<p>Check br_netfilter module</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">lsmod | grep br_netfilter</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">modprobe br_netfilter</span></pre></td></tr></table></figure>
+
+
+<h3 id="安裝kubeadm-kubelet-kubectl"><a href="#安裝kubeadm-kubelet-kubectl" class="headerlink" title="安裝kubeadm, kubelet, kubectl"></a>安裝kubeadm, kubelet, kubectl</h3><p>kubeadm ==&gt;    用來引導啟動整個集群<br>kubelet    ==&gt;    在所有節點上執行,用來控制啟動pod及容器<br>kubectl ==&gt;    用來控制整個集群</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># Change Root Users</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">sudo su</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># Add kubernetes Repository</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">cat &lt;&lt;EOF &gt; /etc/yum.repos.d/kubernetes.repo</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">[kubernetes]</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">name=Kubernetes</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">enabled=1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">gpgcheck=1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">repo_gpgcheck=1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">EOF</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># Set SELinux in permissive mode (effectively disabling it)</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">setenforce 0</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">sed -i <span class="string">'s/^SELINUX=enforcing$/SELINUX=permissive/'</span> /etc/selinux/config</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">(你可以選擇要安裝的版本： yum list kubeadm --showduplicates --disableexcludes=kubernetes)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">systemctl <span class="built_in">enable</span> --now kubelet</span></pre></td></tr></table></figure>
+
+<h2 id="建立Kubernetes集群"><a href="#建立Kubernetes集群" class="headerlink" title="建立Kubernetes集群"></a>建立Kubernetes集群</h2><h3 id="完善Master-Node環境"><a href="#完善Master-Node環境" class="headerlink" title="完善Master Node環境"></a>完善Master Node環境</h3><ol>
+<li>初始化啟用</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">kubeadm init --pod-network-cidr=192.168.0.0/16  --apiserver-advertise-address=0.0.0.0(depend on your network adapter)	</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">mkdir -p <span class="variable">$HOME</span>/.kube</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">sudo cp -i /etc/kubernetes/admin.conf <span class="variable">$HOME</span>/.kube/config</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">sudo chown $(id -u):$(id -g) <span class="variable">$HOME</span>/.kube/config</span></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>pod network add-on(Calico)</li>
+</ol>
+<p>Install</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">kubectl apply -f https://docs.projectcalico.org/v3.8/manifests/calico.yaml</span></pre></td></tr></table></figure>
+
+<p>Check</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">kubectl get pods --all-namespace</span></pre></td></tr></table></figure>
+
+<p>3.Master主機加入分配資源(Develop only)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">kubectl taint nodes --all node-role.kubernetes.io/master-</span></pre></td></tr></table></figure>
+
+
+<h3 id="加入集群節點"><a href="#加入集群節點" class="headerlink" title="加入集群節點"></a>加入集群節點</h3><p>加入節點</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">kubeadm join --token &lt;token&gt; &lt;control-plane-host&gt;:&lt;control-plane-port&gt; --discovery-token-ca-cert-hash sha256:&lt;<span class="built_in">hash</span>&gt;</span></pre></td></tr></table></figure>
+
+
+<p>token相關(在Master節點)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">kubeadm token list</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">kubeadm token create</span></pre></td></tr></table></figure>
+
+<p>產生hash(在Master節點)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">openssl x509 -pubkey -<span class="keyword">in</span> /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2&gt;/dev/null | \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">   openssl dgst -sha256 -hex | sed <span class="string">'s/^.* //'</span></span></pre></td></tr></table></figure>
+
+
+<h2 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h2><p>從Master主機複製設定檔到節點主機</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">scp root@&lt;control-plane-host&gt;:/etc/kubernetes/admin.conf .</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">kubectl --kubeconfig ./admin.conf get nodes</span></pre></td></tr></table></figure>
+
+<p>移除節點</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">kubectl drain &lt;node name&gt; --delete-local-data --force --ignore-daemonsets</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">kubectl delete node &lt;node name&gt;</span></pre></td></tr></table></figure>
+
+<p>重設kubernetes集群(在Master主機)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">kubeadm reset</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">iptables -F &amp;&amp; iptables -t nat -F &amp;&amp; iptables -t mangle -F &amp;&amp; iptables -X</span></pre></td></tr></table></figure>
+
+<p>備份etcd<br>資料放置在Master節點的/var/lib/etcd位置上</p>
+<p>more info: <a href="https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/" target="_blank" rel="noopener">Kubeadm bootraping Kubernetes</a></p>
 
       
     </div>
+    
+    
+    
 
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/kubernetes/" rel="tag"># kubernetes</a>
+          
+            <a href="/tags/docker/" rel="tag"># docker</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/11/28/vmware-harbor/" rel="next" title="自建Docker Image倉庫 - VMware Harbor">
+                <i class="fa fa-chevron-left"></i> 自建Docker Image倉庫 - VMware Harbor
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/11/28/kubernetes-dashboard/" rel="prev" title="kubernetes UI管理站台-Dashboard">
+                kubernetes UI管理站台-Dashboard <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -342,6 +499,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -362,8 +523,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            本站概覽
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -440,6 +610,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#安裝kubeadm"><span class="nav-number">1.</span> <span class="nav-text">安裝kubeadm</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安裝前必備"><span class="nav-number">1.1.</span> <span class="nav-text">安裝前必備</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安裝kubeadm-kubelet-kubectl"><span class="nav-number">1.2.</span> <span class="nav-text">安裝kubeadm, kubelet, kubectl</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#建立Kubernetes集群"><span class="nav-number">2.</span> <span class="nav-text">建立Kubernetes集群</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#完善Master-Node環境"><span class="nav-number">2.1.</span> <span class="nav-text">完善Master Node環境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#加入集群節點"><span class="nav-number">2.2.</span> <span class="nav-text">加入集群節點</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其它"><span class="nav-number">3.</span> <span class="nav-text">其它</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -593,6 +779,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 

@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="kubernetes,helm," />
 
 
 
@@ -79,14 +79,19 @@
 
 
 
-<meta name="description" content="小小攻城獅技術宅">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Anson Tech Note">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;tags&#x2F;docker&#x2F;index.html">
+<meta name="description" content="Helm介紹  Helm能幫助我們方便的管理Kubernetes應用程式，就像Redhat&#x2F;CentOS裡面的yum、Java裡面的Maven、前端常用的NPM…等。2019年11中發布的Helm v3版本，少了需要tiller及修正一些功能，變得更方便好用！目前有Microsoft、Goole、bitnami、SAMSUNG…等加入專案，另外也是CNCF的孵化專案。 架構      Helm安裝">
+<meta name="keywords" content="kubernetes,helm">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kubernetes的套件管理工具-Helm(v3)">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;28&#x2F;kubernetes-helm&#x2F;index.html">
 <meta property="og:site_name" content="Anson Tech Note">
-<meta property="og:description" content="小小攻城獅技術宅">
+<meta property="og:description" content="Helm介紹  Helm能幫助我們方便的管理Kubernetes應用程式，就像Redhat&#x2F;CentOS裡面的yum、Java裡面的Maven、前端常用的NPM…等。2019年11中發布的Helm v3版本，少了需要tiller及修正一些功能，變得更方便好用！目前有Microsoft、Goole、bitnami、SAMSUNG…等加入專案，另外也是CNCF的孵化專案。 架構      Helm安裝">
 <meta property="og:locale" content="zh-tw">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;28&#x2F;kubernetes-helm&#x2F;helm-logo.svg">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;28&#x2F;kubernetes-helm&#x2F;chart-illustration.png">
+<meta property="og:updated_time" content="2019-11-28T09:36:07.116Z">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;28&#x2F;kubernetes-helm&#x2F;helm-logo.svg">
 
 
 
@@ -116,13 +121,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/tags/docker/"/>
+  <link rel="canonical" href="http://yoursite.com/2019/11/28/kubernetes-helm/"/>
 
 
 
 
 
-  <title>標籤: docker | Anson Tech Note</title>
+  <title>kubernetes的套件管理工具-Helm(v3) | Anson Tech Note</title>
   
 
 
@@ -141,7 +146,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -259,82 +264,168 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block tag">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>docker<small>標籤</small>
-        </h1>
-      </div>
+  
 
-      
-        
+  
+  
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/28/kubernetes-helm/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Anson Lin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/docker-avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Anson Tech Note">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2019/11/28/kubeadm/" itemprop="url">
-              
-                <span itemprop="name">透過kubeadm佈署Kubernetes集群</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">kubernetes的套件管理工具-Helm(v3)</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2019-11-28T16:00:00+08:00"
-              content="2019-11-28" >
-          11-28
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">發表於</span>
+              
+              <time title="創建於" itemprop="dateCreated datePublished" datetime="2019-11-28T18:00:00+08:00">
+                2019-11-28
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-        
+      
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+      
+        <h3 id="Helm介紹"><a href="#Helm介紹" class="headerlink" title="Helm介紹"></a>Helm介紹</h3><img src="/2019/11/28/kubernetes-helm/helm-logo.svg" class=""> 
+<p>Helm能幫助我們方便的管理Kubernetes應用程式，就像Redhat/CentOS裡面的yum、Java裡面的Maven、前端常用的NPM…等。<br>2019年11中發布的Helm v3版本，少了需要tiller及修正一些功能，變得更方便好用！目前有Microsoft、Goole、bitnami、SAMSUNG…等加入專案，另外也是CNCF的孵化專案。</p>
+<p>架構</p>
+<img src="/2019/11/28/kubernetes-helm/chart-illustration.png" class=""> 
 
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2019/11/28/vmware-harbor/" itemprop="url">
-              
-                <span itemprop="name">自建Docker Image倉庫 - VMware Harbor</span>
-              
-            </a>
-        
-      </h2>
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2019-11-28T14:00:00+08:00"
-              content="2019-11-28" >
-          11-28
-        </time>
-      </div>
 
-    </header>
-  </article>
+<h3 id="Helm安裝"><a href="#Helm安裝" class="headerlink" title="Helm安裝"></a>Helm安裝</h3><p><a href="https://github.com/helm/helm/releases" target="_blank" rel="noopener">下載Helm</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ tar -zxvf helm-v3.0.0-linux-amd64.tgz</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">$ mv linux-amd64/helm  /usr/bin/helm</span></pre></td></tr></table></figure>
 
+<h3 id="Helm-Repository"><a href="#Helm-Repository" class="headerlink" title="Helm Repository"></a>Helm Repository</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ helm repo add stable https://kubernetes-charts.storage.googleapis.com</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">$ helm repo add bitnami https://charts.bitnami.com/bitnami </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">$ helm repo add mattermost https://helm.mattermost.com</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">$ helm repo add kiwigrid  https://kiwigrid.github.io</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">...</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">$ helm repo update</span></pre></td></tr></table></figure>
+
+
+
+
+<p>more info: <a href="https://helm.sh/" target="_blank" rel="noopener">Helm</a></p>
 
       
     </div>
+    
+    
+    
 
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/kubernetes/" rel="tag"># kubernetes</a>
+          
+            <a href="/tags/helm/" rel="tag"># helm</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/11/28/kubernetes-ingress/" rel="next" title="kubernetes-ingress">
+                <i class="fa fa-chevron-left"></i> kubernetes-ingress
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/11/28/kubernetes-storageclass-nfs/" rel="prev" title="kubernetes-storageclass-nfs">
+                kubernetes-storageclass-nfs <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -342,6 +433,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -362,8 +457,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            本站概覽
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -440,6 +544,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Helm介紹"><span class="nav-number">1.</span> <span class="nav-text">Helm介紹</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Helm安裝"><span class="nav-number">2.</span> <span class="nav-text">Helm安裝</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Helm-Repository"><span class="nav-number">3.</span> <span class="nav-text">Helm Repository</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -593,6 +713,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
