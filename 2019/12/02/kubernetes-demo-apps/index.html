@@ -79,15 +79,17 @@
 
 
 
-<meta name="description" content="#Anson Lin 這裡記錄腦容量小的技術筆記">
-<meta property="og:type" content="website">
-<meta property="og:title" content="about">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;about&#x2F;index.html">
+<meta name="description" content="安裝玩Kubernetes集群後，當然要佈署一些程序，才能完成整個Lab測試囉！ Demo用AppsNginx站台Nginx Azure投票系統AzureVote WordpressWordPress 下載套用接著把上方位置直接下載下來套用囉！ 1$ curl  http:&#x2F;&#x2F;xxxx.txt -o xxx.yaml2$ kubectl apply -f xxx.yaml   more info:">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kubernetes幾個Demo Apps">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;02&#x2F;kubernetes-demo-apps&#x2F;index.html">
 <meta property="og:site_name" content="Anson Tech Note">
-<meta property="og:description" content="#Anson Lin 這裡記錄腦容量小的技術筆記">
+<meta property="og:description" content="安裝玩Kubernetes集群後，當然要佈署一些程序，才能完成整個Lab測試囉！ Demo用AppsNginx站台Nginx Azure投票系統AzureVote WordpressWordPress 下載套用接著把上方位置直接下載下來套用囉！ 1$ curl  http:&#x2F;&#x2F;xxxx.txt -o xxx.yaml2$ kubectl apply -f xxx.yaml   more info:">
 <meta property="og:locale" content="zh-tw">
-<meta property="og:updated_time" content="2019-11-28T06:33:50.180Z">
+<meta property="og:image" content="https:&#x2F;&#x2F;d33wubrfki0l68.cloudfront.net&#x2F;1567471e7c58dc9b7d9c65dcd54e60cbf5870daa&#x2F;da576&#x2F;_common-resources&#x2F;images&#x2F;flower.png">
+<meta property="og:updated_time" content="2019-12-02T09:06:14.819Z">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;d33wubrfki0l68.cloudfront.net&#x2F;1567471e7c58dc9b7d9c65dcd54e60cbf5870daa&#x2F;da576&#x2F;_common-resources&#x2F;images&#x2F;flower.png">
 
 
 
@@ -117,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/about/"/>
+  <link rel="canonical" href="http://yoursite.com/2019/12/02/kubernetes-demo-apps/"/>
 
 
 
 
 
-  <title>about | Anson Tech Note</title>
+  <title>Kubernetes幾個Demo Apps | Anson Tech Note</title>
   
 
 
@@ -262,35 +264,150 @@
 
   <div id="posts" class="posts-expand">
     
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/02/kubernetes-demo-apps/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Anson Lin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/docker-avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Anson Tech Note">
+    </span>
+
     
-    
-    <div class="post-block page">
       <header class="post-header">
 
-	<h1 class="post-title" itemprop="name headline">about</h1>
-
-
-
-</header>
-
-      
-      
-      
-      <div class="post-body">
         
         
-          <p>#Anson Lin</p>
-<p>這裡記錄腦容量小的技術筆記</p>
-
+          <h1 class="post-title" itemprop="name headline">Kubernetes幾個Demo Apps</h1>
         
-      </div>
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">發表於</span>
+              
+              <time title="創建於" itemprop="dateCreated datePublished" datetime="2019-12-02T18:00:00+08:00">
+                2019-12-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
       
       
+
+      
+        <p><img src="https://d33wubrfki0l68.cloudfront.net/1567471e7c58dc9b7d9c65dcd54e60cbf5870daa/da576/_common-resources/images/flower.png" alt="KubernetesDemoApps"><br>安裝玩Kubernetes集群後，當然要佈署一些程序，才能完成整個Lab測試囉！</p>
+<h2 id="Demo用Apps"><a href="#Demo用Apps" class="headerlink" title="Demo用Apps"></a>Demo用Apps</h2><h3 id="Nginx站台"><a href="#Nginx站台" class="headerlink" title="Nginx站台"></a>Nginx站台</h3><p><a href="./kubernetes-demo-apps-nginx.txt">Nginx</a></p>
+<h3 id="Azure投票系統"><a href="#Azure投票系統" class="headerlink" title="Azure投票系統"></a>Azure投票系統</h3><p><a href="./kubernetes-demo-apps-azurevote.txt">AzureVote</a></p>
+<h3 id="Wordpress"><a href="#Wordpress" class="headerlink" title="Wordpress"></a>Wordpress</h3><p><a href="./kubernetes-demo-apps-wordpress.txt">WordPress</a></p>
+<h2 id="下載套用"><a href="#下載套用" class="headerlink" title="下載套用"></a>下載套用</h2><p>接著把上方位置直接下載下來套用囉！</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ curl  http://xxxx.txt -o xxx.yaml</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">$ kubectl apply -f xxx.yaml</span></pre></td></tr></table></figure>
+
+
+<p>more info:有空再補上吧！</p>
+
       
     </div>
     
     
     
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/12/02/kubernetes-metallb/" rel="next" title="Kubernetes地端裸機負載均衡器MetalLB">
+                <i class="fa fa-chevron-left"></i> Kubernetes地端裸機負載均衡器MetalLB
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/12/03/kubernetes-prometheus/" rel="prev" title="Kubernetes监控管理工具prometheus-operator">
+                Kubernetes监控管理工具prometheus-operator <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
   </div>
 
 
@@ -323,8 +440,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            本站概覽
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -401,6 +527,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Demo用Apps"><span class="nav-number">1.</span> <span class="nav-text">Demo用Apps</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Nginx站台"><span class="nav-number">1.1.</span> <span class="nav-text">Nginx站台</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Azure投票系統"><span class="nav-number">1.2.</span> <span class="nav-text">Azure投票系統</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Wordpress"><span class="nav-number">1.3.</span> <span class="nav-text">Wordpress</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#下載套用"><span class="nav-number">2.</span> <span class="nav-text">下載套用</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       

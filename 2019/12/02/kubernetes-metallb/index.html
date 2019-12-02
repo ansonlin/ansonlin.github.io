@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="kubernetes," />
 
 
 
@@ -79,15 +79,19 @@
 
 
 
-<meta name="description" content="#Anson Lin 這裡記錄腦容量小的技術筆記">
-<meta property="og:type" content="website">
-<meta property="og:title" content="about">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;about&#x2F;index.html">
+<meta name="description" content="LoadBalancerLoadBalancer 是提供給公有雲使用的類型，如果一個 Service 設定為這個類型時，就會利用叢集中的 Cloud Provider 元件去呼叫公有雲的服務 API 來建立負載平衡器，接著跟這個 Pod 進行綁定。但在地端部署時，該類型會實現類似 NodePort 機制，也可以額外設定 externalIPs 來直接存取指定的 Port。 接下来的MetalLB">
+<meta name="keywords" content="kubernetes">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kubernetes地端裸機負載均衡器MetalLB">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;02&#x2F;kubernetes-metallb&#x2F;index.html">
 <meta property="og:site_name" content="Anson Tech Note">
-<meta property="og:description" content="#Anson Lin 這裡記錄腦容量小的技術筆記">
+<meta property="og:description" content="LoadBalancerLoadBalancer 是提供給公有雲使用的類型，如果一個 Service 設定為這個類型時，就會利用叢集中的 Cloud Provider 元件去呼叫公有雲的服務 API 來建立負載平衡器，接著跟這個 Pod 進行綁定。但在地端部署時，該類型會實現類似 NodePort 機制，也可以額外設定 externalIPs 來直接存取指定的 Port。 接下来的MetalLB">
 <meta property="og:locale" content="zh-tw">
-<meta property="og:updated_time" content="2019-11-28T06:33:50.180Z">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;FmNbr7N.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;02&#x2F;kubernetes-metallb&#x2F;metallb-nginx.png">
+<meta property="og:updated_time" content="2019-12-02T08:20:42.162Z">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.imgur.com&#x2F;FmNbr7N.png">
 
 
 
@@ -117,13 +121,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/about/"/>
+  <link rel="canonical" href="http://yoursite.com/2019/12/02/kubernetes-metallb/"/>
 
 
 
 
 
-  <title>about | Anson Tech Note</title>
+  <title>Kubernetes地端裸機負載均衡器MetalLB | Anson Tech Note</title>
   
 
 
@@ -262,35 +266,174 @@
 
   <div id="posts" class="posts-expand">
     
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/02/kubernetes-metallb/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Anson Lin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/docker-avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Anson Tech Note">
+    </span>
+
     
-    
-    <div class="post-block page">
       <header class="post-header">
 
-	<h1 class="post-title" itemprop="name headline">about</h1>
-
-
-
-</header>
-
-      
-      
-      
-      <div class="post-body">
         
         
-          <p>#Anson Lin</p>
-<p>這裡記錄腦容量小的技術筆記</p>
-
+          <h1 class="post-title" itemprop="name headline">Kubernetes地端裸機負載均衡器MetalLB</h1>
         
-      </div>
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">發表於</span>
+              
+              <time title="創建於" itemprop="dateCreated datePublished" datetime="2019-12-02T15:30:00+08:00">
+                2019-12-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
       
       
+
+      
+        <p><img src="https://i.imgur.com/FmNbr7N.png" alt="LoadBalancer"></p>
+<h2 id="LoadBalancer"><a href="#LoadBalancer" class="headerlink" title="LoadBalancer"></a>LoadBalancer</h2><p>LoadBalancer 是提供給公有雲使用的類型，如果一個 Service 設定為這個類型時，就會利用叢集中的 Cloud Provider 元件去呼叫公有雲的服務 API 來建立負載平衡器，接著跟這個 Pod 進行綁定。<br>但在地端部署時，該類型會實現類似 NodePort 機制，也可以額外設定 externalIPs 來直接存取指定的 Port。</p>
+<p>接下来的MetalLB，提供给私有 Kubernetes 用户带来了一个方便、可用的软體解决方案。</p>
+<h2 id="MetalLB"><a href="#MetalLB" class="headerlink" title="MetalLB"></a>MetalLB</h2><p>MetalLB支援兩種模式： Layer2、BGP ，更多可參考 <a href="https://metallb.universe.tf/installation/" target="_blank" rel="noopener">Metallb</a>。</p>
+<h3 id="安裝metallb"><a href="#安裝metallb" class="headerlink" title="安裝metallb"></a>安裝metallb</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ kubectl apply -f https://raw.githubusercontent.com/google/metallb/v0.8.3/manifests/metallb.yaml</span></pre></td></tr></table></figure>
+
+<p>會新增一個metallb-system的命名空間，可以確認下Metallb的安裝情況</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ cat &lt;&lt;EOF | kubectl apply -f -</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">kubectl -n metallb-system get po</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">EOF</span></pre></td></tr></table></figure>
+
+<h3 id="設置IP池"><a href="#設置IP池" class="headerlink" title="設置IP池"></a>設置IP池</h3><p>more info:<a href="https://metallb.universe.tf/configuration/" target="_blank" rel="noopener">metalLB Configure</a></p>
+<p>指定MetalLB使用的IP Pools(測試用可直接指定Master節點的IP)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ cat &lt;&lt;EOF | kubectl apply -f -</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">kind: ConfigMap</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">metadata:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">  namespace: metallb-system</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">  name: config</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">data:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">  config: |</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">    address-pools:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">    - name: ip-Pool</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">      protocol: layer2</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">      auto-assign: <span class="literal">true</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">      addresses:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">      - 10.40.46.101/32</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">EOF</span></pre></td></tr></table></figure>
+
+<h2 id="測試Metallb"><a href="#測試Metallb" class="headerlink" title="測試Metallb"></a>測試Metallb</h2><p>接著就起一個nginx服務，來看看是否會自動取得MetalLB的位址</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ kubectl run nginx --image nginx --port 80</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">$ kubectl expose deploy nginx --port 8080 --target-port 80 --<span class="built_in">type</span> LoadBalancer</span></pre></td></tr></table></figure>
+
+<p>查看測試用 nginx service，確認Loadbalancer IP</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ kubectl get svc</span></pre></td></tr></table></figure>
+
+<p>然後curl nginx位址 <a href="http://10.40.46.101:8080" target="_blank" rel="noopener">http://10.40.46.101:8080</a></p>
+<img src="/2019/12/02/kubernetes-metallb/metallb-nginx.png" class=""> 
+
+<h2 id="多服務共用一個LB-IP"><a href="#多服務共用一個LB-IP" class="headerlink" title="多服務共用一個LB IP"></a>多服務共用一個LB IP</h2><p>只要服務不使用相同的端口，就可以跨多個服務共享同一負載均衡器。為了使服務共享負載均衡器，所有受影響的服務都需要使用相同的註釋版本metallb.universe.tf/allow-shared-ip: <NAME>。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">kind: Service</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">metadata:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">  name: nginx-shareip</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">  annotations: </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">    metallb.universe.tf/allow-shared-ip: shared</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">spec:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">  ports:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">  - name: http</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">    port: 88</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">    protocol: TCP</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">    targetPort: 80</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">  selector:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">    app: nginx</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">  <span class="built_in">type</span>: LoadBalancer</span></pre></td></tr></table></figure>
+
+
+<p>More info:<br><a href="https://metallb.universe.tf/installation/" target="_blank" rel="noopener">https://metallb.universe.tf/installation/</a><br><a href="https://asergo.com/knowledge-base/kubernetes/private-managed-cluster/load-balancer.html" target="_blank" rel="noopener">https://asergo.com/knowledge-base/kubernetes/private-managed-cluster/load-balancer.html</a><br><a href="https://k2r2bai.com/2019/09/27/ironman2020/day12/" target="_blank" rel="noopener">https://k2r2bai.com/2019/09/27/ironman2020/day12/</a> </p>
+
       
     </div>
     
     
     
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/kubernetes/" rel="tag"># kubernetes</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/11/29/kubernetes-ingress/" rel="next" title="Kubernetes管理集群服务的外部访问Ingress">
+                <i class="fa fa-chevron-left"></i> Kubernetes管理集群服务的外部访问Ingress
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/12/02/kubernetes-demo-apps/" rel="prev" title="Kubernetes幾個Demo Apps">
+                Kubernetes幾個Demo Apps <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
   </div>
 
 
@@ -323,8 +466,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            本站概覽
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -401,6 +553,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#LoadBalancer"><span class="nav-number">1.</span> <span class="nav-text">LoadBalancer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MetalLB"><span class="nav-number">2.</span> <span class="nav-text">MetalLB</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安裝metallb"><span class="nav-number">2.1.</span> <span class="nav-text">安裝metallb</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#設置IP池"><span class="nav-number">2.2.</span> <span class="nav-text">設置IP池</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#測試Metallb"><span class="nav-number">3.</span> <span class="nav-text">測試Metallb</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多服務共用一個LB-IP"><span class="nav-number">4.</span> <span class="nav-text">多服務共用一個LB IP</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       

@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="kubernetes,helm,prometheus," />
 
 
 
@@ -79,15 +79,18 @@
 
 
 
-<meta name="description" content="#Anson Lin 這裡記錄腦容量小的技術筆記">
-<meta property="og:type" content="website">
-<meta property="og:title" content="about">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;about&#x2F;index.html">
+<meta name="description" content="OOO-Operator by CoreOSs在以往原生的 Kubernetes 環境裡，管理維護 stateful service 是件困難的工作。雖然 kubernetes 有提供 statefulSet 這樣的物件，但對於要維護 stateful service 來說還是相當不足的。舉例來說，當建立一個 mysql 的 stateful service 時，我們可能希望第一個 pod 是">
+<meta name="keywords" content="kubernetes,helm,prometheus">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kubernetes监控管理工具prometheus-operator">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;03&#x2F;kubernetes-prometheus&#x2F;index.html">
 <meta property="og:site_name" content="Anson Tech Note">
-<meta property="og:description" content="#Anson Lin 這裡記錄腦容量小的技術筆記">
+<meta property="og:description" content="OOO-Operator by CoreOSs在以往原生的 Kubernetes 環境裡，管理維護 stateful service 是件困難的工作。雖然 kubernetes 有提供 statefulSet 這樣的物件，但對於要維護 stateful service 來說還是相當不足的。舉例來說，當建立一個 mysql 的 stateful service 時，我們可能希望第一個 pod 是">
 <meta property="og:locale" content="zh-tw">
-<meta property="og:updated_time" content="2019-11-28T06:33:50.180Z">
+<meta property="og:image" content="https:&#x2F;&#x2F;coreos.com&#x2F;sites&#x2F;default&#x2F;files&#x2F;inline-images&#x2F;p1.png">
+<meta property="og:updated_time" content="2019-12-02T09:21:34.187Z">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;coreos.com&#x2F;sites&#x2F;default&#x2F;files&#x2F;inline-images&#x2F;p1.png">
 
 
 
@@ -117,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/about/"/>
+  <link rel="canonical" href="http://yoursite.com/2019/12/03/kubernetes-prometheus/"/>
 
 
 
 
 
-  <title>about | Anson Tech Note</title>
+  <title>Kubernetes监控管理工具prometheus-operator | Anson Tech Note</title>
   
 
 
@@ -262,35 +265,166 @@
 
   <div id="posts" class="posts-expand">
     
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/03/kubernetes-prometheus/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Anson Lin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/docker-avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Anson Tech Note">
+    </span>
+
     
-    
-    <div class="post-block page">
       <header class="post-header">
 
-	<h1 class="post-title" itemprop="name headline">about</h1>
-
-
-
-</header>
-
-      
-      
-      
-      <div class="post-body">
         
         
-          <p>#Anson Lin</p>
-<p>這裡記錄腦容量小的技術筆記</p>
-
+          <h1 class="post-title" itemprop="name headline">Kubernetes监控管理工具prometheus-operator</h1>
         
-      </div>
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">發表於</span>
+              
+              <time title="創建於" itemprop="dateCreated datePublished" datetime="2019-12-03T17:00:00+08:00">
+                2019-12-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
       
       
+
+      
+        <p><img src="https://coreos.com/sites/default/files/inline-images/p1.png" alt="Prometheus-Operator workflow"></p>
+<h2 id="OOO-Operator-by-CoreOSs"><a href="#OOO-Operator-by-CoreOSs" class="headerlink" title="OOO-Operator by CoreOSs"></a>OOO-Operator by CoreOSs</h2><p>在以往原生的 Kubernetes 環境裡，管理維護 stateful service 是件困難的工作。雖然 kubernetes 有提供 statefulSet 這樣的物件，但對於要維護 stateful service 來說還是相當不足的。舉例來說，當建立一個 mysql 的 stateful service 時，我們可能希望第一個 pod 是 master，第二個 pod 對 master 做 replication，第三個 pod 對第二個 pod 做 replication。這樣的架構如果要靠 kubernets 管理者來設定的話，會需要對 mysql 有一定的了解才能進行，而且可能相當耗費心力。<br>而每種 stateful service 的管理維護方式都各有巧妙不同，像 redis、kafka、prometheus 等，這些都需要嫻熟於該領域的人，才知道最好的管理方式為何。因此 stateful service 一直是讓 Kubernetes 使用者相當困擾的事情，比較安全的做法往往都是放棄讓 stateful service 跑在 kubernetes 裡，用傳統的方式來維運，一直到 operator 的出現。</p>
+<p>對於在 Kubernetes 上維運 stateful service 的困難，CoreOS 這家公司看出了需求與契機，開發了 Operator 這種專門處理 stateful service 的機制。透過擴展 Kubernetes 的 API 與相對應的 controller，可以用更好更安全的方式來建立、配置和管理 stateful service。於是短短一兩年時間，許多軟體廠商開始主動提供 operator 的套件來協助使用者將其軟體放到 Kubernetes 維運，也因此 operator 也成為 Kubernetes 領域裡的顯學之一。</p>
+<p>Operator 的架構主要可以分成兩部分，一個是 CRD (使用者自定義資源，CustomResourceDefinition)，另一個是 controllers，而 controller 就是處理當 CRD 發生 CRUD 操作時的相對應動作。例如 CRD 可能是定義一個叫 mysqldatabase 的資源物件，當kuberetes API 收到有 mysqldatabase 要建立時，會透過相對應的 controller 來建立相關的資源物件。<br>是知名且良好的 operator 套件，多半是原廠或該領域的專家所提供，通常都提供了許多便利且安全的機制，讓使用者可以用簡單且符合 Kubernetes 架構的方式來管理使用，而 Prometheus-Operator 也是其中之一</p>
+<h2 id="Prometheus-Operator"><a href="#Prometheus-Operator" class="headerlink" title="Prometheus-Operator"></a>Prometheus-Operator</h2><h3 id="預先安裝Helm"><a href="#預先安裝Helm" class="headerlink" title="預先安裝Helm"></a>預先安裝Helm</h3><p><a href="./kubernetes-helm.md">Helm</a></p>
+<h3 id="安裝Prometheus-Operator"><a href="#安裝Prometheus-Operator" class="headerlink" title="安裝Prometheus-Operator"></a>安裝Prometheus-Operator</h3><p>接著直接下載官方values設定檔來看看</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ curl -O https://raw.githubusercontent.com/helm/charts/master/stable/prometheus-operator/values.yaml -o prom-op-values.yaml</span></pre></td></tr></table></figure>
+
+<p>常用的設定有</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ vi prom-op-values.yaml</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">  ingress:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    enabled: <span class="literal">true</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    hosts:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">      - alertmanager.10.40.46.101.nip.io</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">grafana:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">  enabled: <span class="literal">true</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">  adminPassword: prom-operator</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">  ingress:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">    enabled: <span class="literal">true</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">    hosts: grafana.10.40.46.101.nip.io</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">	  </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">	.................................</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">	.................................</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">	.................................</span></pre></td></tr></table></figure>
+
+
+<p>套用設定看結果囉！</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ helm install --name prometheus stable/prometheus-operator  -f prom-op-values.yaml</span></pre></td></tr></table></figure>
+
+
+
+
+<p>more info:  [Prometheus Operator] (<a href="https://github.com/helm/charts/tree/master/stable/prometheus-operator" target="_blank" rel="noopener">https://github.com/helm/charts/tree/master/stable/prometheus-operator</a>)<br> <a href="http://brobridge.com/bdsres/2019/10/21/prometheus-operator-i-efe748a6796b/" target="_blank" rel="noopener">prom-op-2</a></p>
+
       
     </div>
     
     
     
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/kubernetes/" rel="tag"># kubernetes</a>
+          
+            <a href="/tags/helm/" rel="tag"># helm</a>
+          
+            <a href="/tags/prometheus/" rel="tag"># prometheus</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/12/02/kubernetes-demo-apps/" rel="next" title="Kubernetes幾個Demo Apps">
+                <i class="fa fa-chevron-left"></i> Kubernetes幾個Demo Apps
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
   </div>
 
 
@@ -323,8 +457,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            本站概覽
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -401,6 +544,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#OOO-Operator-by-CoreOSs"><span class="nav-number">1.</span> <span class="nav-text">OOO-Operator by CoreOSs</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Prometheus-Operator"><span class="nav-number">2.</span> <span class="nav-text">Prometheus-Operator</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#預先安裝Helm"><span class="nav-number">2.1.</span> <span class="nav-text">預先安裝Helm</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安裝Prometheus-Operator"><span class="nav-number">2.2.</span> <span class="nav-text">安裝Prometheus-Operator</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       

@@ -4,7 +4,62 @@
   
     
     <entry>
-      <title>Ingress - 管理集群服务的外部访问</title>
+      <title>Kubernetes监控管理工具prometheus-operator</title>
+      <link href="/2019/12/03/kubernetes-prometheus/"/>
+      <url>/2019/12/03/kubernetes-prometheus/</url>
+      
+        <content type="html"><![CDATA[<p><img src="https://coreos.com/sites/default/files/inline-images/p1.png" alt="Prometheus-Operator workflow"></p><h2 id="OOO-Operator-by-CoreOSs"><a href="#OOO-Operator-by-CoreOSs" class="headerlink" title="OOO-Operator by CoreOSs"></a>OOO-Operator by CoreOSs</h2><p>在以往原生的 Kubernetes 環境裡，管理維護 stateful service 是件困難的工作。雖然 kubernetes 有提供 statefulSet 這樣的物件，但對於要維護 stateful service 來說還是相當不足的。舉例來說，當建立一個 mysql 的 stateful service 時，我們可能希望第一個 pod 是 master，第二個 pod 對 master 做 replication，第三個 pod 對第二個 pod 做 replication。這樣的架構如果要靠 kubernets 管理者來設定的話，會需要對 mysql 有一定的了解才能進行，而且可能相當耗費心力。<br>而每種 stateful service 的管理維護方式都各有巧妙不同，像 redis、kafka、prometheus 等，這些都需要嫻熟於該領域的人，才知道最好的管理方式為何。因此 stateful service 一直是讓 Kubernetes 使用者相當困擾的事情，比較安全的做法往往都是放棄讓 stateful service 跑在 kubernetes 裡，用傳統的方式來維運，一直到 operator 的出現。</p><p>對於在 Kubernetes 上維運 stateful service 的困難，CoreOS 這家公司看出了需求與契機，開發了 Operator 這種專門處理 stateful service 的機制。透過擴展 Kubernetes 的 API 與相對應的 controller，可以用更好更安全的方式來建立、配置和管理 stateful service。於是短短一兩年時間，許多軟體廠商開始主動提供 operator 的套件來協助使用者將其軟體放到 Kubernetes 維運，也因此 operator 也成為 Kubernetes 領域裡的顯學之一。</p><p>Operator 的架構主要可以分成兩部分，一個是 CRD (使用者自定義資源，CustomResourceDefinition)，另一個是 controllers，而 controller 就是處理當 CRD 發生 CRUD 操作時的相對應動作。例如 CRD 可能是定義一個叫 mysqldatabase 的資源物件，當kuberetes API 收到有 mysqldatabase 要建立時，會透過相對應的 controller 來建立相關的資源物件。<br>是知名且良好的 operator 套件，多半是原廠或該領域的專家所提供，通常都提供了許多便利且安全的機制，讓使用者可以用簡單且符合 Kubernetes 架構的方式來管理使用，而 Prometheus-Operator 也是其中之一</p><h2 id="Prometheus-Operator"><a href="#Prometheus-Operator" class="headerlink" title="Prometheus-Operator"></a>Prometheus-Operator</h2><h3 id="預先安裝Helm"><a href="#預先安裝Helm" class="headerlink" title="預先安裝Helm"></a>預先安裝Helm</h3><p><a href="./kubernetes-helm.md">Helm</a></p><h3 id="安裝Prometheus-Operator"><a href="#安裝Prometheus-Operator" class="headerlink" title="安裝Prometheus-Operator"></a>安裝Prometheus-Operator</h3><p>接著直接下載官方values設定檔來看看</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ curl -O https://raw.githubusercontent.com/helm/charts/master/stable/prometheus-operator/values.yaml -o prom-op-values.yaml</span></pre></td></tr></table></figure><p>常用的設定有</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ vi prom-op-values.yaml</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">  ingress:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    enabled: <span class="literal">true</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    hosts:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">      - alertmanager.10.40.46.101.nip.io</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">grafana:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">  enabled: <span class="literal">true</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">  adminPassword: prom-operator</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">  ingress:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">    enabled: <span class="literal">true</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">    hosts: grafana.10.40.46.101.nip.io</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">  </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">.................................</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">.................................</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">.................................</span></pre></td></tr></table></figure><p>套用設定看結果囉！</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ helm install --name prometheus stable/prometheus-operator  -f prom-op-values.yaml</span></pre></td></tr></table></figure><p>more info:  [Prometheus Operator] (<a href="https://github.com/helm/charts/tree/master/stable/prometheus-operator" target="_blank" rel="noopener">https://github.com/helm/charts/tree/master/stable/prometheus-operator</a>)<br> <a href="http://brobridge.com/bdsres/2019/10/21/prometheus-operator-i-efe748a6796b/" target="_blank" rel="noopener">prom-op-2</a></p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> kubernetes </tag>
+            
+            <tag> helm </tag>
+            
+            <tag> prometheus </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Kubernetes幾個Demo Apps</title>
+      <link href="/2019/12/02/kubernetes-demo-apps/"/>
+      <url>/2019/12/02/kubernetes-demo-apps/</url>
+      
+        <content type="html"><![CDATA[<p><img src="https://d33wubrfki0l68.cloudfront.net/1567471e7c58dc9b7d9c65dcd54e60cbf5870daa/da576/_common-resources/images/flower.png" alt="KubernetesDemoApps"><br>安裝玩Kubernetes集群後，當然要佈署一些程序，才能完成整個Lab測試囉！</p><h2 id="Demo用Apps"><a href="#Demo用Apps" class="headerlink" title="Demo用Apps"></a>Demo用Apps</h2><h3 id="Nginx站台"><a href="#Nginx站台" class="headerlink" title="Nginx站台"></a>Nginx站台</h3><p><a href="./kubernetes-demo-apps-nginx.txt">Nginx</a></p><h3 id="Azure投票系統"><a href="#Azure投票系統" class="headerlink" title="Azure投票系統"></a>Azure投票系統</h3><p><a href="./kubernetes-demo-apps-azurevote.txt">AzureVote</a></p><h3 id="Wordpress"><a href="#Wordpress" class="headerlink" title="Wordpress"></a>Wordpress</h3><p><a href="./kubernetes-demo-apps-wordpress.txt">WordPress</a></p><h2 id="下載套用"><a href="#下載套用" class="headerlink" title="下載套用"></a>下載套用</h2><p>接著把上方位置直接下載下來套用囉！</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ curl  http://xxxx.txt -o xxx.yaml</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">$ kubectl apply -f xxx.yaml</span></pre></td></tr></table></figure><p>more info:有空再補上吧！</p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Kubernetes地端裸機負載均衡器MetalLB</title>
+      <link href="/2019/12/02/kubernetes-metallb/"/>
+      <url>/2019/12/02/kubernetes-metallb/</url>
+      
+        <content type="html"><![CDATA[<p><img src="https://i.imgur.com/FmNbr7N.png" alt="LoadBalancer"></p><h2 id="LoadBalancer"><a href="#LoadBalancer" class="headerlink" title="LoadBalancer"></a>LoadBalancer</h2><p>LoadBalancer 是提供給公有雲使用的類型，如果一個 Service 設定為這個類型時，就會利用叢集中的 Cloud Provider 元件去呼叫公有雲的服務 API 來建立負載平衡器，接著跟這個 Pod 進行綁定。<br>但在地端部署時，該類型會實現類似 NodePort 機制，也可以額外設定 externalIPs 來直接存取指定的 Port。</p><p>接下来的MetalLB，提供给私有 Kubernetes 用户带来了一个方便、可用的软體解决方案。</p><h2 id="MetalLB"><a href="#MetalLB" class="headerlink" title="MetalLB"></a>MetalLB</h2><p>MetalLB支援兩種模式： Layer2、BGP ，更多可參考 <a href="https://metallb.universe.tf/installation/" target="_blank" rel="noopener">Metallb</a>。</p><h3 id="安裝metallb"><a href="#安裝metallb" class="headerlink" title="安裝metallb"></a>安裝metallb</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ kubectl apply -f https://raw.githubusercontent.com/google/metallb/v0.8.3/manifests/metallb.yaml</span></pre></td></tr></table></figure><p>會新增一個metallb-system的命名空間，可以確認下Metallb的安裝情況</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ cat &lt;&lt;EOF | kubectl apply -f -</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">kubectl -n metallb-system get po</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">EOF</span></pre></td></tr></table></figure><h3 id="設置IP池"><a href="#設置IP池" class="headerlink" title="設置IP池"></a>設置IP池</h3><p>more info:<a href="https://metallb.universe.tf/configuration/" target="_blank" rel="noopener">metalLB Configure</a></p><p>指定MetalLB使用的IP Pools(測試用可直接指定Master節點的IP)</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ cat &lt;&lt;EOF | kubectl apply -f -</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">kind: ConfigMap</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">metadata:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">  namespace: metallb-system</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">  name: config</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">data:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">  config: |</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">    address-pools:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">    - name: ip-Pool</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">      protocol: layer2</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">      auto-assign: <span class="literal">true</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">      addresses:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">      - 10.40.46.101/32</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">EOF</span></pre></td></tr></table></figure><h2 id="測試Metallb"><a href="#測試Metallb" class="headerlink" title="測試Metallb"></a>測試Metallb</h2><p>接著就起一個nginx服務，來看看是否會自動取得MetalLB的位址</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ kubectl run nginx --image nginx --port 80</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">$ kubectl expose deploy nginx --port 8080 --target-port 80 --<span class="built_in">type</span> LoadBalancer</span></pre></td></tr></table></figure><p>查看測試用 nginx service，確認Loadbalancer IP</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ kubectl get svc</span></pre></td></tr></table></figure><p>然後curl nginx位址 <a href="http://10.40.46.101:8080" target="_blank" rel="noopener">http://10.40.46.101:8080</a></p><img src="/2019/12/02/kubernetes-metallb/metallb-nginx.png" class=""> <h2 id="多服務共用一個LB-IP"><a href="#多服務共用一個LB-IP" class="headerlink" title="多服務共用一個LB IP"></a>多服務共用一個LB IP</h2><p>只要服務不使用相同的端口，就可以跨多個服務共享同一負載均衡器。為了使服務共享負載均衡器，所有受影響的服務都需要使用相同的註釋版本metallb.universe.tf/allow-shared-ip: <NAME>。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">kind: Service</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">metadata:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">  name: nginx-shareip</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">  annotations: </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">    metallb.universe.tf/allow-shared-ip: shared</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">spec:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">  ports:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">  - name: http</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">    port: 88</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">    protocol: TCP</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">    targetPort: 80</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">  selector:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">    app: nginx</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">  <span class="built_in">type</span>: LoadBalancer</span></pre></td></tr></table></figure><p>More info:<br><a href="https://metallb.universe.tf/installation/" target="_blank" rel="noopener">https://metallb.universe.tf/installation/</a><br><a href="https://asergo.com/knowledge-base/kubernetes/private-managed-cluster/load-balancer.html" target="_blank" rel="noopener">https://asergo.com/knowledge-base/kubernetes/private-managed-cluster/load-balancer.html</a><br><a href="https://k2r2bai.com/2019/09/27/ironman2020/day12/" target="_blank" rel="noopener">https://k2r2bai.com/2019/09/27/ironman2020/day12/</a> </p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> kubernetes </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Kubernetes管理集群服务的外部访问Ingress</title>
       <link href="/2019/11/29/kubernetes-ingress/"/>
       <url>/2019/11/29/kubernetes-ingress/</url>
       
@@ -25,7 +80,7 @@
     
     
     <entry>
-      <title>kubernetes的套件管理工具-Helm(v3)</title>
+      <title>Kubernetes套件管理工具Helm(v3)</title>
       <link href="/2019/11/29/kubernetes-helm/"/>
       <url>/2019/11/29/kubernetes-helm/</url>
       
@@ -46,7 +101,7 @@
     
     
     <entry>
-      <title>kubernetes 儲存</title>
+      <title>Kubernetes儲存StorageClass</title>
       <link href="/2019/11/28/kubernetes-storageclass-nfs/"/>
       <url>/2019/11/28/kubernetes-storageclass-nfs/</url>
       
@@ -67,7 +122,7 @@
     
     
     <entry>
-      <title>kubernetes UI管理站台-Dashboard</title>
+      <title>Kubernetes UI管理站台-Dashboard</title>
       <link href="/2019/11/28/kubernetes-dashboard/"/>
       <url>/2019/11/28/kubernetes-dashboard/</url>
       
@@ -86,7 +141,7 @@
     
     
     <entry>
-      <title>透過kubeadm佈署Kubernetes集群</title>
+      <title>Kubernetes集群佈署kubeadm</title>
       <link href="/2019/11/28/kubeadm/"/>
       <url>/2019/11/28/kubeadm/</url>
       
