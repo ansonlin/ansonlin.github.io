@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="kubernetes,docker," />
+  <meta name="keywords" content="kubernetes,kubeadm," />
 
 
 
@@ -79,16 +79,16 @@
 
 
 
-<meta name="description" content="安裝kubeadm  安裝前必備 Hardware每一台至少有2 GB或以上的記憶體(依應用而定)、2顆 CPU、節點之間網路連接正常  OSCentOS 7&#x2F;Redhat 7  hostname、MAC、UUID   check MAC address 1ip link 2or3ifconfig -a  check UUID 1sudo cat &#x2F;sys&#x2F;class&#x2F;dmi&#x2F;id&#x2F;product">
-<meta name="keywords" content="kubernetes,docker">
+<meta name="description" content="此篇介紹透過kubeadm來建立單一control plane角色的Kubernetes，關於HA集群請參考 Kubernetes HA 安裝前必備 Hardware 至少有2 GB或以上的記憶體(依應用而定)、2顆 CPU、節點之間網路連接正常  OS Redhat &#x2F; CentOS 7.6、Minimum install  Container Runtime 為擺脫單一 Containe">
+<meta name="keywords" content="kubernetes,kubeadm">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Kubernetes佈署kubeadm">
+<meta property="og:title" content="使用kubeadm建立Kubernetes環境">
 <meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;28&#x2F;kubernetes-kubeadm&#x2F;index.html">
 <meta property="og:site_name" content="Anson Tech Note">
-<meta property="og:description" content="安裝kubeadm  安裝前必備 Hardware每一台至少有2 GB或以上的記憶體(依應用而定)、2顆 CPU、節點之間網路連接正常  OSCentOS 7&#x2F;Redhat 7  hostname、MAC、UUID   check MAC address 1ip link 2or3ifconfig -a  check UUID 1sudo cat &#x2F;sys&#x2F;class&#x2F;dmi&#x2F;id&#x2F;product">
+<meta property="og:description" content="此篇介紹透過kubeadm來建立單一control plane角色的Kubernetes，關於HA集群請參考 Kubernetes HA 安裝前必備 Hardware 至少有2 GB或以上的記憶體(依應用而定)、2顆 CPU、節點之間網路連接正常  OS Redhat &#x2F; CentOS 7.6、Minimum install  Container Runtime 為擺脫單一 Containe">
 <meta property="og:locale" content="zh-tw">
 <meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;28&#x2F;kubernetes-kubeadm&#x2F;kubeadm-stacked-color.png">
-<meta property="og:updated_time" content="2019-12-04T05:58:15.582Z">
+<meta property="og:updated_time" content="2019-12-05T09:19:52.830Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;28&#x2F;kubernetes-kubeadm&#x2F;kubeadm-stacked-color.png">
 
@@ -126,7 +126,7 @@
 
 
 
-  <title>Kubernetes佈署kubeadm | Anson Tech Note</title>
+  <title>使用kubeadm建立Kubernetes環境 | Anson Tech Note</title>
   
 
 
@@ -294,7 +294,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Kubernetes佈署kubeadm</h1>
+          <h1 class="post-title" itemprop="name headline">使用kubeadm建立Kubernetes環境</h1>
         
 
         <div class="post-meta">
@@ -344,70 +344,88 @@
       
 
       
-        <h2 id="安裝kubeadm"><a href="#安裝kubeadm" class="headerlink" title="安裝kubeadm"></a>安裝kubeadm</h2><img src="/2019/11/28/kubernetes-kubeadm/kubeadm-stacked-color.png" class=""> 
-<h3 id="安裝前必備"><a href="#安裝前必備" class="headerlink" title="安裝前必備"></a>安裝前必備</h3><ol>
-<li><p>Hardware<br>每一台至少有2 GB或以上的記憶體(依應用而定)、2顆 CPU、節點之間網路連接正常</p>
+        <img src="/2019/11/28/kubernetes-kubeadm/kubeadm-stacked-color.png" class=""> 
+
+<p>此篇介紹透過kubeadm來建立單一control plane角色的Kubernetes，關於HA集群請參考 <a href="../kubernetes-ha/">Kubernetes HA</a></p>
+<h2 id="安裝前必備"><a href="#安裝前必備" class="headerlink" title="安裝前必備"></a>安裝前必備</h2><ol>
+<li><p>Hardware<br> 至少有2 GB或以上的記憶體(依應用而定)、2顆 CPU、節點之間網路連接正常</p>
 </li>
-<li><p>OS<br>CentOS 7/Redhat 7</p>
+<li><p>OS<br> Redhat / CentOS 7.6、Minimum install</p>
 </li>
-<li><p>hostname、MAC、UUID</p>
+<li><p>Container Runtime<br> 為擺脫單一 Container Runtime的依賴，後續多家推出各式各樣的 open source container runtime，但Docker還是普羅大眾最上手好用的，以下也以docker為例</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># yum install docker</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># systemctl enable docker &amp;&amp; systemctl start docker</span></span></pre></td></tr></table></figure>
+</li>
+<li><p>防火牆設置</p>
 </li>
 </ol>
-<p>check MAC address</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">ip link </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">or</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">ifconfig -a</span></pre></td></tr></table></figure>
-
-<p>check UUID</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">sudo cat /sys/class/dmi/id/product_uuid</span></pre></td></tr></table></figure>
-
-<ol start="4">
-<li>Require Ports(Inbound)</li>
+<p>以下描述不同角色，需要開放的Inbound Ports</p>
+<ol>
+<li>Control-plane node(s) ports<br>TCP  6443              ==&gt;     Kubernetes API Server<br>TCP  2379-2380        ==&gt;     etcd server client API<br>TCP  10250-10252    ==&gt;     Self</li>
 </ol>
-<p>Control-plane node(s) ports</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">TCP  6443  		==&gt; Kubernetes API Server</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">TCP  2379-2380		==&gt; etcd server client API</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">TCP  10250-10252	==&gt; Self</span></pre></td></tr></table></figure>
-
-<p>Worker node(s) ports</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">TCP  10250		==&gt; Kubernetes API</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">TCP  30000-32767	==&gt; NodePort Service</span></pre></td></tr></table></figure>
-
-<ol start="5">
-<li>Container Runtime</li>
-</ol>
-<p>Docker </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ sudo yum install docker</span></pre></td></tr></table></figure>
-
-<ol start="6">
-<li>Disable SWAP &amp; Check br_netfilter module</li>
-</ol>
-<p>Disable Swap</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">cat &lt;&lt;EOF &gt;  /etc/sysctl.d/k8s.conf</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">net.bridge.bridge-nf-call-ip6tables = 1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">net.bridge.bridge-nf-call-iptables = 1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">net.ipv4_ip_forward = 1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">vm.swappiness = 0</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">vm.max_map_count=262144</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">EOF</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">sysctl --system</span></pre></td></tr></table></figure>
-
-<p>Check br_netfilter module</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">lsmod | grep br_netfilter</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">modprobe br_netfilter</span></pre></td></tr></table></figure>
-
-
-<h3 id="安裝kubeadm-kubelet-kubectl"><a href="#安裝kubeadm-kubelet-kubectl" class="headerlink" title="安裝kubeadm, kubelet, kubectl"></a>安裝kubeadm, kubelet, kubectl</h3><p>kubeadm ==&gt;    用來引導啟動整個集群<br>kubelet    ==&gt;    在所有節點上執行,用來控制啟動pod及容器<br>kubectl ==&gt;    用來控制整個集群</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># Change Root Users</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">sudo su</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># Add kubernetes Repository</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">cat &lt;&lt;EOF &gt; /etc/yum.repos.d/kubernetes.repo</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">[kubernetes]</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">name=Kubernetes</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">enabled=1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">gpgcheck=1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">repo_gpgcheck=1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">EOF</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># Set SELinux in permissive mode (effectively disabling it)</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">setenforce 0</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">sed -i <span class="string">'s/^SELINUX=enforcing$/SELINUX=permissive/'</span> /etc/selinux/config</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">(你可以選擇要安裝的版本： yum list kubeadm --showduplicates --disableexcludes=kubernetes)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">systemctl <span class="built_in">enable</span> --now kubelet</span></pre></td></tr></table></figure>
-
-<h2 id="建立Kubernetes集群"><a href="#建立Kubernetes集群" class="headerlink" title="建立Kubernetes集群"></a>建立Kubernetes集群</h2><h3 id="完善Master-Node環境"><a href="#完善Master-Node環境" class="headerlink" title="完善Master Node環境"></a>完善Master Node環境</h3><ol>
-<li>初始化啟用</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">kubeadm init --pod-network-cidr=192.168.0.0/16  --apiserver-advertise-address=0.0.0.0(depend on your network adapter)	</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">mkdir -p <span class="variable">$HOME</span>/.kube</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">sudo cp -i /etc/kubernetes/admin.conf <span class="variable">$HOME</span>/.kube/config</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">sudo chown $(id -u):$(id -g) <span class="variable">$HOME</span>/.kube/config</span></pre></td></tr></table></figure>
+<p>指令如下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ sudo firewall-cmd --add-port 6443/tcp,2379-2380/tcp,10250-10252/tcp,80/tcp,443/tcp --permanent </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">$ sudo firewall-cmd --reload</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">$ sudo firewall-cmd --list-all</span></pre></td></tr></table></figure>
 
 <ol start="2">
-<li>pod network add-on(Calico)</li>
+<li>Worker node(s) ports<br>TCP  10250            ==&gt;     Kubernetes API<br>TCP  30000-32767    ==&gt;     NodePort Service</li>
 </ol>
-<p>Install</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">kubectl apply -f https://docs.projectcalico.org/v3.8/manifests/calico.yaml</span></pre></td></tr></table></figure>
+<p>指令如下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ sudo firewall-cmd --add-port 10250/tcp,30000-32767/tcp,80/tcp,443/tcp --permanent </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">$ sudo firewall-cmd --reload</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">$ sudo firewall-cmd --list-all</span></pre></td></tr></table></figure>
 
-<p>Check</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">kubectl get pods --all-namespace</span></pre></td></tr></table></figure>
-
-<p>3.Master主機加入分配資源(Develop only)</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">kubectl taint nodes --all node-role.kubernetes.io/master-</span></pre></td></tr></table></figure>
+<p>或直接停用防火牆(不推薦)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ sudo systemctl <span class="built_in">disable</span> firewalld &amp;&amp; sudo systemctl stop firewalld</span></pre></td></tr></table></figure>
 
 
-<h3 id="加入集群節點"><a href="#加入集群節點" class="headerlink" title="加入集群節點"></a>加入集群節點</h3><p>加入節點</p>
+
+<h2 id="環境設置"><a href="#環境設置" class="headerlink" title="環境設置"></a>環境設置</h2><ol>
+<li>停用分頁Swap</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># cat &lt;&lt;EOF &gt;  /etc/sysctl.d/k8s.conf</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">net.bridge.bridge-nf-call-ip6tables = 1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">net.bridge.bridge-nf-call-iptables = 1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">net.ipv4_ip_forward = 1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">vm.swappiness = 0</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">vm.max_map_count=262144</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">EOF</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># sysctl --system</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># sed  -i  '/ swap / s/^\(.*\)$/#\1/g'  /etc/fstab</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># swapoff -a</span></span></pre></td></tr></table></figure>
+
+<p>Check br_netfilter module</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># lsmod | grep br_netfilter</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># modprobe br_netfilter</span></span></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>停用安全增強Linux</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># setenforce  0</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># sed  -i  's/^SELINUX=.*/SELINUX=disabled/g'   /etc/selinux/config</span></span></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>其它檢查</li>
+</ol>
+<p>MAC地址</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># ip link </span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">or</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># ifconfig -a</span></span></pre></td></tr></table></figure>
+
+<p>UUID是否唯一</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># cat /sys/class/dmi/id/product_uuid</span></span></pre></td></tr></table></figure>
+
+
+<h2 id="安裝kubeadm"><a href="#安裝kubeadm" class="headerlink" title="安裝kubeadm"></a>安裝kubeadm</h2><p>接著就是安裝啟動Kubernetes的主角Kubeadm，以下介紹三個角色：<br>kubeadm         ==&gt;        用來引導啟動整個集群<br>kubelet            ==&gt;        在所有節點上執行,用來控制啟動pod及容器<br>kubectl         ==&gt;        用來控制整個集群</p>
+<ol>
+<li><p>加入Kubernetes Repository </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ sudo su</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># cat &lt;&lt;EOF &gt; /etc/yum.repos.d/kubernetes.repo</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">[kubernetes]</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">name=Kubernetes</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">enabled=1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">gpgcheck=1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">repo_gpgcheck=1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">EOF</span></pre></td></tr></table></figure>
+</li>
+<li><p>安裝kubeadm</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># systemctl enable --now kubelet</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># systemctl start kubelet</span></span></pre></td></tr></table></figure>
+<p>或者選擇要安裝的版本： yum list kubeadm –showduplicates –disableexcludes=kubernetes</p>
+</li>
+</ol>
+<h2 id="建立單一控制平面的Kubernetes環境"><a href="#建立單一控制平面的Kubernetes環境" class="headerlink" title="建立單一控制平面的Kubernetes環境"></a>建立單一控制平面的Kubernetes環境</h2><p>建立Master及網路插件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">kubeadm init --pod-network-cidr=192.168.0.0/16  --apiserver-advertise-address=0.0.0.0(depend on your network adapter)</span></pre></td></tr></table></figure>
+
+<p>配置kubectl環境</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">mkdir -p <span class="variable">$HOME</span>/.kube</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">sudo cp -i /etc/kubernetes/admin.conf <span class="variable">$HOME</span>/.kube/config</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">sudo chown $(id -u):$(id -g) <span class="variable">$HOME</span>/.kube/config</span></pre></td></tr></table></figure>
+
+<p>安裝pod network add-on(Calico)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># kubectl apply -f https://docs.projectcalico.org/v3.8/manifests/calico.yaml</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># kubectl get pods --all-namespace</span></span></pre></td></tr></table></figure>
+
+
+<p>加入Kubernetes節點<br>加入節點</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">kubeadm join --token &lt;token&gt; &lt;control-plane-host&gt;:&lt;control-plane-port&gt; --discovery-token-ca-cert-hash sha256:&lt;<span class="built_in">hash</span>&gt;</span></pre></td></tr></table></figure>
 
+
+
+<h2 id="其它常見操作"><a href="#其它常見操作" class="headerlink" title="其它常見操作"></a>其它常見操作</h2><p>Master主機加入分配資源(Develop only)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">kubectl taint nodes --all node-role.kubernetes.io/master-</span></pre></td></tr></table></figure>
 
 <p>token相關(在Master節點)</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">kubeadm token list</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">kubeadm token create</span></pre></td></tr></table></figure>
@@ -415,8 +433,7 @@
 <p>產生hash(在Master節點)</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">openssl x509 -pubkey -<span class="keyword">in</span> /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2&gt;/dev/null | \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">   openssl dgst -sha256 -hex | sed <span class="string">'s/^.* //'</span></span></pre></td></tr></table></figure>
 
-
-<h2 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h2><p>從Master主機複製設定檔到節點主機</p>
+<p>從Master主機複製設定檔到節點主機</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">scp root@&lt;control-plane-host&gt;:/etc/kubernetes/admin.conf .</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">kubectl --kubeconfig ./admin.conf get nodes</span></pre></td></tr></table></figure>
 
 <p>移除節點</p>
@@ -446,7 +463,7 @@
           
             <a href="/tags/kubernetes/" rel="tag"># kubernetes</a>
           
-            <a href="/tags/docker/" rel="tag"># docker</a>
+            <a href="/tags/kubeadm/" rel="tag"># kubeadm</a>
           
         </div>
       
@@ -552,7 +569,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">文章</span>
                 </a>
               </div>
@@ -565,7 +582,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">標籤</span>
                 </a>
               </div>
@@ -620,7 +637,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#安裝kubeadm"><span class="nav-number">1.</span> <span class="nav-text">安裝kubeadm</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安裝前必備"><span class="nav-number">1.1.</span> <span class="nav-text">安裝前必備</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安裝kubeadm-kubelet-kubectl"><span class="nav-number">1.2.</span> <span class="nav-text">安裝kubeadm, kubelet, kubectl</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#建立Kubernetes集群"><span class="nav-number">2.</span> <span class="nav-text">建立Kubernetes集群</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#完善Master-Node環境"><span class="nav-number">2.1.</span> <span class="nav-text">完善Master Node環境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#加入集群節點"><span class="nav-number">2.2.</span> <span class="nav-text">加入集群節點</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其它"><span class="nav-number">3.</span> <span class="nav-text">其它</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#安裝前必備"><span class="nav-number">1.</span> <span class="nav-text">安裝前必備</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#環境設置"><span class="nav-number">2.</span> <span class="nav-text">環境設置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安裝kubeadm"><span class="nav-number">3.</span> <span class="nav-text">安裝kubeadm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#建立單一控制平面的Kubernetes環境"><span class="nav-number">4.</span> <span class="nav-text">建立單一控制平面的Kubernetes環境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其它常見操作"><span class="nav-number">5.</span> <span class="nav-text">其它常見操作</span></a></li></ol></div>
             
 
           </div>
