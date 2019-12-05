@@ -88,8 +88,9 @@
 <meta property="og:description" content="Volume介绍與管理計算實例相比，管理存儲是一個明顯的問題。該PersistentVolume子系統提供了用戶和管理員抽象的存儲如何從它是如何消費提供信息的API。為此，我們引入了兩個新的API資源：PersistentVolume(PV)和PersistentVolumeClaim(PVC)。PV是集群中的資源。PVC是對這些資源的請求，並且還充當對資源的聲明檢查。可以通過兩種方式設置PV：靜">
 <meta property="og:locale" content="zh-tw">
 <meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;28&#x2F;kubernetes-storageclass-nfs&#x2F;kube-nfs-client.jpg">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;28&#x2F;kubernetes-storageclass-nfs&#x2F;sc-nfs.jpg">
 <meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;28&#x2F;kubernetes-storageclass-nfs&#x2F;test-pod.jpg">
-<meta property="og:updated_time" content="2019-12-02T07:52:26.872Z">
+<meta property="og:updated_time" content="2019-12-04T06:35:31.612Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;28&#x2F;kubernetes-storageclass-nfs&#x2F;kube-nfs-client.jpg">
 
@@ -369,12 +370,18 @@
 <p>然而Storage classes的Provisioner(供應商)常見的有： AWSElasticBlockStore、AzureFile、AzureDisk、CephFS、GCEPersistentDisk、Gluster、iSCSI、VsphereVolume、NFS</p>
 <h2 id="透過helm建立nfs-storage-class"><a href="#透過helm建立nfs-storage-class" class="headerlink" title="透過helm建立nfs storage class"></a>透過helm建立nfs storage class</h2><img src="/2019/11/28/kubernetes-storageclass-nfs/kube-nfs-client.jpg" class=""> 
 
+<h3 id="預先準備"><a href="#預先準備" class="headerlink" title="預先準備"></a>預先準備</h3><ol>
+<li>需要一台NAS，手邊一台Synology就拿來用了，或是自建一台VM使用NFS服務(不建議)，</li>
+<li>每一台Worker需要安裝nfs client服務<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ sudo yum install -y nfs-utils</span></pre></td></tr></table></figure>
 
-<p>需要一台NAS，手邊一台Synology就拿來用了，或是自建一台VM使用NFS服務(不建議)，以下透过Helm建立nfs的storageclass</p>
+
+</li>
+</ol>
 <h3 id="安裝nfs-storage-class"><a href="#安裝nfs-storage-class" class="headerlink" title="安裝nfs storage class"></a>安裝nfs storage class</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">helm repo add stable  https://kubernetes-charts.storage.googleapis.com</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">helm repo update</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">helm install --<span class="built_in">set</span> nfs.server=10.40.141.130 --<span class="built_in">set</span> nfs.path=/volume1/k8ssc --<span class="built_in">set</span> storageClass.defaultClass=<span class="literal">true</span>  --<span class="built_in">set</span> storageClass.name=nfs-client --generate-name stable/nfs-client-provisioner</span></pre></td></tr></table></figure>
 
 <p>確認佈署狀況</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">kubectl get sc</span></pre></td></tr></table></figure>
+<img src="/2019/11/28/kubernetes-storageclass-nfs/sc-nfs.jpg" class=""> 
 
 <h3 id="實際部署pod"><a href="#實際部署pod" class="headerlink" title="實際部署pod"></a>實際部署pod</h3><p>實際部署pod測試是否正常寫入到nfs，先建立pvc</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">kind: PersistentVolumeClaim</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">metadata:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">  name: <span class="built_in">test</span>-claim</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">  annotations:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">    volume.beta.kubernetes.io/storage-class: <span class="string">"nfs-client"</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">spec:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">  accessModes:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">    - ReadWriteMany</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">  resources:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">    requests:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">      storage: 1Mi</span></pre></td></tr></table></figure>
@@ -580,7 +587,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Volume介绍"><span class="nav-number">1.</span> <span class="nav-text">Volume介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PersistentVolume介绍"><span class="nav-number">2.</span> <span class="nav-text">PersistentVolume介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#storageClass介绍"><span class="nav-number">3.</span> <span class="nav-text">storageClass介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#透過helm建立nfs-storage-class"><span class="nav-number">3.1.</span> <span class="nav-text">透過helm建立nfs storage class</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安裝nfs-storage-class"><span class="nav-number">3.1.1.</span> <span class="nav-text">安裝nfs storage class</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#實際部署pod"><span class="nav-number">3.1.2.</span> <span class="nav-text">實際部署pod</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Volume介绍"><span class="nav-number">1.</span> <span class="nav-text">Volume介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PersistentVolume介绍"><span class="nav-number">2.</span> <span class="nav-text">PersistentVolume介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#storageClass介绍"><span class="nav-number">3.</span> <span class="nav-text">storageClass介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#透過helm建立nfs-storage-class"><span class="nav-number">3.1.</span> <span class="nav-text">透過helm建立nfs storage class</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#預先準備"><span class="nav-number">3.1.1.</span> <span class="nav-text">預先準備</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安裝nfs-storage-class"><span class="nav-number">3.1.2.</span> <span class="nav-text">安裝nfs storage class</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#實際部署pod"><span class="nav-number">3.1.3.</span> <span class="nav-text">實際部署pod</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>

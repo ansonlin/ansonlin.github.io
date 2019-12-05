@@ -88,9 +88,8 @@
 <meta property="og:description" content="一个 API 对象，用于管理对集群中服务的外部访问，通常是 HTTP。Ingress 可以提供负载平衡，SSL 终端和基于名称的虚拟主机。 Ingress是什麼？Ingress公开了从群集外部到群集内 services 的HTTP和HTTPS路由。 流量路由由Ingress资源上定义的规则控制。 1 internet2     |3[ Ingress ]4--|-----|--5[ Service">
 <meta property="og:locale" content="zh-tw">
 <meta property="og:image" content="https:&#x2F;&#x2F;docs.traefik.io&#x2F;v1.7&#x2F;img&#x2F;architecture.png">
-<meta property="og:image" content="https:&#x2F;&#x2F;kubernetes.github.io&#x2F;ingress-nginx&#x2F;images&#x2F;baremetal&#x2F;cloud_overview.jpg">
-<meta property="og:image" content="https:&#x2F;&#x2F;kubernetes.github.io&#x2F;ingress-nginx&#x2F;images&#x2F;baremetal&#x2F;baremetal_overview.jpg">
-<meta property="og:updated_time" content="2019-12-02T07:51:59.622Z">
+<meta property="og:image" content="https:&#x2F;&#x2F;kubernetes.github.io&#x2F;ingress-nginx&#x2F;images&#x2F;baremetal&#x2F;metallb.jpg">
+<meta property="og:updated_time" content="2019-12-04T03:10:51.805Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;docs.traefik.io&#x2F;v1.7&#x2F;img&#x2F;architecture.png">
 
@@ -381,16 +380,24 @@
 <p>或是直接開啟瀏覽器確認(traefik.192.168.1.1.nip.io &lt;===請修改成你的Domain name)</p>
 <h2 id="Nginx-Ingress-Controller"><a href="#Nginx-Ingress-Controller" class="headerlink" title="Nginx Ingress Controller"></a>Nginx Ingress Controller</h2><p>more info: <a href="https://kubernetes.github.io/ingress-nginx/deploy/#bare-metal" target="_blank" rel="noopener">Deploy Nginx Ingress Controller through Helm to Kubernetes</a></p>
 <p>直接透過Helm方式來安裝是最快的方式，但需要先安裝<a href="../kubernetes-helm/">Helm</a></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">helm install stable/nginx-ingress --name my-nginx --<span class="built_in">set</span> rbac.create=<span class="literal">true</span></span></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">helm install stable/nginx-ingress --name my-nginx --<span class="built_in">set</span> rbac.create=<span class="literal">true</span> --generate-name</span></pre></td></tr></table></figure>
 
-<h3 id="LoadBalancer-IP-地端自建"><a href="#LoadBalancer-IP-地端自建" class="headerlink" title="LoadBalancer IP(地端自建)"></a>LoadBalancer IP(地端自建)</h3><p><img src="https://kubernetes.github.io/ingress-nginx/images/baremetal/cloud_overview.jpg" alt="ingress_cloud"><br><img src="https://kubernetes.github.io/ingress-nginx/images/baremetal/baremetal_overview.jpg" alt="ingress_baremetal"></p>
-<p>more info: <a href="https://kubernetes.github.io/ingress-nginx/deploy/baremetal/" target="_blank" rel="noopener">Bare Metal Considerations</a></p>
-<p>內部私有雲的話，這是直接使用Master Node的IP，修改service的方式達成。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">kubectl edit svc nginx-ingress-controller</span></pre></td></tr></table></figure>
+<h3 id="LoadBalancer-IP-地端自建"><a href="#LoadBalancer-IP-地端自建" class="headerlink" title="LoadBalancer IP(地端自建)"></a>LoadBalancer IP(地端自建)</h3><p>more info: <a href="https://kubernetes.github.io/ingress-nginx/deploy/baremetal/" target="_blank" rel="noopener">Bare Metal Considerations</a></p>
+<ol>
+<li>指定externalIPs方式<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># kubectl edit svc nginx-ingress-controller</span></span></pre></td></tr></table></figure>
+在 type: LoadBalancer 下方加入兩行(依實際狀況調整IP地址)<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">externalIPs:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">- 10.40.46.101</span></pre></td></tr></table></figure>
 
 
-<p>在 type: LoadBalancer 下方加入兩行</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">externalIPs:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">- 10.40.40.183</span></pre></td></tr></table></figure>
+</li>
+</ol>
+<ol start="2">
+<li>透過MetalLB發配LoadBalancer IP<br><img src="https://kubernetes.github.io/ingress-nginx/images/baremetal/metallb.jpg" alt="MetalLB"></li>
+</ol>
+<p>必須先安裝<a href="../kubernetes-metallb">MetalLB</a>，然後修改nginx ingress 服務，新增兩筆允許共用IP地址</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># kubectl edit svc nginx-ingress-1575428352-controller</span></span></pre></td></tr></table></figure>
+
+<p>在 metadata 下方加入兩行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">annotations:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">  metallb.universe.tf/allow-shared-ip: shared</span></pre></td></tr></table></figure>
 
 
 <h3 id="檢查部署狀況-1"><a href="#檢查部署狀況-1" class="headerlink" title="檢查部署狀況"></a>檢查部署狀況</h3><ol>
