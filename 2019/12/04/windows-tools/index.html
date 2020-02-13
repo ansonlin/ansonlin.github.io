@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="kubernetes,helm,windows,hexo," />
 
 
 
@@ -79,13 +79,15 @@
 
 
 
-<meta name="description" content="小小攻城獅技術宅">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Anson Tech Note">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;tags&#x2F;HA&#x2F;index.html">
+<meta name="description" content="必备安装套件管理工具Chocolatey 1# cmd2# powershell3# Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString(&amp;apos;https:&#x2F;&#x2F;chocolatey.org&#x2F;install.ps1&amp;apos;))   Kubernetes管理">
+<meta name="keywords" content="kubernetes,helm,windows,hexo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Windows常用工具">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;04&#x2F;windows-tools&#x2F;index.html">
 <meta property="og:site_name" content="Anson Tech Note">
-<meta property="og:description" content="小小攻城獅技術宅">
+<meta property="og:description" content="必备安装套件管理工具Chocolatey 1# cmd2# powershell3# Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString(&amp;apos;https:&#x2F;&#x2F;chocolatey.org&#x2F;install.ps1&amp;apos;))   Kubernetes管理">
 <meta property="og:locale" content="zh-tw">
+<meta property="og:updated_time" content="2019-12-04T02:25:04.206Z">
 <meta name="twitter:card" content="summary">
 
 
@@ -116,13 +118,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/tags/HA/"/>
+  <link rel="canonical" href="http://yoursite.com/2019/12/04/windows-tools/"/>
 
 
 
 
 
-  <title>標籤: HA | Anson Tech Note</title>
+  <title>Windows常用工具 | Anson Tech Note</title>
   
 
 
@@ -141,7 +143,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -259,54 +261,194 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block tag">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>HA<small>標籤</small>
-        </h1>
-      </div>
+  
 
-      
-        
+  
+  
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/04/windows-tools/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Anson Lin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/docker-avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Anson Tech Note">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2019/12/04/kubernetes-ha/" itemprop="url">
-              
-                <span itemprop="name">建立高可用Kubernetes集群</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">Windows常用工具</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2019-12-04T10:46:21+08:00"
-              content="2019-12-04" >
-          12-04
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">發表於</span>
+              
+              <time title="創建於" itemprop="dateCreated datePublished" datetime="2019-12-04T09:53:50+08:00">
+                2019-12-04
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="必备安装套件管理工具"><a href="#必备安装套件管理工具" class="headerlink" title="必备安装套件管理工具"></a>必备安装套件管理工具</h2><p><a href="https://chocolatey.org/" target="_blank" rel="noopener">Chocolatey</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># cmd</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># powershell</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))</span></span></pre></td></tr></table></figure>
+
+
+<h2 id="Kubernetes管理工具"><a href="#Kubernetes管理工具" class="headerlink" title="Kubernetes管理工具"></a>Kubernetes管理工具</h2><h3 id="Kubectl"><a href="#Kubectl" class="headerlink" title="Kubectl"></a>Kubectl</h3><p>kubectl install on windows<br><a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/" target="_blank" rel="noopener">https://kubernetes.io/docs/tasks/tools/install-kubectl/</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">choco install kubernetes-cli</span></pre></td></tr></table></figure>
+
+<h3 id="Helm"><a href="#Helm" class="headerlink" title="Helm"></a>Helm</h3><p>Kubernetes社區的成員為 Chocolatey貢獻了一份Helm軟件包。該軟件包通常是最新的。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># choco install kubernetes-helm</span></span></pre></td></tr></table></figure>
+
+
+<h2 id="Markdown-Blog管理工具Hexo"><a href="#Markdown-Blog管理工具Hexo" class="headerlink" title="Markdown Blog管理工具Hexo"></a>Markdown Blog管理工具Hexo</h2><p><a href="https://hexo.io/zh-tw/docs/" target="_blank" rel="noopener">Hexo</a></p>
+<h3 id="安装Hexo"><a href="#安装Hexo" class="headerlink" title="安装Hexo"></a>安装Hexo</h3><p>必备套件并安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">choco install git</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">choco install nodejs</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">choco install nodejs-lts</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">choco install yarn</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">yarn global add hexo</span></pre></td></tr></table></figure>
+
+
+<p>重启cmdline, 創建我的部落格</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">hexo init blog</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> blog</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">hexo server</span></pre></td></tr></table></figure>
+
+<p>新增文章</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">hexo new post xxxxx</span></pre></td></tr></table></figure>
+
+<p>建立草稿</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># hexo new draft test-draft</span></span></pre></td></tr></table></figure>
+
+<p>草稿转成正式文章<br>可下命令转成正式文章，也可手动将文章从 source/_posts 目录移动到 source/_drafts 目录即可。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># hexo P test-draft</span></span></pre></td></tr></table></figure>
+
+
+<p>佈署到github</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">hexo clean &amp;&amp; hexo deploy</span></pre></td></tr></table></figure>
+
+
+
+
+
+<p>More info:</p>
+<p><a href="https://yogapan.github.io/2017/08/11/%E7%94%A8Hexo-Github-Pages%E6%90%AD%E5%BB%BA%E5%80%8B%E4%BA%BA%E9%83%A8%E8%90%BD%E6%A0%BC/" target="_blank" rel="noopener">https://yogapan.github.io/2017/08/11/%E7%94%A8Hexo-Github-Pages%E6%90%AD%E5%BB%BA%E5%80%8B%E4%BA%BA%E9%83%A8%E8%90%BD%E6%A0%BC/</a></p>
 
       
     </div>
+    
+    
+    
 
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/kubernetes/" rel="tag"># kubernetes</a>
+          
+            <a href="/tags/helm/" rel="tag"># helm</a>
+          
+            <a href="/tags/windows/" rel="tag"># windows</a>
+          
+            <a href="/tags/hexo/" rel="tag"># hexo</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/12/03/kubernetes-prometheus/" rel="next" title="Kubernetes监控管理工具prometheus-operator">
+                <i class="fa fa-chevron-left"></i> Kubernetes监控管理工具prometheus-operator
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/12/04/kubernetes-ha/" rel="prev" title="建立高可用Kubernetes集群">
+                建立高可用Kubernetes集群 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -314,6 +456,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -334,8 +480,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            本站概覽
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -412,6 +567,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#必备安装套件管理工具"><span class="nav-number">1.</span> <span class="nav-text">必备安装套件管理工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kubernetes管理工具"><span class="nav-number">2.</span> <span class="nav-text">Kubernetes管理工具</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Kubectl"><span class="nav-number">2.1.</span> <span class="nav-text">Kubectl</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Helm"><span class="nav-number">2.2.</span> <span class="nav-text">Helm</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Markdown-Blog管理工具Hexo"><span class="nav-number">3.</span> <span class="nav-text">Markdown Blog管理工具Hexo</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装Hexo"><span class="nav-number">3.1.</span> <span class="nav-text">安装Hexo</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -565,6 +736,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 

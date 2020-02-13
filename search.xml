@@ -27,6 +27,31 @@
     
     
     <entry>
+      <title>Windows常用工具</title>
+      <link href="/2019/12/04/windows-tools/"/>
+      <url>/2019/12/04/windows-tools/</url>
+      
+        <content type="html"><![CDATA[<h2 id="必备安装套件管理工具"><a href="#必备安装套件管理工具" class="headerlink" title="必备安装套件管理工具"></a>必备安装套件管理工具</h2><p><a href="https://chocolatey.org/" target="_blank" rel="noopener">Chocolatey</a></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># cmd</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># powershell</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))</span></span></pre></td></tr></table></figure><h2 id="Kubernetes管理工具"><a href="#Kubernetes管理工具" class="headerlink" title="Kubernetes管理工具"></a>Kubernetes管理工具</h2><h3 id="Kubectl"><a href="#Kubectl" class="headerlink" title="Kubectl"></a>Kubectl</h3><p>kubectl install on windows<br><a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/" target="_blank" rel="noopener">https://kubernetes.io/docs/tasks/tools/install-kubectl/</a></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">choco install kubernetes-cli</span></pre></td></tr></table></figure><h3 id="Helm"><a href="#Helm" class="headerlink" title="Helm"></a>Helm</h3><p>Kubernetes社區的成員為 Chocolatey貢獻了一份Helm軟件包。該軟件包通常是最新的。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># choco install kubernetes-helm</span></span></pre></td></tr></table></figure><h2 id="Markdown-Blog管理工具Hexo"><a href="#Markdown-Blog管理工具Hexo" class="headerlink" title="Markdown Blog管理工具Hexo"></a>Markdown Blog管理工具Hexo</h2><p><a href="https://hexo.io/zh-tw/docs/" target="_blank" rel="noopener">Hexo</a></p><h3 id="安装Hexo"><a href="#安装Hexo" class="headerlink" title="安装Hexo"></a>安装Hexo</h3><p>必备套件并安装</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">choco install git</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">choco install nodejs</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">choco install nodejs-lts</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">choco install yarn</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">yarn global add hexo</span></pre></td></tr></table></figure><p>重启cmdline, 創建我的部落格</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">hexo init blog</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> blog</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">hexo server</span></pre></td></tr></table></figure><p>新增文章</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">hexo new post xxxxx</span></pre></td></tr></table></figure><p>建立草稿</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># hexo new draft test-draft</span></span></pre></td></tr></table></figure><p>草稿转成正式文章<br>可下命令转成正式文章，也可手动将文章从 source/_posts 目录移动到 source/_drafts 目录即可。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># hexo P test-draft</span></span></pre></td></tr></table></figure><p>佈署到github</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">hexo clean &amp;&amp; hexo deploy</span></pre></td></tr></table></figure><p>More info:</p><p><a href="https://yogapan.github.io/2017/08/11/%E7%94%A8Hexo-Github-Pages%E6%90%AD%E5%BB%BA%E5%80%8B%E4%BA%BA%E9%83%A8%E8%90%BD%E6%A0%BC/" target="_blank" rel="noopener">https://yogapan.github.io/2017/08/11/%E7%94%A8Hexo-Github-Pages%E6%90%AD%E5%BB%BA%E5%80%8B%E4%BA%BA%E9%83%A8%E8%90%BD%E6%A0%BC/</a></p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> kubernetes </tag>
+            
+            <tag> helm </tag>
+            
+            <tag> windows </tag>
+            
+            <tag> hexo </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Kubernetes监控管理工具prometheus-operator</title>
       <link href="/2019/12/03/kubernetes-prometheus/"/>
       <url>/2019/12/03/kubernetes-prometheus/</url>
