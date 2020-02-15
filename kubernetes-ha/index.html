@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="kubernetes,kubeadm,HA," />
 
 
 
@@ -79,14 +79,19 @@
 
 
 
-<meta name="description" content="小小攻城獅技術宅">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Anson Tech Note">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;archives&#x2F;2019&#x2F;11&#x2F;index.html">
+<meta name="description" content="本篇文章目標是利用 Linux 作業系統虛擬機器(CentOS 7.6)，用 kubeadm 這套工具於自己的環境下從無到有打造一個具有高可用性(HA)的 K8S Cluster 環境，可以隨時進行擴充以應付日後成長的需求。 安裝前必備或參考先前文章 安裝Kubeadm  OSRedhat &#x2F; CentOS 7、Minimum install  Docker 1$ sudo yum install">
+<meta name="keywords" content="kubernetes,kubeadm,HA">
+<meta property="og:type" content="article">
+<meta property="og:title" content="建立高可用Kubernetes集群">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;kubernetes-ha&#x2F;index.html">
 <meta property="og:site_name" content="Anson Tech Note">
-<meta property="og:description" content="小小攻城獅技術宅">
+<meta property="og:description" content="本篇文章目標是利用 Linux 作業系統虛擬機器(CentOS 7.6)，用 kubeadm 這套工具於自己的環境下從無到有打造一個具有高可用性(HA)的 K8S Cluster 環境，可以隨時進行擴充以應付日後成長的需求。 安裝前必備或參考先前文章 安裝Kubeadm  OSRedhat &#x2F; CentOS 7、Minimum install  Docker 1$ sudo yum install">
 <meta property="og:locale" content="zh-tw">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;kubernetes-ha&#x2F;kube-ha-master-ok.jpg">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;kubernetes-ha&#x2F;kube-ha-master-getNodes.jpg">
+<meta property="og:updated_time" content="2020-02-15T06:52:54.277Z">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;kubernetes-ha&#x2F;kube-ha-master-ok.jpg">
 
 
 
@@ -116,13 +121,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/archives/2019/11/"/>
+  <link rel="canonical" href="http://yoursite.com/kubernetes-ha/"/>
 
 
 
 
 
-  <title>歸檔 | Anson Tech Note</title>
+  <title>建立高可用Kubernetes集群 | Anson Tech Note</title>
   
 
 
@@ -141,7 +146,7 @@
     
   
 
-  <div class="container sidebar-position-left page-archive">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -259,185 +264,215 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
+  <div id="posts" class="posts-expand">
+    
 
-      <span class="archive-page-counter">
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/kubernetes-ha/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Anson Lin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/docker-avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Anson Tech Note">
+    </span>
+
+    
+      <header class="post-header">
+
         
         
+          <h1 class="post-title" itemprop="name headline">建立高可用Kubernetes集群</h1>
         
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">發表於</span>
+              
+              <time title="創建於" itemprop="dateCreated datePublished" datetime="2019-12-12T00:00:00+08:00">
+                2019-12-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
           
-        
-        嗯..! 目前共計 13 篇文章。 繼續努力。
-      </span>
 
-      
-
-        
-        
-        
-
-        
           
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2019">2019</h1>
-          </div>
-        
-        
+            
+          
 
-        
+          
+          
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+          
 
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/kubernetes-ingress/" itemprop="url">
-              
-                <span itemprop="name">Kubernetes管理集群服务的外部访问Ingress</span>
-              
-            </a>
-        
-      </h2>
+          
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2019-11-30T00:00:00+08:00"
-              content="2019-11-30" >
-          11-30
-        </time>
-      </div>
+          
 
-    </header>
-  </article>
+        </div>
+      </header>
+    
 
-
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/kubernetes-helm/" itemprop="url">
-              
-                <span itemprop="name">Kubernetes套件管理工具Helm(v3)</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2019-11-29T00:00:00+08:00"
-              content="2019-11-29" >
-          11-29
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
       
 
-        
-        
-        
+      
+        <p>本篇文章目標是利用 Linux 作業系統虛擬機器(CentOS 7.6)，用 kubeadm 這套工具於自己的環境下從無到有打造一個具有高可用性(HA)的 K8S Cluster 環境，可以隨時進行擴充以應付日後成長的需求。</p>
+<h2 id="安裝前必備"><a href="#安裝前必備" class="headerlink" title="安裝前必備"></a>安裝前必備</h2><p>或參考先前文章 <a href="../kubernetes-kubeadm">安裝Kubeadm</a></p>
+<ol>
+<li><p>OS<br>Redhat / CentOS 7、Minimum install</p>
+</li>
+<li><p>Docker</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ sudo yum install docker</span></pre></td></tr></table></figure>
+</li>
+<li><p>安裝kubeadm 1.16.3</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ sudo yum install kubeadm-1.16.3 ,kubelet-1.16.3, kubectl-1.16.3</span></pre></td></tr></table></figure>
 
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/kubernetes-kubeadm/" itemprop="url">
-              
-                <span itemprop="name">使用kubeadm建立Kubernetes環境</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2019-11-29T00:00:00+08:00"
-              content="2019-11-29" >
-          11-29
-        </time>
-      </div>
-
-    </header>
-  </article>
+</li>
+</ol>
+<p>………….</p>
+<h2 id="Kubernetes-HA環境概述"><a href="#Kubernetes-HA環境概述" class="headerlink" title="Kubernetes HA環境概述"></a>Kubernetes HA環境概述</h2> 
 
 
+<p>由於資源限制，原本應該獨立的HA Proxy主機，因資源夠大，所以合併作為Worker01用了。<br>而K8S Cluster 主要運作的容器服務都在 worker 上面(預設上 master 是不開放運行的，除非特別取消這個限制)，因此資源上(尤其是記憶體)不妨給 worker 多一些。<br>為了快速部署，完成一台後可直接做成範本，複製成其它台VM。</p>
+<ol>
+<li><p>HA Proxy角色<br> lb01            10.40.46.101        (4vCPU、16GBvRAM、300GB HDD)</p>
+</li>
+<li><p>Masters角色<br> master01        10.40.141.101        (2vCPU、4GBvRAM、40GB HDD)<br> master02        10.40.141.102        (2vCPU、4GBvRAM、40GB HDD)<br> master02        10.40.141.102        (2vCPU、4GBvRAM、40GB HDD)</p>
+</li>
+<li><p>Workers角色<br> worker01        10.40.46.101        (4vCPU、16GBvRAM、300GB HDD)<br> worker02        10.40.141.112        (2vCPU、8GBvRAM、40GB HDD)<br> worker03        10.40.141.113        (2vCPU、4GBvRAM、40GB HDD)</p>
+</li>
+</ol>
+<p>由於第一台會先做成範本，所以先加入hosts，方便後續進行。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ sudo cat &lt;&lt;EOF &gt; /etc/hosts</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">10.40.46.101    kube-lb01</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">10.40.141.101   master01</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">10.40.141.102   master02</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">10.40.141.103   master03</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">10.40.46.101    worker01</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">10.40.141.112   worker02</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">10.40.141.113   worker03</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">EOF</span></pre></td></tr></table></figure>
+
+<h2 id="安裝部署Kubernetes-HA"><a href="#安裝部署Kubernetes-HA" class="headerlink" title="安裝部署Kubernetes HA"></a>安裝部署Kubernetes HA</h2><h3 id="HA-Proxy角色"><a href="#HA-Proxy角色" class="headerlink" title="HA Proxy角色"></a>HA Proxy角色</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># sudo yum install haproxy</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># cd /etc/haproxy &amp;&amp; mv haproxy.cfg haproxy.cfg.original</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># cat &lt;&lt;EOF &gt; haproxy.cfg</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">global</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">    user haproxy</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">    group haproxy</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">defaults</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">    mode http</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">    <span class="built_in">log</span> global</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">    retries 2</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">    timeout connect 3000ms</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">    timeout server 5000ms</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">    timeout client 5000ms</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">frontend kubernetes</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">    <span class="built_in">bind</span> 10.40.46.101:6443</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">    option tcplog</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">    mode tcp</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">    default_backend kubernetes-master-nodes</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">backend kubernetes-master-nodes</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line">    mode tcp</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line">    balance roundrobin</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line">    option tcp-check</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line">    server master01 10.40.141.101:6443 check fall 3 rise 2</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">24</span></pre></td><td class="code"><pre><span class="line">    server master02 10.40.141.102:6443 check fall 3 rise 2</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">25</span></pre></td><td class="code"><pre><span class="line">    server master03 10.40.141.103:6443 check fall 3 rise 2</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">26</span></pre></td><td class="code"><pre><span class="line">EOF</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">27</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># systemctl enable haproxy &amp;&amp; systemctl start haproxy &amp;&amp; systemctl status haproxy</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">28</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># yum install nc &amp;&amp; nc -v localhost 6443</span></span></pre></td></tr></table></figure>
+
+<h3 id="Master角色"><a href="#Master角色" class="headerlink" title="Master角色"></a>Master角色</h3><ol>
+<li>Master01服务器<br>先於第一台Mater01主機啟用及群，再將其他台分別加入<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># kubeadm init \</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">--pod-network-cidr=192.168.0.0/16 \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">--control-plane-endpoint <span class="string">"kube-lb01:6443"</span> \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">--upload-certs</span></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>加入kubectl所需變數</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># mkdir -p $HOME/.kube</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># sudo chown $(id -u):$(id -g) $HOME/.kube/config</span></span></pre></td></tr></table></figure>
+
+<p>設置Kubernetes 網路套件Calico</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># kubectl apply -f https://docs.projectcalico.org/v3.8/manifests/calico.yaml</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># kubectl get pod -n kube-system -w</span></span></pre></td></tr></table></figure>
+
+<img src="/kubernetes-ha/kube-ha-master-ok.jpg" class=""> 
+
+<ol start="2">
+<li>Master02、Master03服务器<br>加入kubernetes Master<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># kubeadm join kube-lb01:6443 --token 6pkk9m.elns1xxxxxxxxxxx \</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">    --discovery-token-ca-cert-hash sha256:eded5303dcb0001e6c1bb90cffxxxxxxxxxxxxxx \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    --control-plane --certificate-key 092ba50f514e6a3f1c11636537f56xxxxxxxxxxxxxxxxxxx</span></pre></td></tr></table></figure>
+
+
+</li>
+</ol>
+<h3 id="Worker角色"><a href="#Worker角色" class="headerlink" title="Worker角色"></a>Worker角色</h3><p>加入kubernetes Nodes</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># kubeadm join kube-lb01:6443 --token 6pkk9m.elns1eoxxxxxxx \</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">    --discovery-token-ca-cert-hash sha256:eded5303dcb0001e6c1bbxxxxxxxxxxxxxxxxxxxxxxxxxx</span></pre></td></tr></table></figure>
+
+<img src="/kubernetes-ha/kube-ha-master-getNodes.jpg" class=""> 
+
+
+<h2 id="Kubernetes-HA常见问题"><a href="#Kubernetes-HA常见问题" class="headerlink" title="Kubernetes HA常见问题"></a>Kubernetes HA常见问题</h2><p>加入集群過程需要檢查kubelet服務，若遇到檢查失敗問題，建議先停用開機自動啟動kubelet服務，重開機後再手動執行啟動，然後再加入自動啟動</p>
+<pre><code class="bash"><span class="comment"># systemctl disable kubelet &amp;&amp; reboot</span>
+<span class="comment"># systemctl enable kubelet &amp;&amp; systemctl start kubelet</span></code></pre>
+<p>more info: <a href="https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/high-availability/" target="_blank" rel="noopener">Kubernetes HA cluster</a></p>
+<p><a href="https://www.howtoforge.com/tutorial/centos-kubernetes-docker-cluster/" target="_blank" rel="noopener">https://www.howtoforge.com/tutorial/centos-kubernetes-docker-cluster/</a></p>
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/vmware-harbor/" itemprop="url">
-              
-                <span itemprop="name">自建Docker Image倉庫 - VMware Harbor</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2019-11-28T00:00:00+08:00"
-              content="2019-11-28" >
-          11-28
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
     </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/kubernetes/" rel="tag"># kubernetes</a>
+          
+            <a href="/tags/kubeadm/" rel="tag"># kubeadm</a>
+          
+            <a href="/tags/HA/" rel="tag"># HA</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/kubernetes-storageclass-nfs/" rel="next" title="Kubernetes儲存StorageClass">
+                <i class="fa fa-chevron-left"></i> Kubernetes儲存StorageClass
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/kubernetes-dashboard/" rel="prev" title="Kubernetes UI管理站台-Dashboard">
+                Kubernetes UI管理站台-Dashboard <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -445,6 +480,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -465,8 +504,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            本站概覽
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -543,6 +591,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#安裝前必備"><span class="nav-number">1.</span> <span class="nav-text">安裝前必備</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kubernetes-HA環境概述"><span class="nav-number">2.</span> <span class="nav-text">Kubernetes HA環境概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安裝部署Kubernetes-HA"><span class="nav-number">3.</span> <span class="nav-text">安裝部署Kubernetes HA</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#HA-Proxy角色"><span class="nav-number">3.1.</span> <span class="nav-text">HA Proxy角色</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Master角色"><span class="nav-number">3.2.</span> <span class="nav-text">Master角色</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Worker角色"><span class="nav-number">3.3.</span> <span class="nav-text">Worker角色</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kubernetes-HA常见问题"><span class="nav-number">4.</span> <span class="nav-text">Kubernetes HA常见问题</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -696,6 +760,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 

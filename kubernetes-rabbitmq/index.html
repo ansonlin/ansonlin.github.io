@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="kubernetes,helm," />
 
 
 
@@ -79,14 +79,19 @@
 
 
 
-<meta name="description" content="小小攻城獅技術宅">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Anson Tech Note">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;archives&#x2F;2019&#x2F;11&#x2F;index.html">
+<meta name="description" content="預先安裝Helm參考先前文章 安裝Helm 預先準備storageclass服務參考先前文章 StorageClass 透過Helm安裝RabbitMQ此處先建立獨立的namespace，方便後續管理 1kubectl create ns mq2helm repo add stable https:&#x2F;&#x2F;kubernetes-charts.storage.googleapis.com   開始">
+<meta name="keywords" content="kubernetes,helm">
+<meta property="og:type" content="article">
+<meta property="og:title" content="訊息佇列服務-RabbitMQ on Kubernetes">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;kubernetes-rabbitmq&#x2F;index.html">
 <meta property="og:site_name" content="Anson Tech Note">
-<meta property="og:description" content="小小攻城獅技術宅">
+<meta property="og:description" content="預先安裝Helm參考先前文章 安裝Helm 預先準備storageclass服務參考先前文章 StorageClass 透過Helm安裝RabbitMQ此處先建立獨立的namespace，方便後續管理 1kubectl create ns mq2helm repo add stable https:&#x2F;&#x2F;kubernetes-charts.storage.googleapis.com   開始">
 <meta property="og:locale" content="zh-tw">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;kubernetes-rabbitmq&#x2F;rabbitmq-icon.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;kubernetes-rabbitmq&#x2F;mq_install_success.jpg">
+<meta property="og:updated_time" content="2020-02-15T06:54:03.357Z">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;kubernetes-rabbitmq&#x2F;rabbitmq-icon.png">
 
 
 
@@ -116,13 +121,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/archives/2019/11/"/>
+  <link rel="canonical" href="http://yoursite.com/kubernetes-rabbitmq/"/>
 
 
 
 
 
-  <title>歸檔 | Anson Tech Note</title>
+  <title>訊息佇列服務-RabbitMQ on Kubernetes | Anson Tech Note</title>
   
 
 
@@ -141,7 +146,7 @@
     
   
 
-  <div class="container sidebar-position-left page-archive">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -259,185 +264,242 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
+  <div id="posts" class="posts-expand">
+    
 
-      <span class="archive-page-counter">
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/kubernetes-rabbitmq/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Anson Lin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/docker-avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Anson Tech Note">
+    </span>
+
+    
+      <header class="post-header">
+
         
         
+          <h1 class="post-title" itemprop="name headline">訊息佇列服務-RabbitMQ on Kubernetes</h1>
         
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">發表於</span>
+              
+              <time title="創建於" itemprop="dateCreated datePublished" datetime="2020-02-12T00:00:00+08:00">
+                2020-02-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
           
-        
-        嗯..! 目前共計 13 篇文章。 繼續努力。
-      </span>
 
-      
-
-        
-        
-        
-
-        
           
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2019">2019</h1>
-          </div>
-        
-        
+            
+          
 
-        
+          
+          
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+          
 
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/kubernetes-ingress/" itemprop="url">
-              
-                <span itemprop="name">Kubernetes管理集群服务的外部访问Ingress</span>
-              
-            </a>
-        
-      </h2>
+          
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2019-11-30T00:00:00+08:00"
-              content="2019-11-30" >
-          11-30
-        </time>
-      </div>
+          
 
-    </header>
-  </article>
+        </div>
+      </header>
+    
 
-
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/kubernetes-helm/" itemprop="url">
-              
-                <span itemprop="name">Kubernetes套件管理工具Helm(v3)</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2019-11-29T00:00:00+08:00"
-              content="2019-11-29" >
-          11-29
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
       
 
-        
-        
-        
+      
+        <img src="/kubernetes-rabbitmq/rabbitmq-icon.png" class=""> 
 
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/kubernetes-kubeadm/" itemprop="url">
-              
-                <span itemprop="name">使用kubeadm建立Kubernetes環境</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2019-11-29T00:00:00+08:00"
-              content="2019-11-29" >
-          11-29
-        </time>
-      </div>
-
-    </header>
-  </article>
+<h2 id="預先安裝Helm"><a href="#預先安裝Helm" class="headerlink" title="預先安裝Helm"></a>預先安裝Helm</h2><p>參考先前文章 <a href="../kubernetes-helm/">安裝Helm</a></p>
+<h2 id="預先準備storageclass服務"><a href="#預先準備storageclass服務" class="headerlink" title="預先準備storageclass服務"></a>預先準備storageclass服務</h2><p>參考先前文章 <a href="../kubernetes-storageclass-nfs/">StorageClass</a></p>
+<h2 id="透過Helm安裝RabbitMQ"><a href="#透過Helm安裝RabbitMQ" class="headerlink" title="透過Helm安裝RabbitMQ"></a>透過Helm安裝RabbitMQ</h2><p>此處先建立獨立的namespace，方便後續管理</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">kubectl create ns mq</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">helm repo add stable https://kubernetes-charts.storage.googleapis.com</span></pre></td></tr></table></figure>
 
 
+<p>開始安裝</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">  helm install \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">-n mq \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">--<span class="built_in">set</span> rabbitmq.username=dwadm,rabbitmq.password=dwadm \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">--<span class="built_in">set</span> rabbitmq.erlangCookie=SWQOKODSQALRPCLNMEQG	 \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">--<span class="built_in">set</span> ingress.enabled=<span class="literal">true</span>,ingress.hostName=mq.10.40.46.101.nip.io \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">--<span class="built_in">set</span> global.storageClass=nfs-client,persistence.storageClass=nfs-client \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">--generate-name stable/rabbitmq</span></pre></td></tr></table></figure>
+
+<p>佈署成功的畫面</p>
+<img src="/kubernetes-rabbitmq/mq_install_success.jpg" class=""> 
+
+
+<p>使用下列方式存取</p>
+<pre><code class="bash">Credentials:
+    Username      : digiwin
+    <span class="built_in">echo</span> <span class="string">"Password      : <span class="variable">$(kubectl get secret --namespace default rabbitmq-1581661485 -o jsonpath="{.data.rabbitmq-password}" | base64 --decode)</span>"</span>
+    <span class="built_in">echo</span> <span class="string">"ErLang Cookie : <span class="variable">$(kubectl get secret --namespace default rabbitmq-1581661485 -o jsonpath="{.data.rabbitmq-erlang-cookie}" | base64 --decode)</span>"</span>
+
+To Access the RabbitMQ AMQP port:
+    kubectl port-forward --namespace default svc/rabbitmq-1581661485 5672:5672
+    <span class="built_in">echo</span> <span class="string">"URL : amqp://10.40.46.101:5672/"</span>    
+( kubectl port-forward --namespace default svc/rabbitmq-1581661485 --address 0.0.0.0 5672:5672 )
+
+To Access the RabbitMQ Management interface:
+    kubectl port-forward --namespace default svc/rabbitmq-1581661485 15672:15672
+    <span class="built_in">echo</span> <span class="string">"URL : http://127.0.0.1:15672/"</span></code></pre>
+<h2 id="常用的參數"><a href="#常用的參數" class="headerlink" title="常用的參數"></a>常用的參數</h2><table>
+<thead>
+<tr>
+<th>參數</th>
+<th>描述</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>global.storageClass</td>
+<td>Global storage class for dynamic provisioning</td>
+<td>nil</td>
+</tr>
+<tr>
+<td>rabbitmq.username</td>
+<td>RabbitMQ application username</td>
+<td>user</td>
+</tr>
+<tr>
+<td>rabbitmq.password</td>
+<td>RabbitMQ application password</td>
+<td>random 10 character long alphanumeric string</td>
+</tr>
+<tr>
+<td>rabbitmq.erlangCookie</td>
+<td>Erlang cookie</td>
+<td>random 32 character long alphanumeric string</td>
+</tr>
+<tr>
+<td>rabbitmq.plugins</td>
+<td>List of plugins to enable</td>
+<td>rabbitmq_management rabbitmq_peer_discovery_k8s</td>
+</tr>
+<tr>
+<td>rabbitmq.clustering.k8s_domain</td>
+<td>Customize internal k8s cluster domain</td>
+<td>cluster.local</td>
+</tr>
+<tr>
+<td>persistence.storageClass</td>
+<td>Storage class of backing PVC</td>
+<td>nil</td>
+</tr>
+<tr>
+<td>persistence.existingClaim</td>
+<td>RabbitMQ data Persistent Volume existing claim name, evaluated as a template</td>
+<td>“”</td>
+</tr>
+<tr>
+<td>persistence.path</td>
+<td>Mount path of the data volume</td>
+<td>/opt/bitnami/rabbitmq/var/lib/rabbitmq</td>
+</tr>
+<tr>
+<td>ingress.enabled</td>
+<td>Enable ingress resource for Management console</td>
+<td>false</td>
+</tr>
+<tr>
+<td>ingress.hostName</td>
+<td>Hostname to your RabbitMQ installation</td>
+<td>nil</td>
+</tr>
+</tbody></table>
+<p>More info: [rabbitMQ] <a href="https://github.com/helm/charts/tree/master/stable/rabbitmq" target="_blank" rel="noopener">https://github.com/helm/charts/tree/master/stable/rabbitmq</a></p>
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/vmware-harbor/" itemprop="url">
-              
-                <span itemprop="name">自建Docker Image倉庫 - VMware Harbor</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2019-11-28T00:00:00+08:00"
-              content="2019-11-28" >
-          11-28
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
     </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/kubernetes/" rel="tag"># kubernetes</a>
+          
+            <a href="/tags/helm/" rel="tag"># helm</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/kubernetes-redis/" rel="next" title="緩存服務-redis on Kubernetes">
+                <i class="fa fa-chevron-left"></i> 緩存服務-redis on Kubernetes
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -445,6 +507,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -465,8 +531,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            本站概覽
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -543,6 +618,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#預先安裝Helm"><span class="nav-number">1.</span> <span class="nav-text">預先安裝Helm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#預先準備storageclass服務"><span class="nav-number">2.</span> <span class="nav-text">預先準備storageclass服務</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#透過Helm安裝RabbitMQ"><span class="nav-number">3.</span> <span class="nav-text">透過Helm安裝RabbitMQ</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常用的參數"><span class="nav-number">4.</span> <span class="nav-text">常用的參數</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -696,6 +787,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 

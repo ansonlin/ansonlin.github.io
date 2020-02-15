@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="kubernetes,helm," />
 
 
 
@@ -79,14 +79,20 @@
 
 
 
-<meta name="description" content="小小攻城獅技術宅">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Anson Tech Note">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;archives&#x2F;2019&#x2F;11&#x2F;index.html">
+<meta name="description" content="預先安裝Helm參考先前文章 安裝Helm 預先準備storageclass服務參考先前文章 StorageClass 透過Helm安裝Redis1$ kubectl create ns redis23$ helm install \4-n redis \5--set global.storageClass&#x3D;nfs-client \6--set cluster.enabled&#x3D;false,useP">
+<meta name="keywords" content="kubernetes,helm">
+<meta property="og:type" content="article">
+<meta property="og:title" content="緩存服務-redis on Kubernetes">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;kubernetes-redis&#x2F;index.html">
 <meta property="og:site_name" content="Anson Tech Note">
-<meta property="og:description" content="小小攻城獅技術宅">
+<meta property="og:description" content="預先安裝Helm參考先前文章 安裝Helm 預先準備storageclass服務參考先前文章 StorageClass 透過Helm安裝Redis1$ kubectl create ns redis23$ helm install \4-n redis \5--set global.storageClass&#x3D;nfs-client \6--set cluster.enabled&#x3D;false,useP">
 <meta property="og:locale" content="zh-tw">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;kubernetes-redis&#x2F;redis-helm-ok.jpg">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;kubernetes-redis&#x2F;redismgr-chocolate.jpg">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;kubernetes-redis&#x2F;redismgr-success.jpg">
+<meta property="og:updated_time" content="2020-02-15T06:53:52.441Z">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;kubernetes-redis&#x2F;redis-helm-ok.jpg">
 
 
 
@@ -116,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/archives/2019/11/"/>
+  <link rel="canonical" href="http://yoursite.com/kubernetes-redis/"/>
 
 
 
 
 
-  <title>歸檔 | Anson Tech Note</title>
+  <title>緩存服務-redis on Kubernetes | Anson Tech Note</title>
   
 
 
@@ -141,7 +147,7 @@
     
   
 
-  <div class="container sidebar-position-left page-archive">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -259,185 +265,184 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
+  <div id="posts" class="posts-expand">
+    
 
-      <span class="archive-page-counter">
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/kubernetes-redis/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Anson Lin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/docker-avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Anson Tech Note">
+    </span>
+
+    
+      <header class="post-header">
+
         
         
+          <h1 class="post-title" itemprop="name headline">緩存服務-redis on Kubernetes</h1>
         
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">發表於</span>
+              
+              <time title="創建於" itemprop="dateCreated datePublished" datetime="2020-02-12T00:00:00+08:00">
+                2020-02-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
           
-        
-        嗯..! 目前共計 13 篇文章。 繼續努力。
-      </span>
 
-      
-
-        
-        
-        
-
-        
           
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2019">2019</h1>
-          </div>
-        
-        
+            
+          
 
-        
+          
+          
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+          
 
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/kubernetes-ingress/" itemprop="url">
-              
-                <span itemprop="name">Kubernetes管理集群服务的外部访问Ingress</span>
-              
-            </a>
-        
-      </h2>
+          
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2019-11-30T00:00:00+08:00"
-              content="2019-11-30" >
-          11-30
-        </time>
-      </div>
+          
 
-    </header>
-  </article>
+        </div>
+      </header>
+    
 
-
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/kubernetes-helm/" itemprop="url">
-              
-                <span itemprop="name">Kubernetes套件管理工具Helm(v3)</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2019-11-29T00:00:00+08:00"
-              content="2019-11-29" >
-          11-29
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
       
 
-        
-        
-        
+      
+        <h2 id="預先安裝Helm"><a href="#預先安裝Helm" class="headerlink" title="預先安裝Helm"></a>預先安裝Helm</h2><p>參考先前文章 <a href="../kubernetes-helm/">安裝Helm</a></p>
+<h2 id="預先準備storageclass服務"><a href="#預先準備storageclass服務" class="headerlink" title="預先準備storageclass服務"></a>預先準備storageclass服務</h2><p>參考先前文章 <a href="../kubernetes-storageclass-nfs/">StorageClass</a></p>
+<h2 id="透過Helm安裝Redis"><a href="#透過Helm安裝Redis" class="headerlink" title="透過Helm安裝Redis"></a>透過Helm安裝Redis</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ kubectl create ns redis</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">$ helm install \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">-n redis \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">--<span class="built_in">set</span> global.storageClass=nfs-client \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">--<span class="built_in">set</span> cluster.enabled=<span class="literal">false</span>,usePassword=<span class="literal">false</span> \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">--generate-name  stable/redis</span></pre></td></tr></table></figure>
 
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/kubernetes-kubeadm/" itemprop="url">
-              
-                <span itemprop="name">使用kubeadm建立Kubernetes環境</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2019-11-29T00:00:00+08:00"
-              content="2019-11-29" >
-          11-29
-        </time>
-      </div>
-
-    </header>
-  </article>
+<p>安裝完成視圖</p>
+<img src="/kubernetes-redis/redis-helm-ok.jpg" class=""> 
 
 
+<p>方便各位使用，另外擷取成以下文字</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">To get your password run:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">    <span class="built_in">export</span> REDIS_PASSWORD=$(kubectl get secret --namespace redis redis-1581670855 -o jsonpath=<span class="string">"&#123;.data.redis-password&#125;"</span> | base64 --decode)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">To connect to your Redis server:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">1. Run a Redis pod that you can use as a client:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">   kubectl run --namespace redis redis-1581670855-client --rm --tty -i --restart=<span class="string">'Never'</span> \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">    --env REDIS_PASSWORD=<span class="variable">$REDIS_PASSWORD</span> \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">   --image docker.io/bitnami/redis:5.0.7-debian-10-r0 -- bash</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">2. Connect using the Redis CLI:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">   redis-cli -h redis-1581670855-master -a <span class="variable">$REDIS_PASSWORD</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">   redis-cli -h redis-1581670855-slave -a <span class="variable">$REDIS_PASSWORD</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">To connect to your database from outside the cluster execute the following commands:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">    kubectl port-forward --namespace redis svc/redis-1581670855-master 6379:6379 &amp;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">    redis-cli -h 127.0.0.1 -p 6379 -a <span class="variable">$REDIS_PASSWORD</span></span></pre></td></tr></table></figure>
+
+
+
+<p>透過nodeport連線(不建議，建議：內部服務之間透過service name存取)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">kubectl -n redis edit svc redis-1581671838-master</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">1.在targetPort下方新增</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">nodePort: 30379</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">2.type修改成</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"><span class="built_in">type</span>: NodePort</span></pre></td></tr></table></figure>
+
+
+
+<h2 id="安裝Client管理工具-for-Windows"><a href="#安裝Client管理工具-for-Windows" class="headerlink" title="安裝Client管理工具 for Windows"></a>安裝Client管理工具 for Windows</h2><h3 id="需先安裝chocolate工具"><a href="#需先安裝chocolate工具" class="headerlink" title="需先安裝chocolate工具"></a>需先安裝chocolate工具</h3><p>參考先前文章 <a href="./windows-tools.md">Windows工具</a></p>
+<p>會自動安裝0.9.3.817版本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$　choco install redis-desktop-manager</span></pre></td></tr></table></figure>
+
+<p>安裝過程</p>
+<img src="/kubernetes-redis/redismgr-chocolate.jpg" class=""> 
+
+<p>測試連接</p>
+<img src="/kubernetes-redis/redismgr-success.jpg" class=""> 
+
+
+
+<h2 id="常用的參數"><a href="#常用的參數" class="headerlink" title="常用的參數"></a>常用的參數</h2><p>| 參數  |  描述 |  預設值 |<br>| global.storageClass    |Global storage class for dynamic provisioning     | nil |<br>| global.redis.password     |  Redis password (overrides password)     | nil |<br>| cluster.enabled     | Use master-slave topology     | true |<br>| usePassword     | Use password     | true |<br>| persistence.existingClaim     | Provide an existing PersistentVolumeClaim     | nil |<br>| master.persistence.enabled     | Use a PVC to persist data (master node)     | true |<br>| master.persistence.storageClass     | Storage class of backing PVC     | generic |<br>| redisPort     | redisPort     | 6379 |</p>
+<p>more info : [Redis for Helm] <a href="https://github.com/helm/charts/tree/master/stable/redis" target="_blank" rel="noopener">https://github.com/helm/charts/tree/master/stable/redis</a></p>
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/vmware-harbor/" itemprop="url">
-              
-                <span itemprop="name">自建Docker Image倉庫 - VMware Harbor</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2019-11-28T00:00:00+08:00"
-              content="2019-11-28" >
-          11-28
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
     </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/kubernetes/" rel="tag"># kubernetes</a>
+          
+            <a href="/tags/helm/" rel="tag"># helm</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/kubernetes-prometheus/" rel="next" title="Kubernetes监控管理工具prometheus-operator">
+                <i class="fa fa-chevron-left"></i> Kubernetes监控管理工具prometheus-operator
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/kubernetes-rabbitmq/" rel="prev" title="訊息佇列服務-RabbitMQ on Kubernetes">
+                訊息佇列服務-RabbitMQ on Kubernetes <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -445,6 +450,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -465,8 +474,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            本站概覽
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -543,6 +561,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#預先安裝Helm"><span class="nav-number">1.</span> <span class="nav-text">預先安裝Helm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#預先準備storageclass服務"><span class="nav-number">2.</span> <span class="nav-text">預先準備storageclass服務</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#透過Helm安裝Redis"><span class="nav-number">3.</span> <span class="nav-text">透過Helm安裝Redis</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安裝Client管理工具-for-Windows"><span class="nav-number">4.</span> <span class="nav-text">安裝Client管理工具 for Windows</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#需先安裝chocolate工具"><span class="nav-number">4.1.</span> <span class="nav-text">需先安裝chocolate工具</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常用的參數"><span class="nav-number">5.</span> <span class="nav-text">常用的參數</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -696,6 +730,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
