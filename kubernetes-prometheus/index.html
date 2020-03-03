@@ -88,7 +88,7 @@
 <meta property="og:description" content="OOO-Operator by CoreOSs在以往原生的 Kubernetes 環境裡，管理維護 stateful service 是件困難的工作。雖然 kubernetes 有提供 statefulSet 這樣的物件，但對於要維護 stateful service 來說還是相當不足的。舉例來說，當建立一個 mysql 的 stateful service 時，我們可能希望第一個 pod 是">
 <meta property="og:locale" content="zh-tw">
 <meta property="og:image" content="https:&#x2F;&#x2F;coreos.com&#x2F;sites&#x2F;default&#x2F;files&#x2F;inline-images&#x2F;p1.png">
-<meta property="og:updated_time" content="2020-02-15T06:54:12.071Z">
+<meta property="og:updated_time" content="2020-02-20T03:39:53.301Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;coreos.com&#x2F;sites&#x2F;default&#x2F;files&#x2F;inline-images&#x2F;p1.png">
 
@@ -306,8 +306,8 @@
               
                 <span class="post-meta-item-text">發表於</span>
               
-              <time title="創建於" itemprop="dateCreated datePublished" datetime="2019-12-29T00:00:00+08:00">
-                2019-12-29
+              <time title="創建於" itemprop="dateCreated datePublished" datetime="2020-02-01T00:00:00+08:00">
+                2020-02-01
               </time>
             
 
@@ -348,21 +348,39 @@
 <h2 id="OOO-Operator-by-CoreOSs"><a href="#OOO-Operator-by-CoreOSs" class="headerlink" title="OOO-Operator by CoreOSs"></a>OOO-Operator by CoreOSs</h2><p>在以往原生的 Kubernetes 環境裡，管理維護 stateful service 是件困難的工作。雖然 kubernetes 有提供 statefulSet 這樣的物件，但對於要維護 stateful service 來說還是相當不足的。舉例來說，當建立一個 mysql 的 stateful service 時，我們可能希望第一個 pod 是 master，第二個 pod 對 master 做 replication，第三個 pod 對第二個 pod 做 replication。這樣的架構如果要靠 kubernets 管理者來設定的話，會需要對 mysql 有一定的了解才能進行，而且可能相當耗費心力。<br>而每種 stateful service 的管理維護方式都各有巧妙不同，像 redis、kafka、prometheus 等，這些都需要嫻熟於該領域的人，才知道最好的管理方式為何。因此 stateful service 一直是讓 Kubernetes 使用者相當困擾的事情，比較安全的做法往往都是放棄讓 stateful service 跑在 kubernetes 裡，用傳統的方式來維運，一直到 operator 的出現。</p>
 <p>對於在 Kubernetes 上維運 stateful service 的困難，CoreOS 這家公司看出了需求與契機，開發了 Operator 這種專門處理 stateful service 的機制。透過擴展 Kubernetes 的 API 與相對應的 controller，可以用更好更安全的方式來建立、配置和管理 stateful service。於是短短一兩年時間，許多軟體廠商開始主動提供 operator 的套件來協助使用者將其軟體放到 Kubernetes 維運，也因此 operator 也成為 Kubernetes 領域裡的顯學之一。</p>
 <p>Operator 的架構主要可以分成兩部分，一個是 CRD (使用者自定義資源，CustomResourceDefinition)，另一個是 controllers，而 controller 就是處理當 CRD 發生 CRUD 操作時的相對應動作。例如 CRD 可能是定義一個叫 mysqldatabase 的資源物件，當kuberetes API 收到有 mysqldatabase 要建立時，會透過相對應的 controller 來建立相關的資源物件。<br>是知名且良好的 operator 套件，多半是原廠或該領域的專家所提供，通常都提供了許多便利且安全的機制，讓使用者可以用簡單且符合 Kubernetes 架構的方式來管理使用，而 Prometheus-Operator 也是其中之一</p>
-<h2 id="Prometheus-Operator"><a href="#Prometheus-Operator" class="headerlink" title="Prometheus-Operator"></a>Prometheus-Operator</h2><h3 id="預先安裝Helm"><a href="#預先安裝Helm" class="headerlink" title="預先安裝Helm"></a>預先安裝Helm</h3><p><a href="./kubernetes-helm.md">Helm</a></p>
-<h3 id="安裝Prometheus-Operator"><a href="#安裝Prometheus-Operator" class="headerlink" title="安裝Prometheus-Operator"></a>安裝Prometheus-Operator</h3><p>接著直接下載官方values設定檔來看看</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ curl -O https://raw.githubusercontent.com/helm/charts/master/stable/prometheus-operator/values.yaml -o prom-op-values.yaml</span></pre></td></tr></table></figure>
-
-<p>常用的設定有</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ vi prom-op-values.yaml</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">  ingress:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    enabled: <span class="literal">true</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    hosts:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">      - alertmanager.10.40.46.101.nip.io</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">grafana:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">  enabled: <span class="literal">true</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">  adminPassword: prom-operator</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">  ingress:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">    enabled: <span class="literal">true</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">    hosts: grafana.10.40.46.101.nip.io</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">	  </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">	.................................</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">	.................................</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">	.................................</span></pre></td></tr></table></figure>
+<h2 id="預先安裝Helm"><a href="#預先安裝Helm" class="headerlink" title="預先安裝Helm"></a>預先安裝Helm</h2><p><a href="../kubernetes-helm/">Helm</a></p>
+<h2 id="安裝Prometheus-Operator"><a href="#安裝Prometheus-Operator" class="headerlink" title="安裝Prometheus-Operator"></a>安裝Prometheus-Operator</h2><h3 id="建立Namespace以及CRD"><a href="#建立Namespace以及CRD" class="headerlink" title="建立Namespace以及CRD"></a>建立Namespace以及CRD</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">kubectl create ns prometheus</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">kubectl -n prometheus apply -f https://raw.githubusercontent.com/coreos/prometheus-operator/release-0.35/example/prometheus-operator-crd/monitoring.coreos.com_alertmanagers.yaml</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">kubectl -n prometheus apply -f https://raw.githubusercontent.com/coreos/prometheus-operator/release-0.35/example/prometheus-operator-crd/monitoring.coreos.com_podmonitors.yaml</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">kubectl -n prometheus apply -f https://raw.githubusercontent.com/coreos/prometheus-operator/release-0.35/example/prometheus-operator-crd/monitoring.coreos.com_prometheuses.yaml</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">kubectl -n prometheus apply -f https://raw.githubusercontent.com/coreos/prometheus-operator/release-0.35/example/prometheus-operator-crd/monitoring.coreos.com_prometheusrules.yaml</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">kubectl -n prometheus apply -f https://raw.githubusercontent.com/coreos/prometheus-operator/release-0.35/example/prometheus-operator-crd/monitoring.coreos.com_servicemonitors.yaml</span></pre></td></tr></table></figure>
 
 
-<p>套用設定看結果囉！</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ helm install --name prometheus stable/prometheus-operator  -f prom-op-values.yaml</span></pre></td></tr></table></figure>
+<h3 id="Prometheus-Operator參數值"><a href="#Prometheus-Operator參數值" class="headerlink" title="Prometheus-Operator參數值"></a>Prometheus-Operator參數值</h3><p>| 參數  | 描述  | Default<br>prometheus.enabled<br>prometheus.ingress.enabled<br>prometheus.ingress.hosts<br>alertmanager.enabled<br>ingress.enabled<br>ingress.hosts<br>grafana.enabled<br>grafana.ingress.enabled<br>grafana.ingress.hosts<br>grafana.persistence.enabled<br>grafana.persistence.size<br>grafana.persistence.storageClassName<br>prometheusOperator.admissionWebhooks.enabled<br>prometheusOperator.createCustomResource<br>prometheus.prometheusSpec.serviceMonitorSelectorNilUsesHelmValues</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">curl -O https://raw.githubusercontent.com/helm/charts/master/stable/prometheus-operator/values.yaml -o prom-op-values.yaml</span></pre></td></tr></table></figure>
+
+
+<p>開始安裝</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ helm install -f prom-op-values.yaml  -n prometheus stable/prometheus-operator</span></pre></td></tr></table></figure>
+
+<h2 id="加入grafana-Dashboard"><a href="#加入grafana-Dashboard" class="headerlink" title="加入grafana Dashboard"></a>加入grafana Dashboard</h2><h3 id="加入-Mariadb-Dashboard"><a href="#加入-Mariadb-Dashboard" class="headerlink" title="加入 Mariadb Dashboard"></a>加入 Mariadb Dashboard</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">curl -O https://raw.githubusercontent.com/percona/grafana-dashboards/master/dashboards/MySQL_Overview.json</span></pre></td></tr></table></figure>
+
+
+<h3 id="加入-Redis-Dashboard"><a href="#加入-Redis-Dashboard" class="headerlink" title="加入 Redis Dashboard"></a>加入 Redis Dashboard</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">curl -O https://grafana.com/api/dashboards/4074/revisions/1/download</span></pre></td></tr></table></figure>
+
+
+
+<h3 id="加入-RabbitMQ-Dashboard"><a href="#加入-RabbitMQ-Dashboard" class="headerlink" title="加入 RabbitMQ Dashboard"></a>加入 RabbitMQ Dashboard</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">curl -O https://grafana.com/api/dashboards/2121/revisions/1/download</span></pre></td></tr></table></figure>
+
+
+<h2 id="Troubleshooting"><a href="#Troubleshooting" class="headerlink" title="Troubleshooting"></a>Troubleshooting</h2><p>如果存在舊有CRD資源，需先移除</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">kubectl delete crd prometheuses.monitoring.coreos.com</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">kubectl delete crd prometheusrules.monitoring.coreos.com</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">kubectl delete crd servicemonitors.monitoring.coreos.com</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">kubectl delete crd podmonitors.monitoring.coreos.com</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">kubectl delete crd alertmanagers.monitoring.coreos.co</span></pre></td></tr></table></figure>
 
 
 
 
-<p>more info:  [Prometheus Operator] (<a href="https://github.com/helm/charts/tree/master/stable/prometheus-operator" target="_blank" rel="noopener">https://github.com/helm/charts/tree/master/stable/prometheus-operator</a>)<br> <a href="http://brobridge.com/bdsres/2019/10/21/prometheus-operator-i-efe748a6796b/" target="_blank" rel="noopener">prom-op-2</a></p>
+
+
+
+
+
+<p>more info:<br>[Prometheus Operator] (<a href="https://github.com/helm/charts/tree/master/stable/prometheus-operator" target="_blank" rel="noopener">https://github.com/helm/charts/tree/master/stable/prometheus-operator</a>)<br><a href="http://brobridge.com/bdsres/2019/10/21/prometheus-operator-i-efe748a6796b/" target="_blank" rel="noopener">prom-op-2</a></p>
 
       
     </div>
@@ -407,8 +425,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/kubernetes-redis/" rel="prev" title="緩存服務-redis on Kubernetes">
-                緩存服務-redis on Kubernetes <i class="fa fa-chevron-right"></i>
+              <a href="/kubernetes-rabbitmq/" rel="prev" title="訊息佇列服務-RabbitMQ on Kubernetes">
+                訊息佇列服務-RabbitMQ on Kubernetes <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -490,7 +508,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-count">14</span>
                   <span class="site-state-item-name">文章</span>
                 </a>
               </div>
@@ -558,7 +576,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#OOO-Operator-by-CoreOSs"><span class="nav-number">1.</span> <span class="nav-text">OOO-Operator by CoreOSs</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Prometheus-Operator"><span class="nav-number">2.</span> <span class="nav-text">Prometheus-Operator</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#預先安裝Helm"><span class="nav-number">2.1.</span> <span class="nav-text">預先安裝Helm</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安裝Prometheus-Operator"><span class="nav-number">2.2.</span> <span class="nav-text">安裝Prometheus-Operator</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#OOO-Operator-by-CoreOSs"><span class="nav-number">1.</span> <span class="nav-text">OOO-Operator by CoreOSs</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#預先安裝Helm"><span class="nav-number">2.</span> <span class="nav-text">預先安裝Helm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安裝Prometheus-Operator"><span class="nav-number">3.</span> <span class="nav-text">安裝Prometheus-Operator</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#建立Namespace以及CRD"><span class="nav-number">3.1.</span> <span class="nav-text">建立Namespace以及CRD</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Prometheus-Operator參數值"><span class="nav-number">3.2.</span> <span class="nav-text">Prometheus-Operator參數值</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#加入grafana-Dashboard"><span class="nav-number">4.</span> <span class="nav-text">加入grafana Dashboard</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#加入-Mariadb-Dashboard"><span class="nav-number">4.1.</span> <span class="nav-text">加入 Mariadb Dashboard</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#加入-Redis-Dashboard"><span class="nav-number">4.2.</span> <span class="nav-text">加入 Redis Dashboard</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#加入-RabbitMQ-Dashboard"><span class="nav-number">4.3.</span> <span class="nav-text">加入 RabbitMQ Dashboard</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Troubleshooting"><span class="nav-number">5.</span> <span class="nav-text">Troubleshooting</span></a></li></ol></div>
             
 
           </div>

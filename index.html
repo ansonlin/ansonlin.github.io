@@ -274,6 +274,320 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/kubeapps/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Anson Lin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/docker-avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Anson Tech Note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/kubeapps/" itemprop="url">Kubernetes應用程式佈署工具-Kubeapps</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">發表於</span>
+              
+              <time title="創建於" itemprop="dateCreated datePublished" datetime="2020-02-15T00:00:00+08:00">
+                2020-02-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>Kubeapps是一个基于web的UI，用于在Kubernetes集群中部署和管理应用程序。</p>
+<h2 id="預先安裝Helm"><a href="#預先安裝Helm" class="headerlink" title="預先安裝Helm"></a>預先安裝Helm</h2><p><a href="../kubernetes-helm/">Helm</a></p>
+<h2 id="安裝Kubeapps"><a href="#安裝Kubeapps" class="headerlink" title="安裝Kubeapps"></a>安裝Kubeapps</h2><p>透過Helm (v3) chart來安裝最新版的kubeapps，並指定namespace為kubeapps</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">helm repo add bitnami https://charts.bitnami.com/bitnami</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">kubectl create namespace kubeapps</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">helm install kubeapps --namespace kubeapps bitnami/kubeapps \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">--<span class="built_in">set</span> useHelm3=<span class="literal">true</span>,ingress.enabled=<span class="literal">true</span>,ingress.hostname=kubeapps.10.40.46.101.nip.io</span></pre></td></tr></table></figure>
+
+<p>安裝完成視圖</p>
+<img src="/kubeapps/kubeapps-helm-success.jpg" class="">
+
+
+
+<p>more info:<br><a href="https://github.com/kubeapps/kubeapps/blob/master/docs/user/getting-started.md" target="_blank" rel="noopener">GetStart</a><br>[Readme] (<a href="https://github.com/kubeapps/kubeapps/blob/master/chart/kubeapps/README.md" target="_blank" rel="noopener">https://github.com/kubeapps/kubeapps/blob/master/chart/kubeapps/README.md</a> )<br>[參數值] ( <a href="https://github.com/kubeapps/kubeapps/blob/master/chart/kubeapps/values.yaml" target="_blank" rel="noopener">https://github.com/kubeapps/kubeapps/blob/master/chart/kubeapps/values.yaml</a> )</p>
+<h2 id="建立Kubernetes-API-token"><a href="#建立Kubernetes-API-token" class="headerlink" title="建立Kubernetes API token"></a>建立Kubernetes API token</h2><p>存取kubeapps UI面板需要透過API token，以下建立並查詢</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">kubectl create serviceaccount kubeapps-operator</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">kubectl create clusterrolebinding kubeapps-operator --clusterrole=cluster-admin --serviceaccount=default:kubeapps-operator</span></pre></td></tr></table></figure>
+
+<p>取得token值</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">kubectl get secret $(kubectl get serviceaccount kubeapps-operator -o jsonpath=<span class="string">'&#123;range .secrets[*]&#125;&#123;.name&#125;&#123;"\n"&#125;&#123;end&#125;'</span> | grep kubeapps-operator-token) -o jsonpath=<span class="string">'&#123;.data.token&#125;'</span> -o go-template=<span class="string">'&#123;&#123;.data.token | base64decode&#125;&#125;'</span> &amp;&amp; <span class="built_in">echo</span></span></pre></td></tr></table></figure>
+
+<h2 id="存取kubeapps面板"><a href="#存取kubeapps面板" class="headerlink" title="存取kubeapps面板"></a>存取kubeapps面板</h2><p>如果沒有設置ingress，則需要透過port forward來轉發，此處設置為8888 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">"Visit http://127.0.0.1:8080 in your browser to access the Kubeapps Dashboard"</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">kubectl port-forward -n kubeapps svc/kubeapps --address 0.0.0.0  8888:80</span></pre></td></tr></table></figure>
+
+<p>開啟站台並輸入步驟2產生的token，完成示圖</p>
+<p>畫面說明：<br>Applications表示目前透過Helm佈署的應用程式、<br>Catalog表示在Bitnami Helm Hub上可供佈署的應用程式<br>Service Instance還在阿法階段就不說啦XD</p>
+<img src="/kubeapps/kubeapps-login-success.jpg" class="">
+
+
+
+
+
+<h2 id="測試佈署Wordpress"><a href="#測試佈署Wordpress" class="headerlink" title="測試佈署Wordpress"></a>測試佈署Wordpress</h2><img src="/kubeapps/kubeapps-catalog.jpg" class="">
+
+<p>1.點選 Catalog &gt;&gt;  搜尋下 wordpress &gt;&gt; 進入後點選右方綠色按鈕 “Deploy”</p>
+<p>2.輸入相關參數值，完成後點選最底下Submit</p>
+<img src="/kubeapps/kubeapps-wordpress-1.jpg" class="">
+<img src="/kubeapps/kubeapps-wordpress-2.jpg" class="">
+
+<p>3.等待容器建立後開啟站台</p>
+<img src="/kubeapps/kubeapps-wordpress-OK.jpg" class="">
+
+
+<h2 id="移除kubeapps"><a href="#移除kubeapps" class="headerlink" title="移除kubeapps"></a>移除kubeapps</h2><p>To uninstall/delete the kubeapps deployment:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># For Helm 2</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">$ helm delete --purge kubeapps</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># For Helm 3</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">$ helm uninstall kubeapps</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># Optional: Only if there are no more instances of Kubeapps</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">$ kubectl delete crd apprepositories.kubeapps.com</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">$ kubectl delete namespace kubeapps</span></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/kubernetes-redis/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Anson Lin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/docker-avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Anson Tech Note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/kubernetes-redis/" itemprop="url">緩存服務-redis on Kubernetes</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">發表於</span>
+              
+              <time title="創建於" itemprop="dateCreated datePublished" datetime="2020-02-13T00:00:00+08:00">
+                2020-02-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="預先安裝Helm"><a href="#預先安裝Helm" class="headerlink" title="預先安裝Helm"></a>預先安裝Helm</h2><p>參考先前文章 <a href="../kubernetes-helm/">安裝Helm</a></p>
+<h2 id="預先準備storageclass服務"><a href="#預先準備storageclass服務" class="headerlink" title="預先準備storageclass服務"></a>預先準備storageclass服務</h2><p>參考先前文章 <a href="../kubernetes-storageclass-nfs/">StorageClass</a></p>
+<h2 id="透過Helm安裝Redis"><a href="#透過Helm安裝Redis" class="headerlink" title="透過Helm安裝Redis"></a>透過Helm安裝Redis</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ kubectl create ns redis</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">$ helm install  stable/redis \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">-n redis \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">--<span class="built_in">set</span> global.storageClass=nfs-client \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">--<span class="built_in">set</span> cluster.enabled=<span class="literal">false</span>,usePassword=<span class="literal">false</span> \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">--<span class="built_in">set</span> metrics.enabled=<span class="literal">true</span>,metrics.serviceMonitor.enabled=<span class="literal">true</span>,metrics.service.labels=release=myprom</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">--generate-name</span></pre></td></tr></table></figure>
+
+<p>安裝完成視圖</p>
+<img src="/kubernetes-redis/redis-helm-ok.jpg" class=""> 
+
+
+<p>方便各位使用，另外擷取成以下文字</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">To get your password run:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">    <span class="built_in">export</span> REDIS_PASSWORD=$(kubectl get secret --namespace redis redis-1581670855 -o jsonpath=<span class="string">"&#123;.data.redis-password&#125;"</span> | base64 --decode)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">To connect to your Redis server:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">1. Run a Redis pod that you can use as a client:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">   kubectl run --namespace redis redis-1581670855-client --rm --tty -i --restart=<span class="string">'Never'</span> \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">    --env REDIS_PASSWORD=<span class="variable">$REDIS_PASSWORD</span> \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">   --image docker.io/bitnami/redis:5.0.7-debian-10-r0 -- bash</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">2. Connect using the Redis CLI:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">   redis-cli -h redis-1581670855-master -a <span class="variable">$REDIS_PASSWORD</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">   redis-cli -h redis-1581670855-slave -a <span class="variable">$REDIS_PASSWORD</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">To connect to your database from outside the cluster execute the following commands:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">    kubectl port-forward --namespace redis svc/redis-1581670855-master 6379:6379 &amp;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">    redis-cli -h 127.0.0.1 -p 6379 -a <span class="variable">$REDIS_PASSWORD</span></span></pre></td></tr></table></figure>
+
+
+
+<p>透過nodeport連線(不建議，建議：內部服務之間透過service name存取)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">kubectl -n redis edit svc redis-1581671838-master</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">1.在targetPort下方新增</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">nodePort: 30379</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">2.type修改成</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"><span class="built_in">type</span>: NodePort</span></pre></td></tr></table></figure>
+
+
+
+<h2 id="安裝Client管理工具-for-Windows"><a href="#安裝Client管理工具-for-Windows" class="headerlink" title="安裝Client管理工具 for Windows"></a>安裝Client管理工具 for Windows</h2><h3 id="需先安裝chocolate工具"><a href="#需先安裝chocolate工具" class="headerlink" title="需先安裝chocolate工具"></a>需先安裝chocolate工具</h3><p>參考先前文章 <a href="./windows-tools.md">Windows工具</a></p>
+<p>會自動安裝0.9.3.817版本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$　choco install redis-desktop-manager</span></pre></td></tr></table></figure>
+
+<p>安裝過程</p>
+<img src="/kubernetes-redis/redismgr-chocolate.jpg" class=""> 
+
+<p>測試連接</p>
+<img src="/kubernetes-redis/redismgr-success.jpg" class=""> 
+
+
+
+<h2 id="常用的參數"><a href="#常用的參數" class="headerlink" title="常用的參數"></a>常用的參數</h2><p>| 參數  |  描述 |  預設值 |<br>| global.storageClass    |Global storage class for dynamic provisioning     | nil |<br>| global.redis.password     |  Redis password (overrides password)     | nil |<br>| cluster.enabled     | Use master-slave topology     | true |<br>| usePassword     | Use password     | true |<br>| persistence.existingClaim     | Provide an existing PersistentVolumeClaim     | nil |<br>| master.persistence.enabled     | Use a PVC to persist data (master node)     | true |<br>| master.persistence.storageClass     | Storage class of backing PVC     | generic |<br>| redisPort     | redisPort     | 6379 |</p>
+<h2 id="加入Prometheus-Operator監控-Bug參考-https-github-com-helm-charts-issues-20180"><a href="#加入Prometheus-Operator監控-Bug參考-https-github-com-helm-charts-issues-20180" class="headerlink" title="加入Prometheus-Operator監控 (Bug參考:https://github.com/helm/charts/issues/20180)"></a>加入Prometheus-Operator監控 (Bug參考:<a href="https://github.com/helm/charts/issues/20180" target="_blank" rel="noopener">https://github.com/helm/charts/issues/20180</a>)</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ kubectl edit servicemonitor redis-1582017251</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">....</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">  在labels:下方加入</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    release: prometheus-operator</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">....</span></pre></td></tr></table></figure>
+
+
+<p>more info : [Redis for Helm] <a href="https://github.com/helm/charts/tree/master/stable/redis" target="_blank" rel="noopener">https://github.com/helm/charts/tree/master/stable/redis</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/kubernetes-rabbitmq/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -347,6 +661,12 @@
           
             <img src="/kubernetes-rabbitmq/rabbitmq-icon.png" class=""> 
 
+<h2 id="RabbitMQ介紹說明"><a href="#RabbitMQ介紹說明" class="headerlink" title="RabbitMQ介紹說明"></a>RabbitMQ介紹說明</h2><p>RabbitMQ is an open source message broker software that implements the Advanced Message Queuing Protocol (AMQP).</p>
+<p><a href="https://www.rabbitmq.com/documentation.html" target="_blank" rel="noopener">RabbitMQ文檔說明</a></p>
+<p><a href="https://mp.weixin.qq.com/s?__biz=MzI5ODQ2MzI3NQ==&mid=2247488929&idx=2&sn=5817a752b61ea82c2bb9a21f23dbbf71&chksm=eca42ce5dbd3a5f3a0883b31a7eb727f370520b422ffc5284ba8d44ffe4f300ca74c9f4c7cd5&scene=126&sessionid=1581900963&key=96db90385c72044dfbea96614497733baf63db911605dbd2328c18390c5a08faef181621e03fe986cdf98e88428616921c32f62f73e18061f8cb0745888aa8d7a7f2d58d18e5089471e8e763992bbd9d&ascene=1&uin=MjY1ODg0NjI2MQ%3D%3D&devicetype=Windows+10&version=62080079&lang=zh_TW&exportkey=ArAQWAOdwLbOLbIXUcPU57w%3D&pass_ticket=QmanDeP4YTBMwALbVH8d1LFKxOcdF3fbhz%2FobAM81YY5gZ%2BkXEG0HjK9qNpQX7oT" target="_blank" rel="noopener">高併發下RabbitMQ限流實踐</a></p>
+<h3 id="業務場景"><a href="#業務場景" class="headerlink" title="業務場景"></a>業務場景</h3><p>舉一些我們平常生活中的消費場景，例如：火車票、機票等，通常來說這些服務在下單之後，後續的出票結果都是異步通知的，如果服務本身只支持每秒1000訪問量，由於外部服務的原因突然訪問量增加到每秒2000並發，這個時候服務接收者因為流量的劇增，超過了自己系統本身所能處理的最大峰值，如果沒有對消息做限流措施，系統在這段時間內就會造成不可用，在生產環境這是一個很严重的問題，實際應用場景不止於這些，本文通過RabbitMQ來講解如何對消費端做限流措施。</p>
+<h3 id="消費端限流機制"><a href="#消費端限流機制" class="headerlink" title="消費端限流機制"></a>消費端限流機制</h3><p>RabbitMQ提供了服務質量保證( QOS)功能，對channel（通道）預先設置一定的消息數目，每次發送的消息條數都是基於預先設置的數目，如果消費端一旦有未確認的消息，這時服務端將不會再發送新的消費消息，直到消費端將消息進行完全確認，注意：此時消費端不能設置自動簽收，否則會無效。</p>
+<p>在之後，放寬了限制，除了對channel設置之外，還可以對每個消費者進行設置。</p>
 <h2 id="預先安裝Helm"><a href="#預先安裝Helm" class="headerlink" title="預先安裝Helm"></a>預先安裝Helm</h2><p>參考先前文章 <a href="../kubernetes-helm/">安裝Helm</a></p>
 <h2 id="預先準備storageclass服務"><a href="#預先準備storageclass服務" class="headerlink" title="預先準備storageclass服務"></a>預先準備storageclass服務</h2><p>參考先前文章 <a href="../kubernetes-storageclass-nfs/">StorageClass</a></p>
 <h2 id="透過Helm安裝RabbitMQ"><a href="#透過Helm安裝RabbitMQ" class="headerlink" title="透過Helm安裝RabbitMQ"></a>透過Helm安裝RabbitMQ</h2><p>此處先建立獨立的namespace，方便後續管理</p>
@@ -354,7 +674,7 @@
 
 
 <p>開始安裝</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">  helm install \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">-n mq \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">--<span class="built_in">set</span> rabbitmq.username=dwadm,rabbitmq.password=dwadm \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">--<span class="built_in">set</span> rabbitmq.erlangCookie=SWQOKODSQALRPCLNMEQG	 \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">--<span class="built_in">set</span> ingress.enabled=<span class="literal">true</span>,ingress.hostName=mq.10.40.46.101.nip.io \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">--<span class="built_in">set</span> global.storageClass=nfs-client,persistence.storageClass=nfs-client \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">--generate-name stable/rabbitmq</span></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">  helm install \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">-n mq \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">--<span class="built_in">set</span> rabbitmq.username=dwadm,rabbitmq.password=dwadm \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">--<span class="built_in">set</span> rabbitmq.erlangCookie=SWQOKODSQALRPCLNMEQG	 \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">--<span class="built_in">set</span> ingress.enabled=<span class="literal">true</span>,ingress.hostName=rabbitmq.10.40.46.101.nip.io \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">--<span class="built_in">set</span> global.storageClass=nfs-client,persistence.storageClass=nfs-client \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">--<span class="built_in">set</span> metrics.enabled=<span class="literal">true</span>,metrics.serviceMonitor.enabled=<span class="literal">true</span>,metrics.prometheusRule.enabled=<span class="literal">true</span>,metrics.serviceMonitor.interval=20s \	</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">--generate-name stable/rabbitmq</span></pre></td></tr></table></figure>
 
 <p>佈署成功的畫面</p>
 <img src="/kubernetes-rabbitmq/mq_install_success.jpg" class=""> 
@@ -487,157 +807,6 @@ To Access the RabbitMQ Management interface:
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/kubernetes-redis/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Anson Lin">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/docker-avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Anson Tech Note">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/kubernetes-redis/" itemprop="url">緩存服務-redis on Kubernetes</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">發表於</span>
-              
-              <time title="創建於" itemprop="dateCreated datePublished" datetime="2020-02-12T00:00:00+08:00">
-                2020-02-12
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="預先安裝Helm"><a href="#預先安裝Helm" class="headerlink" title="預先安裝Helm"></a>預先安裝Helm</h2><p>參考先前文章 <a href="../kubernetes-helm/">安裝Helm</a></p>
-<h2 id="預先準備storageclass服務"><a href="#預先準備storageclass服務" class="headerlink" title="預先準備storageclass服務"></a>預先準備storageclass服務</h2><p>參考先前文章 <a href="../kubernetes-storageclass-nfs/">StorageClass</a></p>
-<h2 id="透過Helm安裝Redis"><a href="#透過Helm安裝Redis" class="headerlink" title="透過Helm安裝Redis"></a>透過Helm安裝Redis</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ kubectl create ns redis</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">$ helm install \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">-n redis \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">--<span class="built_in">set</span> global.storageClass=nfs-client \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">--<span class="built_in">set</span> cluster.enabled=<span class="literal">false</span>,usePassword=<span class="literal">false</span> \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">--generate-name  stable/redis</span></pre></td></tr></table></figure>
-
-<p>安裝完成視圖</p>
-<img src="/kubernetes-redis/redis-helm-ok.jpg" class=""> 
-
-
-<p>方便各位使用，另外擷取成以下文字</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">To get your password run:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">    <span class="built_in">export</span> REDIS_PASSWORD=$(kubectl get secret --namespace redis redis-1581670855 -o jsonpath=<span class="string">"&#123;.data.redis-password&#125;"</span> | base64 --decode)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">To connect to your Redis server:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">1. Run a Redis pod that you can use as a client:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">   kubectl run --namespace redis redis-1581670855-client --rm --tty -i --restart=<span class="string">'Never'</span> \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">    --env REDIS_PASSWORD=<span class="variable">$REDIS_PASSWORD</span> \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">   --image docker.io/bitnami/redis:5.0.7-debian-10-r0 -- bash</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">2. Connect using the Redis CLI:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">   redis-cli -h redis-1581670855-master -a <span class="variable">$REDIS_PASSWORD</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">   redis-cli -h redis-1581670855-slave -a <span class="variable">$REDIS_PASSWORD</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">To connect to your database from outside the cluster execute the following commands:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">    kubectl port-forward --namespace redis svc/redis-1581670855-master 6379:6379 &amp;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">    redis-cli -h 127.0.0.1 -p 6379 -a <span class="variable">$REDIS_PASSWORD</span></span></pre></td></tr></table></figure>
-
-
-
-<p>透過nodeport連線(不建議，建議：內部服務之間透過service name存取)</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">kubectl -n redis edit svc redis-1581671838-master</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">1.在targetPort下方新增</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">nodePort: 30379</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">2.type修改成</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"><span class="built_in">type</span>: NodePort</span></pre></td></tr></table></figure>
-
-
-
-<h2 id="安裝Client管理工具-for-Windows"><a href="#安裝Client管理工具-for-Windows" class="headerlink" title="安裝Client管理工具 for Windows"></a>安裝Client管理工具 for Windows</h2><h3 id="需先安裝chocolate工具"><a href="#需先安裝chocolate工具" class="headerlink" title="需先安裝chocolate工具"></a>需先安裝chocolate工具</h3><p>參考先前文章 <a href="./windows-tools.md">Windows工具</a></p>
-<p>會自動安裝0.9.3.817版本</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$　choco install redis-desktop-manager</span></pre></td></tr></table></figure>
-
-<p>安裝過程</p>
-<img src="/kubernetes-redis/redismgr-chocolate.jpg" class=""> 
-
-<p>測試連接</p>
-<img src="/kubernetes-redis/redismgr-success.jpg" class=""> 
-
-
-
-<h2 id="常用的參數"><a href="#常用的參數" class="headerlink" title="常用的參數"></a>常用的參數</h2><p>| 參數  |  描述 |  預設值 |<br>| global.storageClass    |Global storage class for dynamic provisioning     | nil |<br>| global.redis.password     |  Redis password (overrides password)     | nil |<br>| cluster.enabled     | Use master-slave topology     | true |<br>| usePassword     | Use password     | true |<br>| persistence.existingClaim     | Provide an existing PersistentVolumeClaim     | nil |<br>| master.persistence.enabled     | Use a PVC to persist data (master node)     | true |<br>| master.persistence.storageClass     | Storage class of backing PVC     | generic |<br>| redisPort     | redisPort     | 6379 |</p>
-<p>more info : [Redis for Helm] <a href="https://github.com/helm/charts/tree/master/stable/redis" target="_blank" rel="noopener">https://github.com/helm/charts/tree/master/stable/redis</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/kubernetes-prometheus/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -669,8 +838,8 @@ To Access the RabbitMQ Management interface:
               
                 <span class="post-meta-item-text">發表於</span>
               
-              <time title="創建於" itemprop="dateCreated datePublished" datetime="2019-12-29T00:00:00+08:00">
-                2019-12-29
+              <time title="創建於" itemprop="dateCreated datePublished" datetime="2020-02-01T00:00:00+08:00">
+                2020-02-01
               </time>
             
 
@@ -713,21 +882,39 @@ To Access the RabbitMQ Management interface:
 <h2 id="OOO-Operator-by-CoreOSs"><a href="#OOO-Operator-by-CoreOSs" class="headerlink" title="OOO-Operator by CoreOSs"></a>OOO-Operator by CoreOSs</h2><p>在以往原生的 Kubernetes 環境裡，管理維護 stateful service 是件困難的工作。雖然 kubernetes 有提供 statefulSet 這樣的物件，但對於要維護 stateful service 來說還是相當不足的。舉例來說，當建立一個 mysql 的 stateful service 時，我們可能希望第一個 pod 是 master，第二個 pod 對 master 做 replication，第三個 pod 對第二個 pod 做 replication。這樣的架構如果要靠 kubernets 管理者來設定的話，會需要對 mysql 有一定的了解才能進行，而且可能相當耗費心力。<br>而每種 stateful service 的管理維護方式都各有巧妙不同，像 redis、kafka、prometheus 等，這些都需要嫻熟於該領域的人，才知道最好的管理方式為何。因此 stateful service 一直是讓 Kubernetes 使用者相當困擾的事情，比較安全的做法往往都是放棄讓 stateful service 跑在 kubernetes 裡，用傳統的方式來維運，一直到 operator 的出現。</p>
 <p>對於在 Kubernetes 上維運 stateful service 的困難，CoreOS 這家公司看出了需求與契機，開發了 Operator 這種專門處理 stateful service 的機制。透過擴展 Kubernetes 的 API 與相對應的 controller，可以用更好更安全的方式來建立、配置和管理 stateful service。於是短短一兩年時間，許多軟體廠商開始主動提供 operator 的套件來協助使用者將其軟體放到 Kubernetes 維運，也因此 operator 也成為 Kubernetes 領域裡的顯學之一。</p>
 <p>Operator 的架構主要可以分成兩部分，一個是 CRD (使用者自定義資源，CustomResourceDefinition)，另一個是 controllers，而 controller 就是處理當 CRD 發生 CRUD 操作時的相對應動作。例如 CRD 可能是定義一個叫 mysqldatabase 的資源物件，當kuberetes API 收到有 mysqldatabase 要建立時，會透過相對應的 controller 來建立相關的資源物件。<br>是知名且良好的 operator 套件，多半是原廠或該領域的專家所提供，通常都提供了許多便利且安全的機制，讓使用者可以用簡單且符合 Kubernetes 架構的方式來管理使用，而 Prometheus-Operator 也是其中之一</p>
-<h2 id="Prometheus-Operator"><a href="#Prometheus-Operator" class="headerlink" title="Prometheus-Operator"></a>Prometheus-Operator</h2><h3 id="預先安裝Helm"><a href="#預先安裝Helm" class="headerlink" title="預先安裝Helm"></a>預先安裝Helm</h3><p><a href="./kubernetes-helm.md">Helm</a></p>
-<h3 id="安裝Prometheus-Operator"><a href="#安裝Prometheus-Operator" class="headerlink" title="安裝Prometheus-Operator"></a>安裝Prometheus-Operator</h3><p>接著直接下載官方values設定檔來看看</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ curl -O https://raw.githubusercontent.com/helm/charts/master/stable/prometheus-operator/values.yaml -o prom-op-values.yaml</span></pre></td></tr></table></figure>
-
-<p>常用的設定有</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ vi prom-op-values.yaml</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">  ingress:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    enabled: <span class="literal">true</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    hosts:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">      - alertmanager.10.40.46.101.nip.io</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">grafana:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">  enabled: <span class="literal">true</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">  adminPassword: prom-operator</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">  ingress:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">    enabled: <span class="literal">true</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">    hosts: grafana.10.40.46.101.nip.io</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">	  </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">	.................................</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">	.................................</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">	.................................</span></pre></td></tr></table></figure>
+<h2 id="預先安裝Helm"><a href="#預先安裝Helm" class="headerlink" title="預先安裝Helm"></a>預先安裝Helm</h2><p><a href="../kubernetes-helm/">Helm</a></p>
+<h2 id="安裝Prometheus-Operator"><a href="#安裝Prometheus-Operator" class="headerlink" title="安裝Prometheus-Operator"></a>安裝Prometheus-Operator</h2><h3 id="建立Namespace以及CRD"><a href="#建立Namespace以及CRD" class="headerlink" title="建立Namespace以及CRD"></a>建立Namespace以及CRD</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">kubectl create ns prometheus</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">kubectl -n prometheus apply -f https://raw.githubusercontent.com/coreos/prometheus-operator/release-0.35/example/prometheus-operator-crd/monitoring.coreos.com_alertmanagers.yaml</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">kubectl -n prometheus apply -f https://raw.githubusercontent.com/coreos/prometheus-operator/release-0.35/example/prometheus-operator-crd/monitoring.coreos.com_podmonitors.yaml</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">kubectl -n prometheus apply -f https://raw.githubusercontent.com/coreos/prometheus-operator/release-0.35/example/prometheus-operator-crd/monitoring.coreos.com_prometheuses.yaml</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">kubectl -n prometheus apply -f https://raw.githubusercontent.com/coreos/prometheus-operator/release-0.35/example/prometheus-operator-crd/monitoring.coreos.com_prometheusrules.yaml</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">kubectl -n prometheus apply -f https://raw.githubusercontent.com/coreos/prometheus-operator/release-0.35/example/prometheus-operator-crd/monitoring.coreos.com_servicemonitors.yaml</span></pre></td></tr></table></figure>
 
 
-<p>套用設定看結果囉！</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ helm install --name prometheus stable/prometheus-operator  -f prom-op-values.yaml</span></pre></td></tr></table></figure>
+<h3 id="Prometheus-Operator參數值"><a href="#Prometheus-Operator參數值" class="headerlink" title="Prometheus-Operator參數值"></a>Prometheus-Operator參數值</h3><p>| 參數  | 描述  | Default<br>prometheus.enabled<br>prometheus.ingress.enabled<br>prometheus.ingress.hosts<br>alertmanager.enabled<br>ingress.enabled<br>ingress.hosts<br>grafana.enabled<br>grafana.ingress.enabled<br>grafana.ingress.hosts<br>grafana.persistence.enabled<br>grafana.persistence.size<br>grafana.persistence.storageClassName<br>prometheusOperator.admissionWebhooks.enabled<br>prometheusOperator.createCustomResource<br>prometheus.prometheusSpec.serviceMonitorSelectorNilUsesHelmValues</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">curl -O https://raw.githubusercontent.com/helm/charts/master/stable/prometheus-operator/values.yaml -o prom-op-values.yaml</span></pre></td></tr></table></figure>
+
+
+<p>開始安裝</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ helm install -f prom-op-values.yaml  -n prometheus stable/prometheus-operator</span></pre></td></tr></table></figure>
+
+<h2 id="加入grafana-Dashboard"><a href="#加入grafana-Dashboard" class="headerlink" title="加入grafana Dashboard"></a>加入grafana Dashboard</h2><h3 id="加入-Mariadb-Dashboard"><a href="#加入-Mariadb-Dashboard" class="headerlink" title="加入 Mariadb Dashboard"></a>加入 Mariadb Dashboard</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">curl -O https://raw.githubusercontent.com/percona/grafana-dashboards/master/dashboards/MySQL_Overview.json</span></pre></td></tr></table></figure>
+
+
+<h3 id="加入-Redis-Dashboard"><a href="#加入-Redis-Dashboard" class="headerlink" title="加入 Redis Dashboard"></a>加入 Redis Dashboard</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">curl -O https://grafana.com/api/dashboards/4074/revisions/1/download</span></pre></td></tr></table></figure>
+
+
+
+<h3 id="加入-RabbitMQ-Dashboard"><a href="#加入-RabbitMQ-Dashboard" class="headerlink" title="加入 RabbitMQ Dashboard"></a>加入 RabbitMQ Dashboard</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">curl -O https://grafana.com/api/dashboards/2121/revisions/1/download</span></pre></td></tr></table></figure>
+
+
+<h2 id="Troubleshooting"><a href="#Troubleshooting" class="headerlink" title="Troubleshooting"></a>Troubleshooting</h2><p>如果存在舊有CRD資源，需先移除</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">kubectl delete crd prometheuses.monitoring.coreos.com</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">kubectl delete crd prometheusrules.monitoring.coreos.com</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">kubectl delete crd servicemonitors.monitoring.coreos.com</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">kubectl delete crd podmonitors.monitoring.coreos.com</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">kubectl delete crd alertmanagers.monitoring.coreos.co</span></pre></td></tr></table></figure>
 
 
 
 
-<p>more info:  [Prometheus Operator] (<a href="https://github.com/helm/charts/tree/master/stable/prometheus-operator" target="_blank" rel="noopener">https://github.com/helm/charts/tree/master/stable/prometheus-operator</a>)<br> <a href="http://brobridge.com/bdsres/2019/10/21/prometheus-operator-i-efe748a6796b/" target="_blank" rel="noopener">prom-op-2</a></p>
+
+
+
+
+
+<p>more info:<br>[Prometheus Operator] (<a href="https://github.com/helm/charts/tree/master/stable/prometheus-operator" target="_blank" rel="noopener">https://github.com/helm/charts/tree/master/stable/prometheus-operator</a>)<br><a href="http://brobridge.com/bdsres/2019/10/21/prometheus-operator-i-efe748a6796b/" target="_blank" rel="noopener">prom-op-2</a></p>
 
           
         
@@ -1640,6 +1827,8 @@ To Access the RabbitMQ Management interface:
             <h2 id="必备安装套件管理工具"><a href="#必备安装套件管理工具" class="headerlink" title="必备安装套件管理工具"></a>必备安装套件管理工具</h2><p><a href="https://chocolatey.org/" target="_blank" rel="noopener">Chocolatey</a></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># cmd</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># powershell</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))</span></span></pre></td></tr></table></figure>
 
+<p>注：如果發生 调用“DownloadString”时发生异常:“请求被中止: 未能创建 SSL/TLS 安全通道。”</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Ssl3 -bor [Net.SecurityProtocolType]::Tls -bor [Net.SecurityProtocolType]::Tls11 -bor [Net.SecurityProtocolType]::Tls12</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">[Net.ServicePointManager]::SecurityProtocol</span></pre></td></tr></table></figure>
 
 <h2 id="Kubernetes管理工具"><a href="#Kubernetes管理工具" class="headerlink" title="Kubernetes管理工具"></a>Kubernetes管理工具</h2><h3 id="Kubectl"><a href="#Kubectl" class="headerlink" title="Kubectl"></a>Kubectl</h3><p>kubectl install on windows<br><a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/" target="_blank" rel="noopener">https://kubernetes.io/docs/tasks/tools/install-kubectl/</a></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">choco install kubernetes-cli</span></pre></td></tr></table></figure>
@@ -1682,218 +1871,6 @@ To Access the RabbitMQ Management interface:
 
 
 <p>More info:<br><a href="https://yogapan.github.io/2017/08/11/%E7%94%A8Hexo-Github-Pages%E6%90%AD%E5%BB%BA%E5%80%8B%E4%BA%BA%E9%83%A8%E8%90%BD%E6%A0%BC/" target="_blank" rel="noopener">https://yogapan.github.io/2017/08/11/%E7%94%A8Hexo-Github-Pages%E6%90%AD%E5%BB%BA%E5%80%8B%E4%BA%BA%E9%83%A8%E8%90%BD%E6%A0%BC/</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/kubernetes-ingress/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Anson Lin">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/docker-avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Anson Tech Note">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/kubernetes-ingress/" itemprop="url">Kubernetes管理集群服务的外部访问Ingress</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">發表於</span>
-              
-              <time title="創建於" itemprop="dateCreated datePublished" datetime="2019-11-30T00:00:00+08:00">
-                2019-11-30
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>一个 API 对象，用于管理对集群中服务的外部访问，通常是 HTTP。Ingress 可以提供负载平衡，SSL 终端和基于名称的虚拟主机。</p>
-<h1 id="Ingress是什麼？"><a href="#Ingress是什麼？" class="headerlink" title="Ingress是什麼？"></a>Ingress是什麼？</h1><p>Ingress公开了从群集外部到群集内 services 的HTTP和HTTPS路由。 流量路由由Ingress资源上定义的规则控制。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"> internet</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">     |</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">[ Ingress ]</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">--|-----|--</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">[ Services ]</span></pre></td></tr></table></figure>
-
-<p>可以将Ingress配置为提供服务外部可访问的URL，负载平衡流量，终止 SSL / TLS 并提供基于名称的虚拟主机。 Ingress 控制器通常负责通过负载平衡器来实现入口，尽管它也可以配置边缘路由器或其他前端以帮助处理流量。</p>
-<p>Ingress 不会公开任意端口或协议。 将 HTTP 和 HTTPS 以外的服务公开给 Internet 时，通常使用以下类型的服务 Service.Type=NodePort 或者 Service.Type=LoadBalancer.</p>
-<h1 id="Ingress控制器"><a href="#Ingress控制器" class="headerlink" title="Ingress控制器"></a>Ingress控制器</h1><p>您必须具有 Ingress 控制器才能满足Ingress的要求。 仅创建Ingress资源无效。</p>
-<p>GCE／Google Kubernetes Engine 是在主节点上部署 Ingress 控制器。 您可以在 Pod 中部署任意数量的自定义 Ingress 控制器。 一定要检查一下这个控制器的 beta 限制。 在 GCE／Google Kubernetes Engine 之外的环境中，需要将控制器部署 为 Pod。</p>
-<h2 id="Traefik-Ingress-Controller"><a href="#Traefik-Ingress-Controller" class="headerlink" title="Traefik Ingress Controller"></a>Traefik Ingress Controller</h2><p>more info: <a href="https://docs.traefik.io/v1.7/user-guide/kubernetes/" target="_blank" rel="noopener">Deploy Traefik 1.7 Ingress Controller to Kubernetes</a></p>
-<p><img src="https://docs.traefik.io/v1.7/img/architecture.png" alt="traefik_arch"></p>
-<h3 id="RBAC"><a href="#RBAC" class="headerlink" title="RBAC"></a>RBAC</h3><p>Kubernetes在1.6+中引入了基於角色的訪問控制（RBAC），以實現對Kubernetes資源和API的細粒度控制。<br>如果您的集群配置了RBAC，則需要授權Traefik使用Kubernetes API。有兩種設置適當權限的方法：通過特定於名稱空間的RoleBindings或單個全局ClusterRoleBinding。<br>每個命名空間的RoleBindings可以將授予的權限僅限制於Traefik所監視的命名空間，從而遵循最小特權原則。如果不應讓Traefik監視所有名稱空間，並且名稱空間集不會動態更改，則這是首選方法。否則，必須使用單個ClusterRoleBinding。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">---</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">kind: ClusterRole</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">apiVersion: rbac.authorization.k8s.io/v1beta1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">metadata:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">  name: traefik-ingress-controller</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">rules:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">  - apiGroups:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">      - <span class="string">""</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">    resources:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">      - services</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">      - endpoints</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">      - secrets</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">    verbs:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">      - get</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">      - list</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">      - watch</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">  - apiGroups:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">      - extensions</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">    resources:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line">      - ingresses</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line">    verbs:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line">      - get</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line">      - list</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">24</span></pre></td><td class="code"><pre><span class="line">      - watch</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">25</span></pre></td><td class="code"><pre><span class="line">---</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">26</span></pre></td><td class="code"><pre><span class="line">kind: ClusterRoleBinding</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">27</span></pre></td><td class="code"><pre><span class="line">apiVersion: rbac.authorization.k8s.io/v1beta1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">28</span></pre></td><td class="code"><pre><span class="line">metadata:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">29</span></pre></td><td class="code"><pre><span class="line">  name: traefik-ingress-controller</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">30</span></pre></td><td class="code"><pre><span class="line">roleRef:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">31</span></pre></td><td class="code"><pre><span class="line">  apiGroup: rbac.authorization.k8s.io</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">32</span></pre></td><td class="code"><pre><span class="line">  kind: ClusterRole</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">33</span></pre></td><td class="code"><pre><span class="line">  name: traefik-ingress-controller</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">34</span></pre></td><td class="code"><pre><span class="line">subjects:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">35</span></pre></td><td class="code"><pre><span class="line">- kind: ServiceAccount</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">36</span></pre></td><td class="code"><pre><span class="line">  name: traefik-ingress-controller</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">37</span></pre></td><td class="code"><pre><span class="line">  namespace: kube-system</span></pre></td></tr></table></figure>
-
-
-<p>或是直接採用線上yaml檔 </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">kubectl apply -f https://raw.githubusercontent.com/containous/traefik/v1.7/examples/k8s/traefik-rbac.yaml</span></pre></td></tr></table></figure>
-
-<h3 id="使用Daemonset方式部署Traefik"><a href="#使用Daemonset方式部署Traefik" class="headerlink" title="使用Daemonset方式部署Traefik"></a>使用Daemonset方式部署Traefik</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">---</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">kind: ServiceAccount</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">metadata:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">  name: traefik-ingress-controller</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">  namespace: kube-system</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">---</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">kind: DaemonSet</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">apiVersion: extensions/v1beta1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">metadata:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">  name: traefik-ingress-controller</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">  namespace: kube-system</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">  labels:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">    k8s-app: traefik-ingress-lb</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">spec:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">  template:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">    metadata:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">      labels:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">        k8s-app: traefik-ingress-lb</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line">        name: traefik-ingress-lb</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line">    spec:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line">      serviceAccountName: traefik-ingress-controller</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line">      terminationGracePeriodSeconds: 60</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">24</span></pre></td><td class="code"><pre><span class="line">      containers:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">25</span></pre></td><td class="code"><pre><span class="line">      - image: traefik:v1.7</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">26</span></pre></td><td class="code"><pre><span class="line">        name: traefik-ingress-lb</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">27</span></pre></td><td class="code"><pre><span class="line">        ports:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">28</span></pre></td><td class="code"><pre><span class="line">        - name: http</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">29</span></pre></td><td class="code"><pre><span class="line">          containerPort: 80</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">30</span></pre></td><td class="code"><pre><span class="line">          hostPort: 80</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">31</span></pre></td><td class="code"><pre><span class="line">        - name: admin</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">32</span></pre></td><td class="code"><pre><span class="line">          containerPort: 8080</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">33</span></pre></td><td class="code"><pre><span class="line">        securityContext:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">34</span></pre></td><td class="code"><pre><span class="line">          capabilities:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">35</span></pre></td><td class="code"><pre><span class="line">            drop:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">36</span></pre></td><td class="code"><pre><span class="line">            - ALL</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">37</span></pre></td><td class="code"><pre><span class="line">            add:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">38</span></pre></td><td class="code"><pre><span class="line">            - NET_BIND_SERVICE</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">39</span></pre></td><td class="code"><pre><span class="line">        args:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">40</span></pre></td><td class="code"><pre><span class="line">        - --api</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">41</span></pre></td><td class="code"><pre><span class="line">        - --kubernetes</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">42</span></pre></td><td class="code"><pre><span class="line">        - --logLevel=INFO</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">43</span></pre></td><td class="code"><pre><span class="line">---</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">44</span></pre></td><td class="code"><pre><span class="line">kind: Service</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">45</span></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">46</span></pre></td><td class="code"><pre><span class="line">metadata:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">47</span></pre></td><td class="code"><pre><span class="line">  name: traefik-ingress-service</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">48</span></pre></td><td class="code"><pre><span class="line">  namespace: kube-system</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">49</span></pre></td><td class="code"><pre><span class="line">spec:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">50</span></pre></td><td class="code"><pre><span class="line">  selector:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">51</span></pre></td><td class="code"><pre><span class="line">    k8s-app: traefik-ingress-lb</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">52</span></pre></td><td class="code"><pre><span class="line">  ports:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">53</span></pre></td><td class="code"><pre><span class="line">    - protocol: TCP</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">54</span></pre></td><td class="code"><pre><span class="line">      port: 80</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">55</span></pre></td><td class="code"><pre><span class="line">      name: web</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">56</span></pre></td><td class="code"><pre><span class="line">    - protocol: TCP</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">57</span></pre></td><td class="code"><pre><span class="line">      port: 8080</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">58</span></pre></td><td class="code"><pre><span class="line">      name: admin</span></pre></td></tr></table></figure>
-
-
-<p>或是直接採用線上yaml檔</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">kubectl apply -f https://raw.githubusercontent.com/containous/traefik/v1.7/examples/k8s/traefik-ds.yaml</span></pre></td></tr></table></figure>
-
-<h3 id="部署Traefik-WebUI管理介面"><a href="#部署Traefik-WebUI管理介面" class="headerlink" title="部署Traefik WebUI管理介面"></a>部署Traefik WebUI管理介面</h3><p>這也是愛用Traefik的地方，可以透過WebUI一次明瞭目前發布的Ingress服務。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">kind: Service</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">metadata:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">  name: traefik-web-ui</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">  namespace: kube-system</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">spec:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">  selector:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">    k8s-app: traefik-ingress-lb</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">  ports:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">  - name: web</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">    port: 80</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">    targetPort: 8080</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">---</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">apiVersion: extensions/v1beta1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">kind: Ingress</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">metadata:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">  name: traefik-web-ui</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">  namespace: kube-system</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">spec:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line">  rules:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line">  - host: traefik.192.168.1.1.nip.io &lt;===請修改成你的Domain name</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line">    http:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line">      paths:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">24</span></pre></td><td class="code"><pre><span class="line">      - path: /</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">25</span></pre></td><td class="code"><pre><span class="line">        backend:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">26</span></pre></td><td class="code"><pre><span class="line">          serviceName: traefik-web-ui</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">27</span></pre></td><td class="code"><pre><span class="line">          servicePort: web</span></pre></td></tr></table></figure>
-
-<p>或是直接採用線上yaml檔</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">kubectl apply -f https://raw.githubusercontent.com/containous/traefik/v1.7/examples/k8s/ui.yaml</span></pre></td></tr></table></figure>
-
-
-<h3 id="檢查部署狀況"><a href="#檢查部署狀況" class="headerlink" title="檢查部署狀況"></a>檢查部署狀況</h3><p>現在讓我們檢查命令是否成功。首先列出kube-system名稱空間中的Pod ：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">kubectl --namespace=kube-system get pods</span></pre></td></tr></table></figure>
-<p>或是直接開啟瀏覽器確認(traefik.192.168.1.1.nip.io &lt;===請修改成你的Domain name)</p>
-<h2 id="Nginx-Ingress-Controller"><a href="#Nginx-Ingress-Controller" class="headerlink" title="Nginx Ingress Controller"></a>Nginx Ingress Controller</h2><p>more info: <a href="https://kubernetes.github.io/ingress-nginx/deploy/#bare-metal" target="_blank" rel="noopener">Deploy Nginx Ingress Controller through Helm to Kubernetes</a></p>
-<p>直接透過Helm方式來安裝是最快的方式，但需要先安裝<a href="../kubernetes-helm/">Helm</a></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">helm install stable/nginx-ingress --name my-nginx --<span class="built_in">set</span> rbac.create=<span class="literal">true</span> --generate-name</span></pre></td></tr></table></figure>
-
-<h3 id="LoadBalancer-IP-地端自建"><a href="#LoadBalancer-IP-地端自建" class="headerlink" title="LoadBalancer IP(地端自建)"></a>LoadBalancer IP(地端自建)</h3><p>more info: <a href="https://kubernetes.github.io/ingress-nginx/deploy/baremetal/" target="_blank" rel="noopener">Bare Metal Considerations</a></p>
-<ol>
-<li>指定externalIPs方式<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># kubectl edit svc nginx-ingress-controller</span></span></pre></td></tr></table></figure>
-在 type: LoadBalancer 下方加入兩行(依實際狀況調整IP地址)<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">externalIPs:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">- 10.40.46.101</span></pre></td></tr></table></figure>
-
-
-</li>
-</ol>
-<ol start="2">
-<li>透過MetalLB發配LoadBalancer IP<br><img src="https://kubernetes.github.io/ingress-nginx/images/baremetal/metallb.jpg" alt="MetalLB"></li>
-</ol>
-<p>必須先安裝<a href="../kubernetes-metallb">MetalLB</a>，然後修改nginx ingress 服務，新增兩筆允許共用IP地址</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># kubectl edit svc nginx-ingress-1575428352-controller</span></span></pre></td></tr></table></figure>
-
-<p>在 metadata 下方加入兩行</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">annotations:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">  metallb.universe.tf/allow-shared-ip: shared</span></pre></td></tr></table></figure>
-
-
-<h3 id="檢查部署狀況-1"><a href="#檢查部署狀況-1" class="headerlink" title="檢查部署狀況"></a>檢查部署狀況</h3><ol>
-<li><p>部署狀況</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">kubectl get pods --all-namespaces -l app.kubernetes.io/name=ingress-nginx --watch</span></pre></td></tr></table></figure>
-</li>
-<li><p>安裝版本</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">POD_NAME=$(kubectl get pods -l app.kubernetes.io/name=ingress-nginx -o jsonpath=<span class="string">'&#123;.items[0].metadata.name&#125;'</span>)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">kubectl <span class="built_in">exec</span> -it <span class="variable">$POD_NAME</span> -- /nginx-ingress-controller --version</span></pre></td></tr></table></figure>
-</li>
-<li><p>Default Backend<br>開啟瀏覽器，打入IP位址，確認是否出現</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">default backend - 404</span></pre></td></tr></table></figure>
-
-
-</li>
-</ol>
-<h1 id="Ingress服務資源"><a href="#Ingress服務資源" class="headerlink" title="Ingress服務資源"></a>Ingress服務資源</h1><p>Ingress 资源仅支持用于定向HTTP流量的规则。</p>
-<h2 id="使用Path方式發布"><a href="#使用Path方式發布" class="headerlink" title="使用Path方式發布"></a>使用Path方式發布</h2><p>通过Ingress，您可以将负载均衡器的数量保持在最低水平。 例如，如下设置：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">foo.bar.com -&gt; 178.91.123.132 -&gt; / foo    service1:4200</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">                                 / bar    service2:8080</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">``` bash</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">實際部署yaml</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">``` bash</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">apiVersion: networking.k8s.io/v1beta1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">kind: Ingress</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">metadata:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">  name: simple-fanout-example</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">  annotations:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">    nginx.ingress.kubernetes.io/rewrite-target: /</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">spec:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">  rules:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">  - host: foo.bar.com</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">    http:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">      paths:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">      - path: /foo</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">        backend:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line">          serviceName: service1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line">          servicePort: 4200</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line">      - path: /bar</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line">        backend:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">24</span></pre></td><td class="code"><pre><span class="line">          serviceName: service2</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">25</span></pre></td><td class="code"><pre><span class="line">          servicePort: 8080</span></pre></td></tr></table></figure>
-
-
-<h2 id="使用-Domain-name方式發布"><a href="#使用-Domain-name方式發布" class="headerlink" title="使用 Domain name方式發布"></a>使用 Domain name方式發布</h2><p>基于名称的虚拟主机支持将 HTTP 流量路由到同一 IP 地址上的多个主机名。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">foo.bar.com --|                 |-&gt; foo.bar.com service1:80</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">              | 178.91.123.132  |</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">bar.foo.com --|                 |-&gt; bar.foo.com service2:80</span></pre></td></tr></table></figure>
-
-<p>實際部署yaml</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">apiVersion: networking.k8s.io/v1beta1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">kind: Ingress</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">metadata:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">  name: name-virtual-host-ingress</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">spec:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">  rules:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">  - host: foo.bar.com</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">    http:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">      paths:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">      - backend:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">          serviceName: service1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">          servicePort: 80</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">  - host: bar.foo.com</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">    http:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">      paths:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">      - backend:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">          serviceName: service2</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">          servicePort: 80</span></pre></td></tr></table></figure>
-
-
-
-
-
-<h1 id="Ingress加密-TLS"><a href="#Ingress加密-TLS" class="headerlink" title="Ingress加密-TLS"></a>Ingress加密-TLS</h1><p>您可以通过指定包含TLS私钥和证书的 Secret 来加密 Ingress。 目前，Ingress 只支持单个 TLS 端口，443，并假定 TLS 终止。 如果 Ingress 中的 TLS 配置部分指定了不同的主机，那么它们将根据通过 SNI TLS 扩展指定的主机名（如果 Ingress 控制器支持 SNI）在同一端口上进行复用。 TLS Secret 必须包含名为 tls.crt 和 tls.key 的密钥，这些密钥包含用于 TLS 的证书和私钥，例如：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">kind: Secret</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">metadata:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">  name: testsecret-tls</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">  namespace: default</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">data:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">  tls.crt: base64 encoded cert</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">  tls.key: base64 encoded key</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line"><span class="built_in">type</span>: kubernetes.io/tls</span></pre></td></tr></table></figure>
-
-<p>然後在 Ingress 中引用此秘钥会告诉 Ingress 控制器使用 TLS 保护从客户端到负载均衡器的通道。 您需要确保创建包含 sslexample.foo.com 的 TLS 秘钥的 CN 的证书。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">apiVersion: networking.k8s.io/v1beta1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">kind: Ingress</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">metadata:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">  name: tls-example-ingress</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">spec:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">  tls:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">  - hosts:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">    - sslexample.foo.com</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">    secretName: testsecret-tls</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">  rules:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">    - host: sslexample.foo.com</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">      http:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">        paths:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">        - path: /</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">          backend:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">            serviceName: service1</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">            servicePort: 80</span></pre></td></tr></table></figure>
-
-
-
-
-<p>more info: <a href="https://kubernetes.io/zh/docs/concepts/services-networking/ingress/" target="_blank" rel="noopener">Ingress</a></p>
 
           
         
@@ -1983,7 +1960,7 @@ To Access the RabbitMQ Management interface:
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-count">14</span>
                   <span class="site-state-item-name">文章</span>
                 </a>
               </div>

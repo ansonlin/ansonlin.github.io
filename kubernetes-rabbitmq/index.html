@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="預先安裝Helm參考先前文章 安裝Helm 預先準備storageclass服務參考先前文章 StorageClass 透過Helm安裝RabbitMQ此處先建立獨立的namespace，方便後續管理 1kubectl create ns mq2helm repo add stable https:&#x2F;&#x2F;kubernetes-charts.storage.googleapis.com   開始">
+<meta name="description" content="RabbitMQ介紹說明RabbitMQ is an open source message broker software that implements the Advanced Message Queuing Protocol (AMQP). RabbitMQ文檔說明 高併發下RabbitMQ限流實踐 業務場景舉一些我們平常生活中的消費場景，例如：火車票、機票等，通常來說這些服務在下單">
 <meta name="keywords" content="kubernetes,helm">
 <meta property="og:type" content="article">
 <meta property="og:title" content="訊息佇列服務-RabbitMQ on Kubernetes">
 <meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;kubernetes-rabbitmq&#x2F;index.html">
 <meta property="og:site_name" content="Anson Tech Note">
-<meta property="og:description" content="預先安裝Helm參考先前文章 安裝Helm 預先準備storageclass服務參考先前文章 StorageClass 透過Helm安裝RabbitMQ此處先建立獨立的namespace，方便後續管理 1kubectl create ns mq2helm repo add stable https:&#x2F;&#x2F;kubernetes-charts.storage.googleapis.com   開始">
+<meta property="og:description" content="RabbitMQ介紹說明RabbitMQ is an open source message broker software that implements the Advanced Message Queuing Protocol (AMQP). RabbitMQ文檔說明 高併發下RabbitMQ限流實踐 業務場景舉一些我們平常生活中的消費場景，例如：火車票、機票等，通常來說這些服務在下單">
 <meta property="og:locale" content="zh-tw">
 <meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;kubernetes-rabbitmq&#x2F;rabbitmq-icon.png">
 <meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;kubernetes-rabbitmq&#x2F;mq_install_success.jpg">
-<meta property="og:updated_time" content="2020-02-15T06:54:03.357Z">
+<meta property="og:updated_time" content="2020-02-18T02:01:15.093Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;kubernetes-rabbitmq&#x2F;rabbitmq-icon.png">
 
@@ -347,6 +347,12 @@
       
         <img src="/kubernetes-rabbitmq/rabbitmq-icon.png" class=""> 
 
+<h2 id="RabbitMQ介紹說明"><a href="#RabbitMQ介紹說明" class="headerlink" title="RabbitMQ介紹說明"></a>RabbitMQ介紹說明</h2><p>RabbitMQ is an open source message broker software that implements the Advanced Message Queuing Protocol (AMQP).</p>
+<p><a href="https://www.rabbitmq.com/documentation.html" target="_blank" rel="noopener">RabbitMQ文檔說明</a></p>
+<p><a href="https://mp.weixin.qq.com/s?__biz=MzI5ODQ2MzI3NQ==&mid=2247488929&idx=2&sn=5817a752b61ea82c2bb9a21f23dbbf71&chksm=eca42ce5dbd3a5f3a0883b31a7eb727f370520b422ffc5284ba8d44ffe4f300ca74c9f4c7cd5&scene=126&sessionid=1581900963&key=96db90385c72044dfbea96614497733baf63db911605dbd2328c18390c5a08faef181621e03fe986cdf98e88428616921c32f62f73e18061f8cb0745888aa8d7a7f2d58d18e5089471e8e763992bbd9d&ascene=1&uin=MjY1ODg0NjI2MQ%3D%3D&devicetype=Windows+10&version=62080079&lang=zh_TW&exportkey=ArAQWAOdwLbOLbIXUcPU57w%3D&pass_ticket=QmanDeP4YTBMwALbVH8d1LFKxOcdF3fbhz%2FobAM81YY5gZ%2BkXEG0HjK9qNpQX7oT" target="_blank" rel="noopener">高併發下RabbitMQ限流實踐</a></p>
+<h3 id="業務場景"><a href="#業務場景" class="headerlink" title="業務場景"></a>業務場景</h3><p>舉一些我們平常生活中的消費場景，例如：火車票、機票等，通常來說這些服務在下單之後，後續的出票結果都是異步通知的，如果服務本身只支持每秒1000訪問量，由於外部服務的原因突然訪問量增加到每秒2000並發，這個時候服務接收者因為流量的劇增，超過了自己系統本身所能處理的最大峰值，如果沒有對消息做限流措施，系統在這段時間內就會造成不可用，在生產環境這是一個很严重的問題，實際應用場景不止於這些，本文通過RabbitMQ來講解如何對消費端做限流措施。</p>
+<h3 id="消費端限流機制"><a href="#消費端限流機制" class="headerlink" title="消費端限流機制"></a>消費端限流機制</h3><p>RabbitMQ提供了服務質量保證( QOS)功能，對channel（通道）預先設置一定的消息數目，每次發送的消息條數都是基於預先設置的數目，如果消費端一旦有未確認的消息，這時服務端將不會再發送新的消費消息，直到消費端將消息進行完全確認，注意：此時消費端不能設置自動簽收，否則會無效。</p>
+<p>在之後，放寬了限制，除了對channel設置之外，還可以對每個消費者進行設置。</p>
 <h2 id="預先安裝Helm"><a href="#預先安裝Helm" class="headerlink" title="預先安裝Helm"></a>預先安裝Helm</h2><p>參考先前文章 <a href="../kubernetes-helm/">安裝Helm</a></p>
 <h2 id="預先準備storageclass服務"><a href="#預先準備storageclass服務" class="headerlink" title="預先準備storageclass服務"></a>預先準備storageclass服務</h2><p>參考先前文章 <a href="../kubernetes-storageclass-nfs/">StorageClass</a></p>
 <h2 id="透過Helm安裝RabbitMQ"><a href="#透過Helm安裝RabbitMQ" class="headerlink" title="透過Helm安裝RabbitMQ"></a>透過Helm安裝RabbitMQ</h2><p>此處先建立獨立的namespace，方便後續管理</p>
@@ -354,7 +360,7 @@
 
 
 <p>開始安裝</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">  helm install \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">-n mq \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">--<span class="built_in">set</span> rabbitmq.username=dwadm,rabbitmq.password=dwadm \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">--<span class="built_in">set</span> rabbitmq.erlangCookie=SWQOKODSQALRPCLNMEQG	 \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">--<span class="built_in">set</span> ingress.enabled=<span class="literal">true</span>,ingress.hostName=mq.10.40.46.101.nip.io \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">--<span class="built_in">set</span> global.storageClass=nfs-client,persistence.storageClass=nfs-client \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">--generate-name stable/rabbitmq</span></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">  helm install \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">-n mq \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">--<span class="built_in">set</span> rabbitmq.username=dwadm,rabbitmq.password=dwadm \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">--<span class="built_in">set</span> rabbitmq.erlangCookie=SWQOKODSQALRPCLNMEQG	 \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">--<span class="built_in">set</span> ingress.enabled=<span class="literal">true</span>,ingress.hostName=rabbitmq.10.40.46.101.nip.io \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">--<span class="built_in">set</span> global.storageClass=nfs-client,persistence.storageClass=nfs-client \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">--<span class="built_in">set</span> metrics.enabled=<span class="literal">true</span>,metrics.serviceMonitor.enabled=<span class="literal">true</span>,metrics.prometheusRule.enabled=<span class="literal">true</span>,metrics.serviceMonitor.interval=20s \	</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">--generate-name stable/rabbitmq</span></pre></td></tr></table></figure>
 
 <p>佈署成功的畫面</p>
 <img src="/kubernetes-rabbitmq/mq_install_success.jpg" class=""> 
@@ -471,8 +477,8 @@ To Access the RabbitMQ Management interface:
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/kubernetes-redis/" rel="next" title="緩存服務-redis on Kubernetes">
-                <i class="fa fa-chevron-left"></i> 緩存服務-redis on Kubernetes
+              <a href="/kubernetes-prometheus/" rel="next" title="Kubernetes监控管理工具prometheus-operator">
+                <i class="fa fa-chevron-left"></i> Kubernetes监控管理工具prometheus-operator
               </a>
             
           </div>
@@ -480,6 +486,10 @@ To Access the RabbitMQ Management interface:
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/kubernetes-redis/" rel="prev" title="緩存服務-redis on Kubernetes">
+                緩存服務-redis on Kubernetes <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -560,7 +570,7 @@ To Access the RabbitMQ Management interface:
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-count">14</span>
                   <span class="site-state-item-name">文章</span>
                 </a>
               </div>
@@ -628,7 +638,7 @@ To Access the RabbitMQ Management interface:
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#預先安裝Helm"><span class="nav-number">1.</span> <span class="nav-text">預先安裝Helm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#預先準備storageclass服務"><span class="nav-number">2.</span> <span class="nav-text">預先準備storageclass服務</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#透過Helm安裝RabbitMQ"><span class="nav-number">3.</span> <span class="nav-text">透過Helm安裝RabbitMQ</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常用的參數"><span class="nav-number">4.</span> <span class="nav-text">常用的參數</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#RabbitMQ介紹說明"><span class="nav-number">1.</span> <span class="nav-text">RabbitMQ介紹說明</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#業務場景"><span class="nav-number">1.1.</span> <span class="nav-text">業務場景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#消費端限流機制"><span class="nav-number">1.2.</span> <span class="nav-text">消費端限流機制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#預先安裝Helm"><span class="nav-number">2.</span> <span class="nav-text">預先安裝Helm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#預先準備storageclass服務"><span class="nav-number">3.</span> <span class="nav-text">預先準備storageclass服務</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#透過Helm安裝RabbitMQ"><span class="nav-number">4.</span> <span class="nav-text">透過Helm安裝RabbitMQ</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常用的參數"><span class="nav-number">5.</span> <span class="nav-text">常用的參數</span></a></li></ol></div>
             
 
           </div>

@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="預先安裝Helm參考先前文章 安裝Helm 預先準備storageclass服務參考先前文章 StorageClass 透過Helm安裝Redis1$ kubectl create ns redis23$ helm install \4-n redis \5--set global.storageClass&#x3D;nfs-client \6--set cluster.enabled&#x3D;false,useP">
+<meta name="description" content="預先安裝Helm參考先前文章 安裝Helm 預先準備storageclass服務參考先前文章 StorageClass 透過Helm安裝Redis1$ kubectl create ns redis23$ helm install  stable&#x2F;redis \4-n redis \5--set global.storageClass&#x3D;nfs-client \6--set cluster.enab">
 <meta name="keywords" content="kubernetes,helm">
 <meta property="og:type" content="article">
 <meta property="og:title" content="緩存服務-redis on Kubernetes">
 <meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;kubernetes-redis&#x2F;index.html">
 <meta property="og:site_name" content="Anson Tech Note">
-<meta property="og:description" content="預先安裝Helm參考先前文章 安裝Helm 預先準備storageclass服務參考先前文章 StorageClass 透過Helm安裝Redis1$ kubectl create ns redis23$ helm install \4-n redis \5--set global.storageClass&#x3D;nfs-client \6--set cluster.enabled&#x3D;false,useP">
+<meta property="og:description" content="預先安裝Helm參考先前文章 安裝Helm 預先準備storageclass服務參考先前文章 StorageClass 透過Helm安裝Redis1$ kubectl create ns redis23$ helm install  stable&#x2F;redis \4-n redis \5--set global.storageClass&#x3D;nfs-client \6--set cluster.enab">
 <meta property="og:locale" content="zh-tw">
 <meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;kubernetes-redis&#x2F;redis-helm-ok.jpg">
 <meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;kubernetes-redis&#x2F;redismgr-chocolate.jpg">
 <meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;kubernetes-redis&#x2F;redismgr-success.jpg">
-<meta property="og:updated_time" content="2020-02-15T06:53:52.441Z">
+<meta property="og:updated_time" content="2020-02-19T01:16:05.669Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;kubernetes-redis&#x2F;redis-helm-ok.jpg">
 
@@ -308,8 +308,8 @@
               
                 <span class="post-meta-item-text">發表於</span>
               
-              <time title="創建於" itemprop="dateCreated datePublished" datetime="2020-02-12T00:00:00+08:00">
-                2020-02-12
+              <time title="創建於" itemprop="dateCreated datePublished" datetime="2020-02-13T00:00:00+08:00">
+                2020-02-13
               </time>
             
 
@@ -348,7 +348,7 @@
       
         <h2 id="預先安裝Helm"><a href="#預先安裝Helm" class="headerlink" title="預先安裝Helm"></a>預先安裝Helm</h2><p>參考先前文章 <a href="../kubernetes-helm/">安裝Helm</a></p>
 <h2 id="預先準備storageclass服務"><a href="#預先準備storageclass服務" class="headerlink" title="預先準備storageclass服務"></a>預先準備storageclass服務</h2><p>參考先前文章 <a href="../kubernetes-storageclass-nfs/">StorageClass</a></p>
-<h2 id="透過Helm安裝Redis"><a href="#透過Helm安裝Redis" class="headerlink" title="透過Helm安裝Redis"></a>透過Helm安裝Redis</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ kubectl create ns redis</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">$ helm install \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">-n redis \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">--<span class="built_in">set</span> global.storageClass=nfs-client \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">--<span class="built_in">set</span> cluster.enabled=<span class="literal">false</span>,usePassword=<span class="literal">false</span> \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">--generate-name  stable/redis</span></pre></td></tr></table></figure>
+<h2 id="透過Helm安裝Redis"><a href="#透過Helm安裝Redis" class="headerlink" title="透過Helm安裝Redis"></a>透過Helm安裝Redis</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ kubectl create ns redis</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">$ helm install  stable/redis \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">-n redis \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">--<span class="built_in">set</span> global.storageClass=nfs-client \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">--<span class="built_in">set</span> cluster.enabled=<span class="literal">false</span>,usePassword=<span class="literal">false</span> \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">--<span class="built_in">set</span> metrics.enabled=<span class="literal">true</span>,metrics.serviceMonitor.enabled=<span class="literal">true</span>,metrics.service.labels=release=myprom</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">--generate-name</span></pre></td></tr></table></figure>
 
 <p>安裝完成視圖</p>
 <img src="/kubernetes-redis/redis-helm-ok.jpg" class=""> 
@@ -377,6 +377,9 @@
 
 
 <h2 id="常用的參數"><a href="#常用的參數" class="headerlink" title="常用的參數"></a>常用的參數</h2><p>| 參數  |  描述 |  預設值 |<br>| global.storageClass    |Global storage class for dynamic provisioning     | nil |<br>| global.redis.password     |  Redis password (overrides password)     | nil |<br>| cluster.enabled     | Use master-slave topology     | true |<br>| usePassword     | Use password     | true |<br>| persistence.existingClaim     | Provide an existing PersistentVolumeClaim     | nil |<br>| master.persistence.enabled     | Use a PVC to persist data (master node)     | true |<br>| master.persistence.storageClass     | Storage class of backing PVC     | generic |<br>| redisPort     | redisPort     | 6379 |</p>
+<h2 id="加入Prometheus-Operator監控-Bug參考-https-github-com-helm-charts-issues-20180"><a href="#加入Prometheus-Operator監控-Bug參考-https-github-com-helm-charts-issues-20180" class="headerlink" title="加入Prometheus-Operator監控 (Bug參考:https://github.com/helm/charts/issues/20180)"></a>加入Prometheus-Operator監控 (Bug參考:<a href="https://github.com/helm/charts/issues/20180" target="_blank" rel="noopener">https://github.com/helm/charts/issues/20180</a>)</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ kubectl edit servicemonitor redis-1582017251</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">....</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">  在labels:下方加入</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    release: prometheus-operator</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">....</span></pre></td></tr></table></figure>
+
+
 <p>more info : [Redis for Helm] <a href="https://github.com/helm/charts/tree/master/stable/redis" target="_blank" rel="noopener">https://github.com/helm/charts/tree/master/stable/redis</a></p>
 
       
@@ -410,8 +413,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/kubernetes-prometheus/" rel="next" title="Kubernetes监控管理工具prometheus-operator">
-                <i class="fa fa-chevron-left"></i> Kubernetes监控管理工具prometheus-operator
+              <a href="/kubernetes-rabbitmq/" rel="next" title="訊息佇列服務-RabbitMQ on Kubernetes">
+                <i class="fa fa-chevron-left"></i> 訊息佇列服務-RabbitMQ on Kubernetes
               </a>
             
           </div>
@@ -420,8 +423,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/kubernetes-rabbitmq/" rel="prev" title="訊息佇列服務-RabbitMQ on Kubernetes">
-                訊息佇列服務-RabbitMQ on Kubernetes <i class="fa fa-chevron-right"></i>
+              <a href="/kubeapps/" rel="prev" title="Kubernetes應用程式佈署工具-Kubeapps">
+                Kubernetes應用程式佈署工具-Kubeapps <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -503,7 +506,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-count">14</span>
                   <span class="site-state-item-name">文章</span>
                 </a>
               </div>
@@ -571,7 +574,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#預先安裝Helm"><span class="nav-number">1.</span> <span class="nav-text">預先安裝Helm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#預先準備storageclass服務"><span class="nav-number">2.</span> <span class="nav-text">預先準備storageclass服務</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#透過Helm安裝Redis"><span class="nav-number">3.</span> <span class="nav-text">透過Helm安裝Redis</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安裝Client管理工具-for-Windows"><span class="nav-number">4.</span> <span class="nav-text">安裝Client管理工具 for Windows</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#需先安裝chocolate工具"><span class="nav-number">4.1.</span> <span class="nav-text">需先安裝chocolate工具</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常用的參數"><span class="nav-number">5.</span> <span class="nav-text">常用的參數</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#預先安裝Helm"><span class="nav-number">1.</span> <span class="nav-text">預先安裝Helm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#預先準備storageclass服務"><span class="nav-number">2.</span> <span class="nav-text">預先準備storageclass服務</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#透過Helm安裝Redis"><span class="nav-number">3.</span> <span class="nav-text">透過Helm安裝Redis</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安裝Client管理工具-for-Windows"><span class="nav-number">4.</span> <span class="nav-text">安裝Client管理工具 for Windows</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#需先安裝chocolate工具"><span class="nav-number">4.1.</span> <span class="nav-text">需先安裝chocolate工具</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常用的參數"><span class="nav-number">5.</span> <span class="nav-text">常用的參數</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#加入Prometheus-Operator監控-Bug參考-https-github-com-helm-charts-issues-20180"><span class="nav-number">6.</span> <span class="nav-text">加入Prometheus-Operator監控 (Bug參考:https://github.com/helm/charts/issues/20180)</span></a></li></ol></div>
             
 
           </div>

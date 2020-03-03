@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="kubernetes,helm," />
 
 
 
@@ -79,14 +79,23 @@
 
 
 
-<meta name="description" content="小小攻城獅技術宅">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Anson Tech Note">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;archives&#x2F;2019&#x2F;page&#x2F;2&#x2F;index.html">
+<meta name="description" content="Kubeapps是一个基于web的UI，用于在Kubernetes集群中部署和管理应用程序。 預先安裝HelmHelm 安裝Kubeapps透過Helm (v3) chart來安裝最新版的kubeapps，並指定namespace為kubeapps 1helm repo add bitnami https:&#x2F;&#x2F;charts.bitnami.com&#x2F;bitnami2kubectl create na">
+<meta name="keywords" content="kubernetes,helm">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kubernetes應用程式佈署工具-Kubeapps">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;kubeapps&#x2F;index.html">
 <meta property="og:site_name" content="Anson Tech Note">
-<meta property="og:description" content="小小攻城獅技術宅">
+<meta property="og:description" content="Kubeapps是一个基于web的UI，用于在Kubernetes集群中部署和管理应用程序。 預先安裝HelmHelm 安裝Kubeapps透過Helm (v3) chart來安裝最新版的kubeapps，並指定namespace為kubeapps 1helm repo add bitnami https:&#x2F;&#x2F;charts.bitnami.com&#x2F;bitnami2kubectl create na">
 <meta property="og:locale" content="zh-tw">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;kubeapps&#x2F;kubeapps-helm-success.jpg">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;kubeapps&#x2F;kubeapps-login-success.jpg">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;kubeapps&#x2F;kubeapps-catalog.jpg">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;kubeapps&#x2F;kubeapps-wordpress-1.jpg">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;kubeapps&#x2F;kubeapps-wordpress-2.jpg">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;kubeapps&#x2F;kubeapps-wordpress-OK.jpg">
+<meta property="og:updated_time" content="2020-02-15T09:13:58.399Z">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;kubeapps&#x2F;kubeapps-helm-success.jpg">
 
 
 
@@ -116,13 +125,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/archives/2019/page/2/"/>
+  <link rel="canonical" href="http://yoursite.com/kubeapps/"/>
 
 
 
 
 
-  <title>歸檔 | Anson Tech Note</title>
+  <title>Kubernetes應用程式佈署工具-Kubeapps | Anson Tech Note</title>
   
 
 
@@ -141,7 +150,7 @@
     
   
 
-  <div class="container sidebar-position-left page-archive">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -259,78 +268,189 @@
           <div id="content" class="content">
             
 
+  <div id="posts" class="posts-expand">
+    
+
+  
+
   
   
   
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
-
-      <span class="archive-page-counter">
-        
-        
-        
-          
-        
-        嗯..! 目前共計 13 篇文章。 繼續努力。
-      </span>
-
-      
-
-        
-        
-        
-
-        
-          
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2019">2019</h1>
-          </div>
-        
-        
-
-        
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/kubeapps/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Anson Lin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/docker-avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Anson Tech Note">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/vmware-harbor/" itemprop="url">
-              
-                <span itemprop="name">自建Docker Image倉庫 - VMware Harbor</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">Kubernetes應用程式佈署工具-Kubeapps</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2019-11-28T00:00:00+08:00"
-              content="2019-11-28" >
-          11-28
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">發表於</span>
+              
+              <time title="創建於" itemprop="dateCreated datePublished" datetime="2020-02-15T00:00:00+08:00">
+                2020-02-15
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
 
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
+      
 
+      
+        <p>Kubeapps是一个基于web的UI，用于在Kubernetes集群中部署和管理应用程序。</p>
+<h2 id="預先安裝Helm"><a href="#預先安裝Helm" class="headerlink" title="預先安裝Helm"></a>預先安裝Helm</h2><p><a href="../kubernetes-helm/">Helm</a></p>
+<h2 id="安裝Kubeapps"><a href="#安裝Kubeapps" class="headerlink" title="安裝Kubeapps"></a>安裝Kubeapps</h2><p>透過Helm (v3) chart來安裝最新版的kubeapps，並指定namespace為kubeapps</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">helm repo add bitnami https://charts.bitnami.com/bitnami</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">kubectl create namespace kubeapps</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">helm install kubeapps --namespace kubeapps bitnami/kubeapps \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">--<span class="built_in">set</span> useHelm3=<span class="literal">true</span>,ingress.enabled=<span class="literal">true</span>,ingress.hostname=kubeapps.10.40.46.101.nip.io</span></pre></td></tr></table></figure>
+
+<p>安裝完成視圖</p>
+<img src="/kubeapps/kubeapps-helm-success.jpg" class="">
+
+
+
+<p>more info:<br><a href="https://github.com/kubeapps/kubeapps/blob/master/docs/user/getting-started.md" target="_blank" rel="noopener">GetStart</a><br>[Readme] (<a href="https://github.com/kubeapps/kubeapps/blob/master/chart/kubeapps/README.md" target="_blank" rel="noopener">https://github.com/kubeapps/kubeapps/blob/master/chart/kubeapps/README.md</a> )<br>[參數值] ( <a href="https://github.com/kubeapps/kubeapps/blob/master/chart/kubeapps/values.yaml" target="_blank" rel="noopener">https://github.com/kubeapps/kubeapps/blob/master/chart/kubeapps/values.yaml</a> )</p>
+<h2 id="建立Kubernetes-API-token"><a href="#建立Kubernetes-API-token" class="headerlink" title="建立Kubernetes API token"></a>建立Kubernetes API token</h2><p>存取kubeapps UI面板需要透過API token，以下建立並查詢</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">kubectl create serviceaccount kubeapps-operator</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">kubectl create clusterrolebinding kubeapps-operator --clusterrole=cluster-admin --serviceaccount=default:kubeapps-operator</span></pre></td></tr></table></figure>
+
+<p>取得token值</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">kubectl get secret $(kubectl get serviceaccount kubeapps-operator -o jsonpath=<span class="string">'&#123;range .secrets[*]&#125;&#123;.name&#125;&#123;"\n"&#125;&#123;end&#125;'</span> | grep kubeapps-operator-token) -o jsonpath=<span class="string">'&#123;.data.token&#125;'</span> -o go-template=<span class="string">'&#123;&#123;.data.token | base64decode&#125;&#125;'</span> &amp;&amp; <span class="built_in">echo</span></span></pre></td></tr></table></figure>
+
+<h2 id="存取kubeapps面板"><a href="#存取kubeapps面板" class="headerlink" title="存取kubeapps面板"></a>存取kubeapps面板</h2><p>如果沒有設置ingress，則需要透過port forward來轉發，此處設置為8888 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">"Visit http://127.0.0.1:8080 in your browser to access the Kubeapps Dashboard"</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">kubectl port-forward -n kubeapps svc/kubeapps --address 0.0.0.0  8888:80</span></pre></td></tr></table></figure>
+
+<p>開啟站台並輸入步驟2產生的token，完成示圖</p>
+<p>畫面說明：<br>Applications表示目前透過Helm佈署的應用程式、<br>Catalog表示在Bitnami Helm Hub上可供佈署的應用程式<br>Service Instance還在阿法階段就不說啦XD</p>
+<img src="/kubeapps/kubeapps-login-success.jpg" class="">
+
+
+
+
+
+<h2 id="測試佈署Wordpress"><a href="#測試佈署Wordpress" class="headerlink" title="測試佈署Wordpress"></a>測試佈署Wordpress</h2><img src="/kubeapps/kubeapps-catalog.jpg" class="">
+
+<p>1.點選 Catalog &gt;&gt;  搜尋下 wordpress &gt;&gt; 進入後點選右方綠色按鈕 “Deploy”</p>
+<p>2.輸入相關參數值，完成後點選最底下Submit</p>
+<img src="/kubeapps/kubeapps-wordpress-1.jpg" class="">
+<img src="/kubeapps/kubeapps-wordpress-2.jpg" class="">
+
+<p>3.等待容器建立後開啟站台</p>
+<img src="/kubeapps/kubeapps-wordpress-OK.jpg" class="">
+
+
+<h2 id="移除kubeapps"><a href="#移除kubeapps" class="headerlink" title="移除kubeapps"></a>移除kubeapps</h2><p>To uninstall/delete the kubeapps deployment:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># For Helm 2</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">$ helm delete --purge kubeapps</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># For Helm 3</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">$ helm uninstall kubeapps</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># Optional: Only if there are no more instances of Kubeapps</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">$ kubectl delete crd apprepositories.kubeapps.com</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">$ kubectl delete namespace kubeapps</span></pre></td></tr></table></figure>
+
+      
     </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/kubernetes/" rel="tag"># kubernetes</a>
+          
+            <a href="/tags/helm/" rel="tag"># helm</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/kubernetes-redis/" rel="next" title="緩存服務-redis on Kubernetes">
+                <i class="fa fa-chevron-left"></i> 緩存服務-redis on Kubernetes
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
-
-  
-  <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/archives/2019/">&lt;i class&#x3D;&quot;fa fa-angle-left&quot;&gt;&lt;&#x2F;i&gt;</a><a class="page-number" href="/archives/2019/">1</a><span class="page-number current">2</span>
-  </nav>
+  </article>
 
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -338,6 +458,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -358,8 +482,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            本站概覽
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -378,7 +511,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-count">14</span>
                   <span class="site-state-item-name">文章</span>
                 </a>
               </div>
@@ -436,6 +569,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#預先安裝Helm"><span class="nav-number">1.</span> <span class="nav-text">預先安裝Helm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安裝Kubeapps"><span class="nav-number">2.</span> <span class="nav-text">安裝Kubeapps</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#建立Kubernetes-API-token"><span class="nav-number">3.</span> <span class="nav-text">建立Kubernetes API token</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#存取kubeapps面板"><span class="nav-number">4.</span> <span class="nav-text">存取kubeapps面板</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#測試佈署Wordpress"><span class="nav-number">5.</span> <span class="nav-text">測試佈署Wordpress</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#移除kubeapps"><span class="nav-number">6.</span> <span class="nav-text">移除kubeapps</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -589,6 +738,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
