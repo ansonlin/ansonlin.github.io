@@ -80,18 +80,22 @@
 
 
 <meta name="description" content="本篇文章目標是利用 Linux 作業系統虛擬機器(CentOS 7.6)，用 kubeadm 這套工具於自己的環境下從無到有打造一個具有高可用性(HA)的 K8S Cluster 環境，可以隨時進行擴充以應付日後成長的需求。 安裝前必備或參考先前文章 安裝Kubeadm  OSRedhat &#x2F; CentOS 7、Minimum install  Docker 1$ sudo yum install">
-<meta name="keywords" content="kubernetes,kubeadm,HA">
 <meta property="og:type" content="article">
 <meta property="og:title" content="建立高可用Kubernetes集群">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;kubernetes-ha&#x2F;index.html">
+<meta property="og:url" content="http://yoursite.com/kubernetes-ha/index.html">
 <meta property="og:site_name" content="Anson Tech Note">
 <meta property="og:description" content="本篇文章目標是利用 Linux 作業系統虛擬機器(CentOS 7.6)，用 kubeadm 這套工具於自己的環境下從無到有打造一個具有高可用性(HA)的 K8S Cluster 環境，可以隨時進行擴充以應付日後成長的需求。 安裝前必備或參考先前文章 安裝Kubeadm  OSRedhat &#x2F; CentOS 7、Minimum install  Docker 1$ sudo yum install">
-<meta property="og:locale" content="zh-tw">
-<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;kubernetes-ha&#x2F;kube-ha-master-ok.jpg">
-<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;kubernetes-ha&#x2F;kube-ha-master-getNodes.jpg">
-<meta property="og:updated_time" content="2020-02-15T06:52:54.277Z">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="http://yoursite.com/kubernetes-ha/kube-ha-master-ok.jpg">
+<meta property="og:image" content="http://yoursite.com/kubernetes-ha/kube-ha-master-getNodes.jpg">
+<meta property="article:published_time" content="2019-12-11T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-02-15T06:52:54.277Z">
+<meta property="article:author" content="Anson Lin">
+<meta property="article:tag" content="kubernetes">
+<meta property="article:tag" content="kubeadm">
+<meta property="article:tag" content="HA">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;kubernetes-ha&#x2F;kube-ha-master-ok.jpg">
+<meta name="twitter:image" content="http://yoursite.com/kubernetes-ha/kube-ha-master-ok.jpg">
 
 
 
@@ -137,7 +141,7 @@
 
 
 
-</head>
+<meta name="generator" content="Hexo 4.2.0"></head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-tw">
 
@@ -215,7 +219,7 @@
       
         <li class="menu-item menu-item-search">
           
-            <a href="javascript:;" target="_blank" rel="noopener" class="popup-trigger">
+            <a href="javascript:;" class="popup-trigger">
           
             
               <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
@@ -351,10 +355,10 @@
 <li><p>OS<br>Redhat / CentOS 7、Minimum install</p>
 </li>
 <li><p>Docker</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ sudo yum install docker</span></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo yum install docker</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>安裝kubeadm 1.16.3</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ sudo yum install kubeadm-1.16.3 ,kubelet-1.16.3, kubectl-1.16.3</span></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo yum install kubeadm-1.16.3 ,kubelet-1.16.3, kubectl-1.16.3</span><br></pre></td></tr></table></figure>
 
 </li>
 </ol>
@@ -372,31 +376,31 @@
 </li>
 </ol>
 <p>由於第一台會先做成範本，所以先加入hosts，方便後續進行。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ sudo cat &lt;&lt;EOF &gt; /etc/hosts</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">10.40.46.101    kube-lb01</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">10.40.141.101   master01</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">10.40.141.102   master02</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">10.40.141.103   master03</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">10.40.46.101    worker01</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">10.40.141.112   worker02</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">10.40.141.113   worker03</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">EOF</span></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ sudo cat &lt;&lt;EOF &gt; /etc/hosts</span><br><span class="line">10.40.46.101    kube-lb01</span><br><span class="line">10.40.141.101   master01</span><br><span class="line">10.40.141.102   master02</span><br><span class="line">10.40.141.103   master03</span><br><span class="line">10.40.46.101    worker01</span><br><span class="line">10.40.141.112   worker02</span><br><span class="line">10.40.141.113   worker03</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
 
-<h2 id="安裝部署Kubernetes-HA"><a href="#安裝部署Kubernetes-HA" class="headerlink" title="安裝部署Kubernetes HA"></a>安裝部署Kubernetes HA</h2><h3 id="HA-Proxy角色"><a href="#HA-Proxy角色" class="headerlink" title="HA Proxy角色"></a>HA Proxy角色</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># sudo yum install haproxy</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># cd /etc/haproxy &amp;&amp; mv haproxy.cfg haproxy.cfg.original</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># cat &lt;&lt;EOF &gt; haproxy.cfg</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">global</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">    user haproxy</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">    group haproxy</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">defaults</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">    mode http</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">    <span class="built_in">log</span> global</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">    retries 2</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">    timeout connect 3000ms</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">    timeout server 5000ms</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">    timeout client 5000ms</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">frontend kubernetes</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">    <span class="built_in">bind</span> 10.40.46.101:6443</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">    option tcplog</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">    mode tcp</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">    default_backend kubernetes-master-nodes</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">backend kubernetes-master-nodes</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line">    mode tcp</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line">    balance roundrobin</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line">    option tcp-check</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line">    server master01 10.40.141.101:6443 check fall 3 rise 2</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">24</span></pre></td><td class="code"><pre><span class="line">    server master02 10.40.141.102:6443 check fall 3 rise 2</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">25</span></pre></td><td class="code"><pre><span class="line">    server master03 10.40.141.103:6443 check fall 3 rise 2</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">26</span></pre></td><td class="code"><pre><span class="line">EOF</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">27</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># systemctl enable haproxy &amp;&amp; systemctl start haproxy &amp;&amp; systemctl status haproxy</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">28</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># yum install nc &amp;&amp; nc -v localhost 6443</span></span></pre></td></tr></table></figure>
+<h2 id="安裝部署Kubernetes-HA"><a href="#安裝部署Kubernetes-HA" class="headerlink" title="安裝部署Kubernetes HA"></a>安裝部署Kubernetes HA</h2><h3 id="HA-Proxy角色"><a href="#HA-Proxy角色" class="headerlink" title="HA Proxy角色"></a>HA Proxy角色</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># sudo yum install haproxy</span></span><br><span class="line"><span class="comment"># cd /etc/haproxy &amp;&amp; mv haproxy.cfg haproxy.cfg.original</span></span><br><span class="line"><span class="comment"># cat &lt;&lt;EOF &gt; haproxy.cfg</span></span><br><span class="line">global</span><br><span class="line">    user haproxy</span><br><span class="line">    group haproxy</span><br><span class="line">defaults</span><br><span class="line">    mode http</span><br><span class="line">    <span class="built_in">log</span> global</span><br><span class="line">    retries 2</span><br><span class="line">    timeout connect 3000ms</span><br><span class="line">    timeout server 5000ms</span><br><span class="line">    timeout client 5000ms</span><br><span class="line">frontend kubernetes</span><br><span class="line">    <span class="built_in">bind</span> 10.40.46.101:6443</span><br><span class="line">    option tcplog</span><br><span class="line">    mode tcp</span><br><span class="line">    default_backend kubernetes-master-nodes</span><br><span class="line">backend kubernetes-master-nodes</span><br><span class="line">    mode tcp</span><br><span class="line">    balance roundrobin</span><br><span class="line">    option tcp-check</span><br><span class="line">    server master01 10.40.141.101:6443 check fall 3 rise 2</span><br><span class="line">    server master02 10.40.141.102:6443 check fall 3 rise 2</span><br><span class="line">    server master03 10.40.141.103:6443 check fall 3 rise 2</span><br><span class="line">EOF</span><br><span class="line"><span class="comment"># systemctl enable haproxy &amp;&amp; systemctl start haproxy &amp;&amp; systemctl status haproxy</span></span><br><span class="line"><span class="comment"># yum install nc &amp;&amp; nc -v localhost 6443</span></span><br></pre></td></tr></table></figure>
 
 <h3 id="Master角色"><a href="#Master角色" class="headerlink" title="Master角色"></a>Master角色</h3><ol>
-<li>Master01服务器<br>先於第一台Mater01主機啟用及群，再將其他台分別加入<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># kubeadm init \</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">--pod-network-cidr=192.168.0.0/16 \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">--control-plane-endpoint <span class="string">"kube-lb01:6443"</span> \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">--upload-certs</span></pre></td></tr></table></figure>
+<li>Master01服务器<br>先於第一台Mater01主機啟用及群，再將其他台分別加入<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># kubeadm init \</span></span><br><span class="line">--pod-network-cidr=192.168.0.0/16 \</span><br><span class="line">--control-plane-endpoint <span class="string">"kube-lb01:6443"</span> \</span><br><span class="line">--upload-certs</span><br></pre></td></tr></table></figure>
 
 </li>
 </ol>
 <p>加入kubectl所需變數</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># mkdir -p $HOME/.kube</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># sudo chown $(id -u):$(id -g) $HOME/.kube/config</span></span></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># mkdir -p $HOME/.kube</span></span><br><span class="line"><span class="comment"># sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config</span></span><br><span class="line"><span class="comment"># sudo chown $(id -u):$(id -g) $HOME/.kube/config</span></span><br></pre></td></tr></table></figure>
 
 <p>設置Kubernetes 網路套件Calico</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># kubectl apply -f https://docs.projectcalico.org/v3.8/manifests/calico.yaml</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># kubectl get pod -n kube-system -w</span></span></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># kubectl apply -f https://docs.projectcalico.org/v3.8/manifests/calico.yaml</span></span><br><span class="line"><span class="comment"># kubectl get pod -n kube-system -w</span></span><br></pre></td></tr></table></figure>
 
 <img src="/kubernetes-ha/kube-ha-master-ok.jpg" class=""> 
 
 <ol start="2">
-<li>Master02、Master03服务器<br>加入kubernetes Master<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># kubeadm join kube-lb01:6443 --token 6pkk9m.elns1xxxxxxxxxxx \</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">    --discovery-token-ca-cert-hash sha256:eded5303dcb0001e6c1bb90cffxxxxxxxxxxxxxx \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    --control-plane --certificate-key 092ba50f514e6a3f1c11636537f56xxxxxxxxxxxxxxxxxxx</span></pre></td></tr></table></figure>
+<li>Master02、Master03服务器<br>加入kubernetes Master<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># kubeadm join kube-lb01:6443 --token 6pkk9m.elns1xxxxxxxxxxx \</span></span><br><span class="line">    --discovery-token-ca-cert-hash sha256:eded5303dcb0001e6c1bb90cffxxxxxxxxxxxxxx \</span><br><span class="line">    --control-plane --certificate-key 092ba50f514e6a3f1c11636537f56xxxxxxxxxxxxxxxxxxx</span><br></pre></td></tr></table></figure>
 
 
 </li>
 </ol>
 <h3 id="Worker角色"><a href="#Worker角色" class="headerlink" title="Worker角色"></a>Worker角色</h3><p>加入kubernetes Nodes</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># kubeadm join kube-lb01:6443 --token 6pkk9m.elns1eoxxxxxxx \</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">    --discovery-token-ca-cert-hash sha256:eded5303dcb0001e6c1bbxxxxxxxxxxxxxxxxxxxxxxxxxx</span></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># kubeadm join kube-lb01:6443 --token 6pkk9m.elns1eoxxxxxxx \</span></span><br><span class="line">    --discovery-token-ca-cert-hash sha256:eded5303dcb0001e6c1bbxxxxxxxxxxxxxxxxxxxxxxxxxx</span><br></pre></td></tr></table></figure>
 
 <img src="/kubernetes-ha/kube-ha-master-getNodes.jpg" class=""> 
 
@@ -533,7 +537,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-count">17</span>
                   <span class="site-state-item-name">文章</span>
                 </a>
               </div>
@@ -546,7 +550,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-count">16</span>
                   <span class="site-state-item-name">標籤</span>
                 </a>
               </div>

@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="kubernetes," />
+  <meta name="keywords" content="kubernetes,helm,mariadb," />
 
 
 
@@ -79,22 +79,22 @@
 
 
 
-<meta name="description" content="LoadBalancerLoadBalancer 是提供給公有雲使用的類型，如果一個 Service 設定為這個類型時，就會利用叢集中的 Cloud Provider 元件去呼叫公有雲的服務 API 來建立負載平衡器，接著跟這個 Pod 進行綁定。但在地端部署時，該類型會實現類似 NodePort 機制，也可以額外設定 externalIPs 來直接存取指定的 Port。 接下来的MetalLB">
+<meta name="description" content="MariaDB是世界上最受歡迎的數據庫服務器之一。它由MySQL的原始開發人員製作，並保證保持開源。著名的用戶包括Wikipedia，Facebook和Google。 MariaDB是作為開源軟件開發的，是作為關係數據庫提供的，用於訪問數據的SQL接口。MariaDB的最新版本還包括GIS和JSON功能。 圖表介紹該圖表使用Helm軟件包管理器在Kubernetes集群上引導了MariaDB">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Kubernetes地端裸機負載均衡器MetalLB">
-<meta property="og:url" content="http://yoursite.com/kubernetes-metallb/index.html">
+<meta property="og:title" content="資料庫服務-MariaDB on Kubernetes">
+<meta property="og:url" content="http://yoursite.com/kubernetes-mariadb/index.html">
 <meta property="og:site_name" content="Anson Tech Note">
-<meta property="og:description" content="LoadBalancerLoadBalancer 是提供給公有雲使用的類型，如果一個 Service 設定為這個類型時，就會利用叢集中的 Cloud Provider 元件去呼叫公有雲的服務 API 來建立負載平衡器，接著跟這個 Pod 進行綁定。但在地端部署時，該類型會實現類似 NodePort 機制，也可以額外設定 externalIPs 來直接存取指定的 Port。 接下来的MetalLB">
+<meta property="og:description" content="MariaDB是世界上最受歡迎的數據庫服務器之一。它由MySQL的原始開發人員製作，並保證保持開源。著名的用戶包括Wikipedia，Facebook和Google。 MariaDB是作為開源軟件開發的，是作為關係數據庫提供的，用於訪問數據的SQL接口。MariaDB的最新版本還包括GIS和JSON功能。 圖表介紹該圖表使用Helm軟件包管理器在Kubernetes集群上引導了MariaDB">
 <meta property="og:locale" content="zh_TW">
-<meta property="og:image" content="https://i.imgur.com/FmNbr7N.png">
-<meta property="og:image" content="http://yoursite.com/kubernetes-metallb/metallb-nginx.png">
-<meta property="og:image" content="http://yoursite.com/kubernetes-metallb/metallb-shareip.jpg">
-<meta property="article:published_time" content="2019-12-07T16:00:00.000Z">
-<meta property="article:modified_time" content="2020-02-15T06:54:26.662Z">
+<meta property="og:image" content="http://yoursite.com/kubernetes-mariadb/mariadb-testConn.png">
+<meta property="article:published_time" content="2020-03-14T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-03-13T08:36:09.790Z">
 <meta property="article:author" content="Anson Lin">
 <meta property="article:tag" content="kubernetes">
+<meta property="article:tag" content="helm">
+<meta property="article:tag" content="mariadb">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://i.imgur.com/FmNbr7N.png">
+<meta name="twitter:image" content="http://yoursite.com/kubernetes-mariadb/mariadb-testConn.png">
 
 
 
@@ -124,13 +124,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/kubernetes-metallb/"/>
+  <link rel="canonical" href="http://yoursite.com/kubernetes-mariadb/"/>
 
 
 
 
 
-  <title>Kubernetes地端裸機負載均衡器MetalLB | Anson Tech Note</title>
+  <title>資料庫服務-MariaDB on Kubernetes | Anson Tech Note</title>
   
 
 
@@ -281,7 +281,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/kubernetes-metallb/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/kubernetes-mariadb/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Anson Lin">
@@ -298,7 +298,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Kubernetes地端裸機負載均衡器MetalLB</h1>
+          <h1 class="post-title" itemprop="name headline">資料庫服務-MariaDB on Kubernetes</h1>
         
 
         <div class="post-meta">
@@ -310,8 +310,8 @@
               
                 <span class="post-meta-item-text">發表於</span>
               
-              <time title="創建於" itemprop="dateCreated datePublished" datetime="2019-12-08T00:00:00+08:00">
-                2019-12-08
+              <time title="創建於" itemprop="dateCreated datePublished" datetime="2020-03-15T00:00:00+08:00">
+                2020-03-15
               </time>
             
 
@@ -348,42 +348,22 @@
       
 
       
-        <p><img src="https://i.imgur.com/FmNbr7N.png" alt="LoadBalancer"></p>
-<h2 id="LoadBalancer"><a href="#LoadBalancer" class="headerlink" title="LoadBalancer"></a>LoadBalancer</h2><p>LoadBalancer 是提供給公有雲使用的類型，如果一個 Service 設定為這個類型時，就會利用叢集中的 Cloud Provider 元件去呼叫公有雲的服務 API 來建立負載平衡器，接著跟這個 Pod 進行綁定。<br>但在地端部署時，該類型會實現類似 NodePort 機制，也可以額外設定 externalIPs 來直接存取指定的 Port。</p>
-<p>接下来的MetalLB，提供给私有 Kubernetes 用户带来了一个方便、可用的软體解决方案。</p>
-<h2 id="MetalLB"><a href="#MetalLB" class="headerlink" title="MetalLB"></a>MetalLB</h2><p>MetalLB支援兩種模式： Layer2、BGP ，更多可參考 <a href="https://metallb.universe.tf/installation/" target="_blank" rel="noopener">Metallb</a>。</p>
-<h3 id="安裝metallb"><a href="#安裝metallb" class="headerlink" title="安裝metallb"></a>安裝metallb</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl apply -f https://raw.githubusercontent.com/google/metallb/v0.8.3/manifests/metallb.yaml</span><br></pre></td></tr></table></figure>
+         
 
-<p>會新增一個metallb-system的命名空間，可以確認下Metallb的安裝情況</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ cat &lt;&lt;EOF | kubectl apply -f -</span><br><span class="line">kubectl -n metallb-system get po</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
-
-<h3 id="設置IP池"><a href="#設置IP池" class="headerlink" title="設置IP池"></a>設置IP池</h3><p>more info:<a href="https://metallb.universe.tf/configuration/" target="_blank" rel="noopener">metalLB Configure</a></p>
-<p>指定MetalLB使用的IP Pools(測試用可直接指定Master節點的IP)</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$ cat &lt;&lt;EOF | kubectl apply -f -</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: ConfigMap</span><br><span class="line">metadata:</span><br><span class="line">  namespace: metallb-system</span><br><span class="line">  name: config</span><br><span class="line">data:</span><br><span class="line">  config: |</span><br><span class="line">    address-pools:</span><br><span class="line">    - name: ip-Pool</span><br><span class="line">      protocol: layer2</span><br><span class="line">      auto-assign: <span class="literal">true</span></span><br><span class="line">      addresses:</span><br><span class="line">      - 10.40.46.101/32</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
-
-<h2 id="測試Metallb"><a href="#測試Metallb" class="headerlink" title="測試Metallb"></a>測試Metallb</h2><p>接著就起一個nginx服務，來看看是否會自動取得MetalLB的位址</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl run nginx --image nginx --port 80</span><br><span class="line">$ kubectl expose deploy nginx --port 8080 --target-port 80 --<span class="built_in">type</span> LoadBalancer</span><br></pre></td></tr></table></figure>
-
-<p>查看測試用 nginx service，確認Loadbalancer IP</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl get svc</span><br></pre></td></tr></table></figure>
-
-<p>然後curl nginx位址 <a href="http://10.40.46.101:8080" target="_blank" rel="noopener">http://10.40.46.101:8080</a></p>
-<img src="/kubernetes-metallb/metallb-nginx.png" class=""> 
-
-<h2 id="多服務共用一個LB-IP"><a href="#多服務共用一個LB-IP" class="headerlink" title="多服務共用一個LB IP"></a>多服務共用一個LB IP</h2><p>只要服務不使用相同的端口，就可以跨多個服務共享同一負載均衡器。為了使服務共享負載均衡器，所有受影響的服務都需要使用相同的註釋版本metallb.universe.tf/allow-shared-ip: <NAME>。</p>
-<p>先移除原本测试的service，在建立metallb允许共用的IP address</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl delete svc nginx</span><br><span class="line"> </span><br><span class="line">$ cat &lt;&lt;EOF | kubectl apply -f -</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Service</span><br><span class="line">metadata:</span><br><span class="line">  name: nginx-1</span><br><span class="line">  annotations: </span><br><span class="line">    metallb.universe.tf/allow-shared-ip: shared</span><br><span class="line">spec:</span><br><span class="line">  ports:</span><br><span class="line">  - name: http</span><br><span class="line">    port: 81</span><br><span class="line">    protocol: TCP</span><br><span class="line">    targetPort: 80</span><br><span class="line">  selector:</span><br><span class="line">    app: nginx</span><br><span class="line">  <span class="built_in">type</span>: LoadBalancer</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<h2 id="MariaDB"><a href="#MariaDB" class="headerlink" title="MariaDB"></a>MariaDB</h2><p>是世界上最受歡迎的數據庫服務器之一。它由MySQL的原始開發人員製作，並保證保持開源。著名的用戶包括Wikipedia，Facebook和Google。</p>
+<p>MariaDB是作為開源軟件開發的，是作為關係數據庫提供的，用於訪問數據的SQL接口。MariaDB的最新版本還包括GIS和JSON功能。</p>
+<h3 id="圖表介紹"><a href="#圖表介紹" class="headerlink" title="圖表介紹"></a>圖表介紹</h3><p>該圖表使用Helm軟件包管理器在Kubernetes集群上引導了MariaDB複製集群的部署。</p>
+<p>Bitnami圖表可與Kubeapps一起用於在群集中部署和管理Helm Charts。該圖表已經過測試，可以在BKPR之上與NGINX Ingress，證書管理器，流利的軟件和Prometheus 一起使用。</p>
+<h2 id="先決條件"><a href="#先決條件" class="headerlink" title="先決條件"></a>先決條件</h2><p>[Kubernetes] (../kubernetes-kubeadm/) 、<br><a href="../kubernetes-helm/">Helm</a> 、<br><a href="../kubernetes-storageclass-nfs/">StorageClass</a> </p>
+<h2 id="MariaDB安裝"><a href="#MariaDB安裝" class="headerlink" title="MariaDB安裝"></a>MariaDB安裝</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl create ns database</span><br><span class="line"></span><br><span class="line">$ helm repo add bitnami https://charts.bitnami.com/bitnami</span><br><span class="line"></span><br><span class="line">$ helm install -n database  mariadb \</span><br><span class="line">--<span class="built_in">set</span> global.storageClass=nfs-client,master.persistence.storageClass=nfs-client,slave.persistence.storageClass=nfs-client \</span><br><span class="line">--<span class="built_in">set</span> service.type=NodePort \</span><br><span class="line">--<span class="built_in">set</span> rootUser.forcePassword=<span class="literal">true</span>,rootUser.password=Abc1234567890 \</span><br><span class="line">--<span class="built_in">set</span> db.name=dop,db.user=digiwin,db.password=digiwin,db.forcePassword=<span class="literal">true</span> \</span><br><span class="line">--<span class="built_in">set</span> replication.enabled=<span class="literal">false</span> \</span><br><span class="line">--<span class="built_in">set</span> metrics.enabled=<span class="literal">true</span>,metrics.serviceMonitor.enabled=<span class="literal">true</span>,metrics.serviceMonitor.namespace=default \</span><br><span class="line">bitnami/mariadb</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">完成後存取的訊息</span><br><span class="line">``` bash</span><br><span class="line">Tip:</span><br><span class="line">  Watch the deployment status using the <span class="built_in">command</span>: kubectl get pods -w --namespace database -l release=mariadb</span><br><span class="line">Services:</span><br><span class="line">  <span class="built_in">echo</span> Master: mariadb.database.svc.cluster.local:3306</span><br><span class="line">Administrator credentials:</span><br><span class="line">  Username: root</span><br><span class="line">  Password : $(kubectl get secret --namespace database mariadb -o jsonpath=<span class="string">"&#123;.data.mariadb-root-password&#125;"</span> | base64 --decode)</span><br><span class="line"></span><br><span class="line">To connect to your database:</span><br><span class="line">  1. Run a pod that you can use as a client:</span><br><span class="line"></span><br><span class="line">      kubectl run mariadb-client --rm --tty -i --restart=<span class="string">'Never'</span> --image  docker.io/bitnami/mariadb:10.3.22-debian-10-r44 --namespace database --<span class="built_in">command</span> -- bash</span><br><span class="line"></span><br><span class="line">  2. To connect to master service (<span class="built_in">read</span>/write):</span><br><span class="line"></span><br><span class="line">      mysql -h mariadb.database.svc.cluster.local -uroot -p dop</span><br><span class="line"></span><br><span class="line">To upgrade this helm chart:</span><br><span class="line">  1. Obtain the password as described on the <span class="string">'Administrator credentials'</span> section and <span class="built_in">set</span> the <span class="string">'rootUser.password'</span> parameter as shown below:</span><br><span class="line"></span><br><span class="line">      ROOT_PASSWORD=$(kubectl get secret --namespace database mariadb -o jsonpath=<span class="string">"&#123;.data.mariadb-root-password&#125;"</span> | base64 --decode)</span><br><span class="line">      helm upgrade mariadb bitnami/mariadb --<span class="built_in">set</span> rootUser.password=<span class="variable">$ROOT_PASSWORD</span></span><br></pre></td></tr></table></figure>
 
 
-<p>建立多个services</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">$ cat &lt;&lt;EOF | kubectl apply -f -</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Service</span><br><span class="line">metadata:</span><br><span class="line">  name: nginx-2</span><br><span class="line">  annotations: </span><br><span class="line">    metallb.universe.tf/allow-shared-ip: shared</span><br><span class="line">spec:</span><br><span class="line">  ports:</span><br><span class="line">  - name: http</span><br><span class="line">    port: 82</span><br><span class="line">    protocol: TCP</span><br><span class="line">    targetPort: 80</span><br><span class="line">  selector:</span><br><span class="line">    app: nginx</span><br><span class="line">  <span class="built_in">type</span>: LoadBalancer</span><br><span class="line"> EOF</span><br></pre></td></tr></table></figure>
-
-<p>确认下执行状况</p>
-<img src="/kubernetes-metallb/metallb-shareip.jpg" class=""> 
+<h2 id="使用DB客戶端工具測試連接"><a href="#使用DB客戶端工具測試連接" class="headerlink" title="使用DB客戶端工具測試連接"></a>使用DB客戶端工具測試連接</h2><p>這使用<a href="https://www.heidisql.com/download.php" target="_blank" rel="noopener">HeidiSQL</a>可攜版本做測試，有興趣搜尋一下，這邊不再囉嗦了！</p>
+<img src="/kubernetes-mariadb/mariadb-testConn.png" class="">
 
 
 
-<p>More info:<br><a href="https://metallb.universe.tf/installation/" target="_blank" rel="noopener">https://metallb.universe.tf/installation/</a><br><a href="https://asergo.com/knowledge-base/kubernetes/private-managed-cluster/load-balancer.html" target="_blank" rel="noopener">https://asergo.com/knowledge-base/kubernetes/private-managed-cluster/load-balancer.html</a><br><a href="https://k2r2bai.com/2019/09/27/ironman2020/day12/" target="_blank" rel="noopener">https://k2r2bai.com/2019/09/27/ironman2020/day12/</a> </p>
+<p>More info:<br><a href="https://github.com/bitnami/charts/tree/master/bitnami/mariadb" target="_blank" rel="noopener">MariaDB Bitnami</a></p>
 
       
     </div>
@@ -403,6 +383,10 @@
           
             <a href="/tags/kubernetes/" rel="tag"># kubernetes</a>
           
+            <a href="/tags/helm/" rel="tag"># helm</a>
+          
+            <a href="/tags/mariadb/" rel="tag"># mariadb</a>
+          
         </div>
       
 
@@ -414,8 +398,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/kubernetes-windows-tools/" rel="next" title="Kubernetes 在Windows常用工具">
-                <i class="fa fa-chevron-left"></i> Kubernetes 在Windows常用工具
+              <a href="/kubernetes-mongodb/" rel="next" title="文檔資料庫服務-mongodb">
+                <i class="fa fa-chevron-left"></i> 文檔資料庫服務-mongodb
               </a>
             
           </div>
@@ -423,10 +407,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/kubernetes-storageclass-nfs/" rel="prev" title="Kubernetes儲存StorageClass">
-                Kubernetes儲存StorageClass <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -575,7 +555,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#LoadBalancer"><span class="nav-number">1.</span> <span class="nav-text">LoadBalancer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MetalLB"><span class="nav-number">2.</span> <span class="nav-text">MetalLB</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安裝metallb"><span class="nav-number">2.1.</span> <span class="nav-text">安裝metallb</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#設置IP池"><span class="nav-number">2.2.</span> <span class="nav-text">設置IP池</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#測試Metallb"><span class="nav-number">3.</span> <span class="nav-text">測試Metallb</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多服務共用一個LB-IP"><span class="nav-number">4.</span> <span class="nav-text">多服務共用一個LB IP</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#MariaDB"><span class="nav-number">1.</span> <span class="nav-text">MariaDB</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#圖表介紹"><span class="nav-number">1.1.</span> <span class="nav-text">圖表介紹</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#先決條件"><span class="nav-number">2.</span> <span class="nav-text">先決條件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MariaDB安裝"><span class="nav-number">3.</span> <span class="nav-text">MariaDB安裝</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用DB客戶端工具測試連接"><span class="nav-number">4.</span> <span class="nav-text">使用DB客戶端工具測試連接</span></a></li></ol></div>
             
 
           </div>

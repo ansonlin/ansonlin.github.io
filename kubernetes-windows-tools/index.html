@@ -79,15 +79,19 @@
 
 
 
-<meta name="description" content="必备安装套件管理工具Chocolatey 1# cmd2# powershell3# Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString(&amp;apos;https:&#x2F;&#x2F;chocolatey.org&#x2F;install.ps1&amp;apos;))  注：如果發生 调用“Dow">
-<meta name="keywords" content="kubernetes,helm,hexo">
+<meta name="description" content="必备安装套件管理工具Chocolatey 123# cmd# powershell# Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString(&#39;https:&#x2F;&#x2F;chocolatey.org&#x2F;install.ps1&#39;))  注：如果發生 调用“Dow">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Kubernetes 在Windows常用工具">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;kubernetes-windows-tools&#x2F;index.html">
+<meta property="og:url" content="http://yoursite.com/kubernetes-windows-tools/index.html">
 <meta property="og:site_name" content="Anson Tech Note">
-<meta property="og:description" content="必备安装套件管理工具Chocolatey 1# cmd2# powershell3# Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString(&amp;apos;https:&#x2F;&#x2F;chocolatey.org&#x2F;install.ps1&amp;apos;))  注：如果發生 调用“Dow">
-<meta property="og:locale" content="zh-tw">
-<meta property="og:updated_time" content="2020-02-18T07:32:09.557Z">
+<meta property="og:description" content="必备安装套件管理工具Chocolatey 123# cmd# powershell# Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString(&#39;https:&#x2F;&#x2F;chocolatey.org&#x2F;install.ps1&#39;))  注：如果發生 调用“Dow">
+<meta property="og:locale" content="zh_TW">
+<meta property="article:published_time" content="2019-12-04T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-02-18T07:32:09.557Z">
+<meta property="article:author" content="Anson Lin">
+<meta property="article:tag" content="kubernetes">
+<meta property="article:tag" content="helm">
+<meta property="article:tag" content="hexo">
 <meta name="twitter:card" content="summary">
 
 
@@ -134,7 +138,7 @@
 
 
 
-</head>
+<meta name="generator" content="Hexo 4.2.0"></head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-tw">
 
@@ -212,7 +216,7 @@
       
         <li class="menu-item menu-item-search">
           
-            <a href="javascript:;" target="_blank" rel="noopener" class="popup-trigger">
+            <a href="javascript:;" class="popup-trigger">
           
             
               <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
@@ -343,48 +347,48 @@
 
       
         <h2 id="必备安装套件管理工具"><a href="#必备安装套件管理工具" class="headerlink" title="必备安装套件管理工具"></a>必备安装套件管理工具</h2><p><a href="https://chocolatey.org/" target="_blank" rel="noopener">Chocolatey</a></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># cmd</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># powershell</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))</span></span></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cmd</span></span><br><span class="line"><span class="comment"># powershell</span></span><br><span class="line"><span class="comment"># Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))</span></span><br></pre></td></tr></table></figure>
 
 <p>注：如果發生 调用“DownloadString”时发生异常:“请求被中止: 未能创建 SSL/TLS 安全通道。”</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Ssl3 -bor [Net.SecurityProtocolType]::Tls -bor [Net.SecurityProtocolType]::Tls11 -bor [Net.SecurityProtocolType]::Tls12</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">[Net.ServicePointManager]::SecurityProtocol</span></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Ssl3 -bor [Net.SecurityProtocolType]::Tls -bor [Net.SecurityProtocolType]::Tls11 -bor [Net.SecurityProtocolType]::Tls12</span><br><span class="line">[Net.ServicePointManager]::SecurityProtocol</span><br></pre></td></tr></table></figure>
 
 <h2 id="Kubernetes管理工具"><a href="#Kubernetes管理工具" class="headerlink" title="Kubernetes管理工具"></a>Kubernetes管理工具</h2><h3 id="Kubectl"><a href="#Kubectl" class="headerlink" title="Kubectl"></a>Kubectl</h3><p>kubectl install on windows<br><a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/" target="_blank" rel="noopener">https://kubernetes.io/docs/tasks/tools/install-kubectl/</a></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">choco install kubernetes-cli</span></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">choco install kubernetes-cli</span><br></pre></td></tr></table></figure>
 
 <h3 id="Helm"><a href="#Helm" class="headerlink" title="Helm"></a>Helm</h3><p>Kubernetes社區的成員為 Chocolatey貢獻了一份Helm軟件包。該軟件包通常是最新的。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># choco install kubernetes-helm</span></span></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># choco install kubernetes-helm</span></span><br></pre></td></tr></table></figure>
 
 
 <h2 id="Markdown-Blog管理工具Hexo"><a href="#Markdown-Blog管理工具Hexo" class="headerlink" title="Markdown Blog管理工具Hexo"></a>Markdown Blog管理工具Hexo</h2><p><a href="https://hexo.io/zh-tw/docs/" target="_blank" rel="noopener">Hexo</a></p>
 <h3 id="安装Hexo"><a href="#安装Hexo" class="headerlink" title="安装Hexo"></a>安装Hexo</h3><p>必备套件并安装</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">choco install git</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">choco install nodejs</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">choco install nodejs-lts</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">choco install yarn</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">yarn global add hexo</span></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">choco install git</span><br><span class="line">choco install nodejs</span><br><span class="line">choco install nodejs-lts</span><br><span class="line">choco install yarn</span><br><span class="line">yarn global add hexo</span><br></pre></td></tr></table></figure>
 
 
 <p>重启cmdline, 創建我的部落格</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">hexo init blog</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> blog</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">hexo server</span></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo init blog</span><br><span class="line"><span class="built_in">cd</span> blog</span><br><span class="line">hexo server</span><br></pre></td></tr></table></figure>
 
 <p>新增文章</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">hexo new post xxxxx</span></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new post xxxxx</span><br></pre></td></tr></table></figure>
 
 <p>建立草稿</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># hexo new draft test-draft</span></span></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># hexo new draft test-draft</span></span><br></pre></td></tr></table></figure>
 
 <p>草稿转成正式文章<br>可下命令转成正式文章，也可手动将文章从 source/_posts 目录移动到 source/_drafts 目录即可。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># hexo P test-draft</span></span></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># hexo P test-draft</span></span><br></pre></td></tr></table></figure>
 
 
 <p>佈署到github</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">hexo clean &amp;&amp; hexo deploy</span></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo clean &amp;&amp; hexo deploy</span><br></pre></td></tr></table></figure>
 
 <h3 id="永久連結（Permalinks）"><a href="#永久連結（Permalinks）" class="headerlink" title="永久連結（Permalinks）"></a>永久連結（Permalinks）</h3><p>文章預設是以日期來分區，但是這會造成文章鏈結時的困擾，以下透過permalinks來解決。</p>
 <p>1.修改站台下 _config.yaml</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">permalink:  :urlname/</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">permalink_defaults:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">  urlname: index</span></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">permalink:  :urlname/</span><br><span class="line">permalink_defaults:</span><br><span class="line">  urlname: index</span><br></pre></td></tr></table></figure>
 
 <p>2.修改scaffolds下的post.md</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">title: &#123;&#123; title &#125;&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">urlname: </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">date: &#123;&#123; date &#125;&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">tags:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">categories:</span></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">title: &#123;&#123; title &#125;&#125;</span><br><span class="line">urlname: </span><br><span class="line">date: &#123;&#123; date &#125;&#125;</span><br><span class="line">tags:</span><br><span class="line">categories:</span><br></pre></td></tr></table></figure>
 
 <p>3.最後別忘了每篇文章要加上urlname</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">---</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">title: Kubernetes工具超好用der</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">urlname: kubernetes-tool</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">date: 2019-12-29</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">---</span></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: Kubernetes工具超好用der</span><br><span class="line">urlname: kubernetes-tool</span><br><span class="line">date: 2019-12-29</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
 
 
 
@@ -516,7 +520,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-count">17</span>
                   <span class="site-state-item-name">文章</span>
                 </a>
               </div>
@@ -529,7 +533,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-count">16</span>
                   <span class="site-state-item-name">標籤</span>
                 </a>
               </div>

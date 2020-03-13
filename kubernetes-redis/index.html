@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="kubernetes,helm," />
+  <meta name="keywords" content="kubernetes,helm,redis," />
 
 
 
@@ -79,20 +79,23 @@
 
 
 
-<meta name="description" content="預先安裝Helm參考先前文章 安裝Helm 預先準備storageclass服務參考先前文章 StorageClass 透過Helm安裝Redis1$ kubectl create ns redis23$ helm install  stable&#x2F;redis \4-n redis \5--set global.storageClass&#x3D;nfs-client \6--set cluster.enab">
-<meta name="keywords" content="kubernetes,helm">
+<meta name="description" content="預先安裝Helm參考先前文章 安裝Helm 預先準備storageclass服務參考先前文章 StorageClass Redis透過Helm安裝Redis 123456helm install redis \--set global.storageClass&#x3D;nfs-client \--set cluster.enabled&#x3D;false \--set usePassword&#x3D;false \--s">
 <meta property="og:type" content="article">
 <meta property="og:title" content="緩存服務-redis on Kubernetes">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;kubernetes-redis&#x2F;index.html">
+<meta property="og:url" content="http://yoursite.com/kubernetes-redis/index.html">
 <meta property="og:site_name" content="Anson Tech Note">
-<meta property="og:description" content="預先安裝Helm參考先前文章 安裝Helm 預先準備storageclass服務參考先前文章 StorageClass 透過Helm安裝Redis1$ kubectl create ns redis23$ helm install  stable&#x2F;redis \4-n redis \5--set global.storageClass&#x3D;nfs-client \6--set cluster.enab">
-<meta property="og:locale" content="zh-tw">
-<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;kubernetes-redis&#x2F;redis-helm-ok.jpg">
-<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;kubernetes-redis&#x2F;redismgr-chocolate.jpg">
-<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;kubernetes-redis&#x2F;redismgr-success.jpg">
-<meta property="og:updated_time" content="2020-02-19T01:16:05.669Z">
+<meta property="og:description" content="預先安裝Helm參考先前文章 安裝Helm 預先準備storageclass服務參考先前文章 StorageClass Redis透過Helm安裝Redis 123456helm install redis \--set global.storageClass&#x3D;nfs-client \--set cluster.enabled&#x3D;false \--set usePassword&#x3D;false \--s">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="http://yoursite.com/kubernetes-redis/redismgr-chocolate.jpg">
+<meta property="og:image" content="http://yoursite.com/kubernetes-redis/redismgr-success.jpg">
+<meta property="article:published_time" content="2020-02-12T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-03-13T06:13:38.692Z">
+<meta property="article:author" content="Anson Lin">
+<meta property="article:tag" content="kubernetes">
+<meta property="article:tag" content="helm">
+<meta property="article:tag" content="redis">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;kubernetes-redis&#x2F;redis-helm-ok.jpg">
+<meta name="twitter:image" content="http://yoursite.com/kubernetes-redis/redismgr-chocolate.jpg">
 
 
 
@@ -138,7 +141,7 @@
 
 
 
-</head>
+<meta name="generator" content="Hexo 4.2.0"></head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-tw">
 
@@ -216,7 +219,7 @@
       
         <li class="menu-item menu-item-search">
           
-            <a href="javascript:;" target="_blank" rel="noopener" class="popup-trigger">
+            <a href="javascript:;" class="popup-trigger">
           
             
               <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
@@ -348,39 +351,41 @@
       
         <h2 id="預先安裝Helm"><a href="#預先安裝Helm" class="headerlink" title="預先安裝Helm"></a>預先安裝Helm</h2><p>參考先前文章 <a href="../kubernetes-helm/">安裝Helm</a></p>
 <h2 id="預先準備storageclass服務"><a href="#預先準備storageclass服務" class="headerlink" title="預先準備storageclass服務"></a>預先準備storageclass服務</h2><p>參考先前文章 <a href="../kubernetes-storageclass-nfs/">StorageClass</a></p>
-<h2 id="透過Helm安裝Redis"><a href="#透過Helm安裝Redis" class="headerlink" title="透過Helm安裝Redis"></a>透過Helm安裝Redis</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ kubectl create ns redis</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">$ helm install  stable/redis \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">-n redis \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">--<span class="built_in">set</span> global.storageClass=nfs-client \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">--<span class="built_in">set</span> cluster.enabled=<span class="literal">false</span>,usePassword=<span class="literal">false</span> \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">--<span class="built_in">set</span> metrics.enabled=<span class="literal">true</span>,metrics.serviceMonitor.enabled=<span class="literal">true</span>,metrics.service.labels=release=myprom</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">--generate-name</span></pre></td></tr></table></figure>
+<h2 id="Redis"><a href="#Redis" class="headerlink" title="Redis"></a>Redis</h2><p>透過Helm安裝Redis</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">helm install redis \</span><br><span class="line">--<span class="built_in">set</span> global.storageClass=nfs-client \</span><br><span class="line">--<span class="built_in">set</span> cluster.enabled=<span class="literal">false</span> \</span><br><span class="line">--<span class="built_in">set</span> usePassword=<span class="literal">false</span> \</span><br><span class="line">--<span class="built_in">set</span> metrics.enabled=<span class="literal">true</span>,metrics.serviceMonitor.enabled=<span class="literal">true</span>,metrics.serviceMonitor.namespace=default \</span><br><span class="line">bitnami/redis</span><br></pre></td></tr></table></figure>
 
-<p>安裝完成視圖</p>
-<img src="/kubernetes-redis/redis-helm-ok.jpg" class=""> 
+<p>取得所有參數值</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ curl https://raw.githubusercontent.com/bitnami/charts/master/bitnami/redis/values.yaml -o redis-values.yaml</span><br></pre></td></tr></table></figure>
 
 
-<p>方便各位使用，另外擷取成以下文字</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">To get your password run:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">    <span class="built_in">export</span> REDIS_PASSWORD=$(kubectl get secret --namespace redis redis-1581670855 -o jsonpath=<span class="string">"&#123;.data.redis-password&#125;"</span> | base64 --decode)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">To connect to your Redis server:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">1. Run a Redis pod that you can use as a client:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">   kubectl run --namespace redis redis-1581670855-client --rm --tty -i --restart=<span class="string">'Never'</span> \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">    --env REDIS_PASSWORD=<span class="variable">$REDIS_PASSWORD</span> \</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">   --image docker.io/bitnami/redis:5.0.7-debian-10-r0 -- bash</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">2. Connect using the Redis CLI:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">   redis-cli -h redis-1581670855-master -a <span class="variable">$REDIS_PASSWORD</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">   redis-cli -h redis-1581670855-slave -a <span class="variable">$REDIS_PASSWORD</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">To connect to your database from outside the cluster execute the following commands:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">    kubectl port-forward --namespace redis svc/redis-1581670855-master 6379:6379 &amp;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">    redis-cli -h 127.0.0.1 -p 6379 -a <span class="variable">$REDIS_PASSWORD</span></span></pre></td></tr></table></figure>
+<p>完成狀態</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">** Please be patient <span class="keyword">while</span> the chart is being deployed **</span><br><span class="line">Redis can be accessed via port 6379 on the following DNS name from within your cluster:</span><br><span class="line"></span><br><span class="line">redis-master.default.svc.cluster.local</span><br><span class="line"></span><br><span class="line">To connect to your Redis server:</span><br><span class="line"></span><br><span class="line">1. Run a Redis pod that you can use as a client:</span><br><span class="line"></span><br><span class="line">   kubectl run --namespace default redis-client --rm --tty -i --restart=<span class="string">'Never'</span> \</span><br><span class="line"></span><br><span class="line">   --image docker.io/bitnami/redis:5.0.7-debian-10-r51 -- bash</span><br><span class="line"></span><br><span class="line">2. Connect using the Redis CLI:</span><br><span class="line">   redis-cli -h redis-master</span><br><span class="line"></span><br><span class="line">To connect to your database from outside the cluster execute the following commands:</span><br><span class="line"></span><br><span class="line">    kubectl port-forward --namespace default svc/redis-master 6379:6379 &amp;</span><br><span class="line">    redis-cli -h 127.0.0.1 -p 6379</span><br></pre></td></tr></table></figure>
 
 
 
 <p>透過nodeport連線(不建議，建議：內部服務之間透過service name存取)</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">kubectl -n redis edit svc redis-1581671838-master</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">1.在targetPort下方新增</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">nodePort: 30379</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">2.type修改成</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"><span class="built_in">type</span>: NodePort</span></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">kubectl -n redis edit svc redis-1581671838-master</span><br><span class="line">1.在targetPort下方新增</span><br><span class="line">nodePort: 30379</span><br><span class="line"></span><br><span class="line">2.type修改成</span><br><span class="line"><span class="built_in">type</span>: NodePort</span><br></pre></td></tr></table></figure>
 
 
 
 <h2 id="安裝Client管理工具-for-Windows"><a href="#安裝Client管理工具-for-Windows" class="headerlink" title="安裝Client管理工具 for Windows"></a>安裝Client管理工具 for Windows</h2><h3 id="需先安裝chocolate工具"><a href="#需先安裝chocolate工具" class="headerlink" title="需先安裝chocolate工具"></a>需先安裝chocolate工具</h3><p>參考先前文章 <a href="./windows-tools.md">Windows工具</a></p>
 <p>會自動安裝0.9.3.817版本</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$　choco install redis-desktop-manager</span></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$　choco install redis-desktop-manager</span><br></pre></td></tr></table></figure>
 
 <p>安裝過程</p>
 <img src="/kubernetes-redis/redismgr-chocolate.jpg" class=""> 
 
-<p>測試連接</p>
+<p>測試連接<br>預設會安裝在C:\Program Files (x86)\RedisDesktopManager</p>
 <img src="/kubernetes-redis/redismgr-success.jpg" class=""> 
 
 
 
 <h2 id="常用的參數"><a href="#常用的參數" class="headerlink" title="常用的參數"></a>常用的參數</h2><p>| 參數  |  描述 |  預設值 |<br>| global.storageClass    |Global storage class for dynamic provisioning     | nil |<br>| global.redis.password     |  Redis password (overrides password)     | nil |<br>| cluster.enabled     | Use master-slave topology     | true |<br>| usePassword     | Use password     | true |<br>| persistence.existingClaim     | Provide an existing PersistentVolumeClaim     | nil |<br>| master.persistence.enabled     | Use a PVC to persist data (master node)     | true |<br>| master.persistence.storageClass     | Storage class of backing PVC     | generic |<br>| redisPort     | redisPort     | 6379 |</p>
-<h2 id="加入Prometheus-Operator監控-Bug參考-https-github-com-helm-charts-issues-20180"><a href="#加入Prometheus-Operator監控-Bug參考-https-github-com-helm-charts-issues-20180" class="headerlink" title="加入Prometheus-Operator監控 (Bug參考:https://github.com/helm/charts/issues/20180)"></a>加入Prometheus-Operator監控 (Bug參考:<a href="https://github.com/helm/charts/issues/20180" target="_blank" rel="noopener">https://github.com/helm/charts/issues/20180</a>)</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">$ kubectl edit servicemonitor redis-1582017251</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">....</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">  在labels:下方加入</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    release: prometheus-operator</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">....</span></pre></td></tr></table></figure>
+<h2 id="加入Prometheus-Operator監控-Bug參考-https-github-com-helm-charts-issues-20180"><a href="#加入Prometheus-Operator監控-Bug參考-https-github-com-helm-charts-issues-20180" class="headerlink" title="加入Prometheus-Operator監控 (Bug參考:https://github.com/helm/charts/issues/20180)"></a>加入Prometheus-Operator監控 (Bug參考:<a href="https://github.com/helm/charts/issues/20180" target="_blank" rel="noopener">https://github.com/helm/charts/issues/20180</a>)</h2><p>如果Prometheus 的service Discovery下沒看到redis，可使用該方式排除</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl edit servicemonitor redis-1582017251</span><br><span class="line">....</span><br><span class="line">  在labels:下方加入</span><br><span class="line">    release: prom</span><br><span class="line">....</span><br></pre></td></tr></table></figure>
 
 
-<p>more info : [Redis for Helm] <a href="https://github.com/helm/charts/tree/master/stable/redis" target="_blank" rel="noopener">https://github.com/helm/charts/tree/master/stable/redis</a></p>
+<p>more info : <a href="https://github.com/bitnami/charts/tree/master/bitnami/redis" target="_blank" rel="noopener">Redis Bitnami</a></p>
 
       
     </div>
@@ -401,6 +406,8 @@
             <a href="/tags/kubernetes/" rel="tag"># kubernetes</a>
           
             <a href="/tags/helm/" rel="tag"># helm</a>
+          
+            <a href="/tags/redis/" rel="tag"># redis</a>
           
         </div>
       
@@ -506,7 +513,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-count">17</span>
                   <span class="site-state-item-name">文章</span>
                 </a>
               </div>
@@ -519,7 +526,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-count">16</span>
                   <span class="site-state-item-name">標籤</span>
                 </a>
               </div>
@@ -574,7 +581,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#預先安裝Helm"><span class="nav-number">1.</span> <span class="nav-text">預先安裝Helm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#預先準備storageclass服務"><span class="nav-number">2.</span> <span class="nav-text">預先準備storageclass服務</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#透過Helm安裝Redis"><span class="nav-number">3.</span> <span class="nav-text">透過Helm安裝Redis</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安裝Client管理工具-for-Windows"><span class="nav-number">4.</span> <span class="nav-text">安裝Client管理工具 for Windows</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#需先安裝chocolate工具"><span class="nav-number">4.1.</span> <span class="nav-text">需先安裝chocolate工具</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常用的參數"><span class="nav-number">5.</span> <span class="nav-text">常用的參數</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#加入Prometheus-Operator監控-Bug參考-https-github-com-helm-charts-issues-20180"><span class="nav-number">6.</span> <span class="nav-text">加入Prometheus-Operator監控 (Bug參考:https://github.com/helm/charts/issues/20180)</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#預先安裝Helm"><span class="nav-number">1.</span> <span class="nav-text">預先安裝Helm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#預先準備storageclass服務"><span class="nav-number">2.</span> <span class="nav-text">預先準備storageclass服務</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis"><span class="nav-number">3.</span> <span class="nav-text">Redis</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安裝Client管理工具-for-Windows"><span class="nav-number">4.</span> <span class="nav-text">安裝Client管理工具 for Windows</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#需先安裝chocolate工具"><span class="nav-number">4.1.</span> <span class="nav-text">需先安裝chocolate工具</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常用的參數"><span class="nav-number">5.</span> <span class="nav-text">常用的參數</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#加入Prometheus-Operator監控-Bug參考-https-github-com-helm-charts-issues-20180"><span class="nav-number">6.</span> <span class="nav-text">加入Prometheus-Operator監控 (Bug參考:https:&#x2F;&#x2F;github.com&#x2F;helm&#x2F;charts&#x2F;issues&#x2F;20180)</span></a></li></ol></div>
             
 
           </div>
