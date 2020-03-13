@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="zh-tw">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="manifest" href="/images/manifest.json">
+  <meta name="google-site-verification" content="vk-35kXC1s-Z1uHwRHcTm-fpdFp6yRJn4x3ypkq8hs4">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"ansonlin.github.io","root":"/","scheme":"Pisces","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="小小攻城獅技術宅">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Anson Tech Note">
+<meta property="og:url" content="https://ansonlin.github.io/page/2/index.html">
+<meta property="og:site_name" content="Anson Tech Note">
+<meta property="og:description" content="小小攻城獅技術宅">
+<meta property="og:locale" content="zh_TW">
+<meta property="article:author" content="Anson Lin">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://ansonlin.github.io/page/2/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : true,
+    isPost : false
+  };
+</script>
+
+  <title>Anson Tech Note</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Anson Tech Note</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-fw fa-sitemap"></i>Sitemap</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-tw">
+    <link itemprop="mainEntityOfPage" href="https://ansonlin.github.io/kubernetes-storageclass-nfs/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/docker-icon.png">
+      <meta itemprop="name" content="Anson Lin">
+      <meta itemprop="description" content="小小攻城獅技術宅">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Anson Tech Note">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/kubernetes-storageclass-nfs/" class="post-title-link" itemprop="url">Kubernetes儲存StorageClass</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2019-12-11 00:00:00" itemprop="dateCreated datePublished" datetime="2019-12-11T00:00:00+08:00">2019-12-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-03-05 11:53:37" itemprop="dateModified" datetime="2020-03-05T11:53:37+08:00">2020-03-05</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Volume介绍"><a href="#Volume介绍" class="headerlink" title="Volume介绍"></a>Volume介绍</h1><p>與管理計算實例相比，管理存儲是一個明顯的問題。該PersistentVolume子系統提供了用戶和管理員抽象的存儲如何從它是如何消費提供信息的API。為此，我們引入了兩個新的API資源：PersistentVolume(PV)和PersistentVolumeClaim(PVC)。<br>PV是集群中的資源。PVC是對這些資源的請求，並且還充當對資源的聲明檢查。可以通過兩種方式設置PV：靜態或動態。</p>
+<ol>
+<li><p>靜態<br>集群管理員創建許多PV。它們帶有實際存儲的詳細信息，可供群集用戶使用。它們存在於Kubernetes API中，可供使用。 (使用上不方便)</p>
+</li>
+<li><p>動態 (推薦)<br>此供應基於StorageClasses：PVC必須請求 存儲類，並且管理員必須已經創建並配置了該類，才能進行動態供應。要求該類的聲明””實際上為其自身禁用了動態預配置。要基於存儲類別啟用動態存儲配置，集群管理員需要 在API服務器上啟用DefaultStorageClass。</p>
+</li>
+</ol>
+<h1 id="PersistentVolume介绍"><a href="#PersistentVolume介绍" class="headerlink" title="PersistentVolume介绍"></a>PersistentVolume介绍</h1><p>PersistentVolume可以當成是 Kubernetes Cluster 中專們用來儲存資料的地方。不但能將 container 的資料儲存下來，也可以透過掛載(mounting)的方式，供許多個 Pods 同時存取。<br>more info: <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/#types-of-persistent-volumes" target="_blank" rel="noopener">Kubernetes Persistent Volume</a></p>
+<p>以下介绍幾個常用的Persistent Volume類型:</p>
+<ol>
+<li>emptyDir類型<br>每當我們建立一個新的 Pod 物件時，Kubernetes 就會在這個 Pod 裏建立一個 emptyDir，該 Pod 中所有的 container 都可以讀寫 emptyDir 中的資料。當 Pod 從 Node 中被移除時，emptyDir 也會隨之消失，範例如下：</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Pod</span><br><span class="line">metadata:</span><br><span class="line">  name: <span class="built_in">test</span>-pd</span><br><span class="line">spec:</span><br><span class="line">  containers:</span><br><span class="line">  - image: k8s.gcr.io/<span class="built_in">test</span>-webserver</span><br><span class="line">    name: <span class="built_in">test</span>-container</span><br><span class="line">    volumeMounts:</span><br><span class="line">    - mountPath: /cache</span><br><span class="line">      name: cache-volume</span><br><span class="line">  volumes:</span><br><span class="line">  - name: cache-volume</span><br><span class="line">    emptyDir: &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>2.hostpath類型</p>
+<p>hostPath 的生命週期與 Node 相同，當 Pod 因某些原因而須重啟時，檔案仍保存在 Node 的檔案系統(file system)底下，直到該 Node 物件被 Kubernetes Cluster 移除，資料才會消失，範例如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Pod</span><br><span class="line">metadata:</span><br><span class="line">  name: <span class="built_in">test</span>-pd</span><br><span class="line">spec:</span><br><span class="line">  containers:</span><br><span class="line">  - image: k8s.gcr.io/<span class="built_in">test</span>-webserver</span><br><span class="line">    name: <span class="built_in">test</span>-container</span><br><span class="line">    volumeMounts:</span><br><span class="line">    - mountPath: /<span class="built_in">test</span>-pd</span><br><span class="line">      name: <span class="built_in">test</span>-volume</span><br><span class="line">  volumes:</span><br><span class="line">  - name: <span class="built_in">test</span>-volume</span><br><span class="line">    hostPath:</span><br><span class="line">      <span class="comment"># directory location on host</span></span><br><span class="line">      path: /data</span><br><span class="line">      <span class="comment"># this field is optional</span></span><br><span class="line">      <span class="built_in">type</span>: Directory</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h1 id="動態-Volume-storageClass"><a href="#動態-Volume-storageClass" class="headerlink" title="動態 Volume - storageClass"></a>動態 Volume - storageClass</h1><p>StorageClass為管理員提供了一種描述他們提供的存儲“類”的方式。不同的類可能會映射到服務質量級別，備份策略或群集管理員確定的任意策略。Kubernetes本身對類表示什麼沒有意見。在其他存儲系統中，有時也將此概念稱為”配置文件”，以下範例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: storage.k8s.io/v1</span><br><span class="line">kind: StorageClass</span><br><span class="line">metadata:</span><br><span class="line">  name: standard</span><br><span class="line">provisioner: kubernetes.io/aws-ebs</span><br><span class="line">parameters:</span><br><span class="line">  <span class="built_in">type</span>: gp2</span><br><span class="line">reclaimPolicy: Retain</span><br><span class="line">allowVolumeExpansion: <span class="literal">true</span></span><br><span class="line">mountOptions:</span><br><span class="line">  - debug</span><br><span class="line">volumeBindingMode: Immediate</span><br></pre></td></tr></table></figure>
+
+<p>然而Storage classes的Provisioner(供應商)常見的有： AWSElasticBlockStore、AzureFile、AzureDisk、CephFS、GCEPersistentDisk、Gluster、iSCSI、VsphereVolume、NFS</p>
+<img src="/kubernetes-storageclass-nfs/pv&sc.jpg" class=""> 
+
+<h2 id="透過helm建立nfs-storage-class"><a href="#透過helm建立nfs-storage-class" class="headerlink" title="透過helm建立nfs storage class"></a>透過helm建立nfs storage class</h2><img src="/kubernetes-storageclass-nfs/kube-nfs-client.jpg" class=""> 
+
+<h3 id="預先準備"><a href="#預先準備" class="headerlink" title="預先準備"></a>預先準備</h3><ol>
+<li>需要一台NAS，手邊一台Synology就拿來用了，或是自建一台VM使用NFS服務(不建議)，</li>
+<li>每一台Worker需要安裝nfs client服務<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo yum install -y nfs-utils</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ol>
+<h3 id="安裝nfs-storage-class"><a href="#安裝nfs-storage-class" class="headerlink" title="安裝nfs storage class"></a>安裝nfs storage class</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">helm repo add stable  https://kubernetes-charts.storage.googleapis.com</span><br><span class="line">helm repo update</span><br><span class="line">helm install --<span class="built_in">set</span> nfs.server=10.40.141.130 --<span class="built_in">set</span> nfs.path=/volume1/k8ssc --<span class="built_in">set</span> storageClass.defaultClass=<span class="literal">true</span>  --<span class="built_in">set</span> storageClass.name=nfs-client --generate-name stable/nfs-client-provisioner</span><br></pre></td></tr></table></figure>
+
+<p>確認佈署狀況</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl get sc</span><br></pre></td></tr></table></figure>
+<img src="/kubernetes-storageclass-nfs/sc-nfs.jpg" class=""> 
+
+<h3 id="實際部署pod"><a href="#實際部署pod" class="headerlink" title="實際部署pod"></a>實際部署pod</h3><p>實際部署pod測試是否正常寫入到nfs，先建立pvc</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">kind: PersistentVolumeClaim</span><br><span class="line">apiVersion: v1</span><br><span class="line">metadata:</span><br><span class="line">  name: <span class="built_in">test</span>-claim</span><br><span class="line">  annotations:</span><br><span class="line">    volume.beta.kubernetes.io/storage-class: <span class="string">"nfs-client"</span></span><br><span class="line">spec:</span><br><span class="line">  accessModes:</span><br><span class="line">    - ReadWriteMany</span><br><span class="line">  resources:</span><br><span class="line">    requests:</span><br><span class="line">      storage: 1Mi</span><br></pre></td></tr></table></figure>
+
+<p>在建立pod</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">kind: Pod</span><br><span class="line">apiVersion: v1</span><br><span class="line">metadata:</span><br><span class="line">  name: <span class="built_in">test</span>-pod</span><br><span class="line">spec:</span><br><span class="line">  containers:</span><br><span class="line">  - name: <span class="built_in">test</span>-pod</span><br><span class="line">    image: gcr.io/google_containers/busybox:1.24</span><br><span class="line">    <span class="built_in">command</span>:</span><br><span class="line">      - <span class="string">"/bin/sh"</span></span><br><span class="line">    args:</span><br><span class="line">      - <span class="string">"-c"</span></span><br><span class="line">      - <span class="string">"touch /mnt/SUCCESS &amp;&amp; exit 0 || exit 1"</span></span><br><span class="line">    volumeMounts:</span><br><span class="line">      - name: nfs-pvc</span><br><span class="line">        mountPath: <span class="string">"/mnt"</span></span><br><span class="line">  restartPolicy: <span class="string">"Never"</span></span><br><span class="line">  volumes:</span><br><span class="line">    - name: nfs-pvc</span><br><span class="line">      persistentVolumeClaim:</span><br><span class="line">        claimName: <span class="built_in">test</span>-claim</span><br></pre></td></tr></table></figure>
+
+<p>確認nfs是否有寫入檔案</p>
+<img src="/kubernetes-storageclass-nfs/test-pod.jpg" class=""> 
+
+
+
+
+<p>more info: <a href="https://github.com/helm/charts/tree/master/stable/nfs-client-provisioner" target="_blank" rel="noopener">Helm NFS Client provisioner</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-tw">
+    <link itemprop="mainEntityOfPage" href="https://ansonlin.github.io/kubernetes-metallb/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/docker-icon.png">
+      <meta itemprop="name" content="Anson Lin">
+      <meta itemprop="description" content="小小攻城獅技術宅">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Anson Tech Note">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/kubernetes-metallb/" class="post-title-link" itemprop="url">Kubernetes地端裸機負載均衡器MetalLB</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2019-12-08 00:00:00" itemprop="dateCreated datePublished" datetime="2019-12-08T00:00:00+08:00">2019-12-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-02-15 14:54:26" itemprop="dateModified" datetime="2020-02-15T14:54:26+08:00">2020-02-15</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><img src="https://i.imgur.com/FmNbr7N.png" alt="LoadBalancer"></p>
+<h2 id="LoadBalancer"><a href="#LoadBalancer" class="headerlink" title="LoadBalancer"></a>LoadBalancer</h2><p>LoadBalancer 是提供給公有雲使用的類型，如果一個 Service 設定為這個類型時，就會利用叢集中的 Cloud Provider 元件去呼叫公有雲的服務 API 來建立負載平衡器，接著跟這個 Pod 進行綁定。<br>但在地端部署時，該類型會實現類似 NodePort 機制，也可以額外設定 externalIPs 來直接存取指定的 Port。</p>
+<p>接下来的MetalLB，提供给私有 Kubernetes 用户带来了一个方便、可用的软體解决方案。</p>
+<h2 id="MetalLB"><a href="#MetalLB" class="headerlink" title="MetalLB"></a>MetalLB</h2><p>MetalLB支援兩種模式： Layer2、BGP ，更多可參考 <a href="https://metallb.universe.tf/installation/" target="_blank" rel="noopener">Metallb</a>。</p>
+<h3 id="安裝metallb"><a href="#安裝metallb" class="headerlink" title="安裝metallb"></a>安裝metallb</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl apply -f https://raw.githubusercontent.com/google/metallb/v0.8.3/manifests/metallb.yaml</span><br></pre></td></tr></table></figure>
+
+<p>會新增一個metallb-system的命名空間，可以確認下Metallb的安裝情況</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ cat &lt;&lt;EOF | kubectl apply -f -</span><br><span class="line">kubectl -n metallb-system get po</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<h3 id="設置IP池"><a href="#設置IP池" class="headerlink" title="設置IP池"></a>設置IP池</h3><p>more info:<a href="https://metallb.universe.tf/configuration/" target="_blank" rel="noopener">metalLB Configure</a></p>
+<p>指定MetalLB使用的IP Pools(測試用可直接指定Master節點的IP)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$ cat &lt;&lt;EOF | kubectl apply -f -</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: ConfigMap</span><br><span class="line">metadata:</span><br><span class="line">  namespace: metallb-system</span><br><span class="line">  name: config</span><br><span class="line">data:</span><br><span class="line">  config: |</span><br><span class="line">    address-pools:</span><br><span class="line">    - name: ip-Pool</span><br><span class="line">      protocol: layer2</span><br><span class="line">      auto-assign: <span class="literal">true</span></span><br><span class="line">      addresses:</span><br><span class="line">      - 10.40.46.101/32</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<h2 id="測試Metallb"><a href="#測試Metallb" class="headerlink" title="測試Metallb"></a>測試Metallb</h2><p>接著就起一個nginx服務，來看看是否會自動取得MetalLB的位址</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl run nginx --image nginx --port 80</span><br><span class="line">$ kubectl expose deploy nginx --port 8080 --target-port 80 --<span class="built_in">type</span> LoadBalancer</span><br></pre></td></tr></table></figure>
+
+<p>查看測試用 nginx service，確認Loadbalancer IP</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl get svc</span><br></pre></td></tr></table></figure>
+
+<p>然後curl nginx位址 <a href="http://10.40.46.101:8080" target="_blank" rel="noopener">http://10.40.46.101:8080</a></p>
+<img src="/kubernetes-metallb/metallb-nginx.png" class=""> 
+
+<h2 id="多服務共用一個LB-IP"><a href="#多服務共用一個LB-IP" class="headerlink" title="多服務共用一個LB IP"></a>多服務共用一個LB IP</h2><p>只要服務不使用相同的端口，就可以跨多個服務共享同一負載均衡器。為了使服務共享負載均衡器，所有受影響的服務都需要使用相同的註釋版本metallb.universe.tf/allow-shared-ip: <NAME>。</p>
+<p>先移除原本测试的service，在建立metallb允许共用的IP address</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl delete svc nginx</span><br><span class="line"> </span><br><span class="line">$ cat &lt;&lt;EOF | kubectl apply -f -</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Service</span><br><span class="line">metadata:</span><br><span class="line">  name: nginx-1</span><br><span class="line">  annotations: </span><br><span class="line">    metallb.universe.tf/allow-shared-ip: shared</span><br><span class="line">spec:</span><br><span class="line">  ports:</span><br><span class="line">  - name: http</span><br><span class="line">    port: 81</span><br><span class="line">    protocol: TCP</span><br><span class="line">    targetPort: 80</span><br><span class="line">  selector:</span><br><span class="line">    app: nginx</span><br><span class="line">  <span class="built_in">type</span>: LoadBalancer</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+
+<p>建立多个services</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">$ cat &lt;&lt;EOF | kubectl apply -f -</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Service</span><br><span class="line">metadata:</span><br><span class="line">  name: nginx-2</span><br><span class="line">  annotations: </span><br><span class="line">    metallb.universe.tf/allow-shared-ip: shared</span><br><span class="line">spec:</span><br><span class="line">  ports:</span><br><span class="line">  - name: http</span><br><span class="line">    port: 82</span><br><span class="line">    protocol: TCP</span><br><span class="line">    targetPort: 80</span><br><span class="line">  selector:</span><br><span class="line">    app: nginx</span><br><span class="line">  <span class="built_in">type</span>: LoadBalancer</span><br><span class="line"> EOF</span><br></pre></td></tr></table></figure>
+
+<p>确认下执行状况</p>
+<img src="/kubernetes-metallb/metallb-shareip.jpg" class=""> 
+
+
+
+<p>More info:<br><a href="https://metallb.universe.tf/installation/" target="_blank" rel="noopener">https://metallb.universe.tf/installation/</a><br><a href="https://asergo.com/knowledge-base/kubernetes/private-managed-cluster/load-balancer.html" target="_blank" rel="noopener">https://asergo.com/knowledge-base/kubernetes/private-managed-cluster/load-balancer.html</a><br><a href="https://k2r2bai.com/2019/09/27/ironman2020/day12/" target="_blank" rel="noopener">https://k2r2bai.com/2019/09/27/ironman2020/day12/</a> </p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-tw">
+    <link itemprop="mainEntityOfPage" href="https://ansonlin.github.io/kubernetes-windows-tools/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/docker-icon.png">
+      <meta itemprop="name" content="Anson Lin">
+      <meta itemprop="description" content="小小攻城獅技術宅">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Anson Tech Note">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/kubernetes-windows-tools/" class="post-title-link" itemprop="url">Kubernetes 在Windows常用工具</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2019-12-05 00:00:00" itemprop="dateCreated datePublished" datetime="2019-12-05T00:00:00+08:00">2019-12-05</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-03-13 16:46:11" itemprop="dateModified" datetime="2020-03-13T16:46:11+08:00">2020-03-13</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="必备安装套件管理工具"><a href="#必备安装套件管理工具" class="headerlink" title="必备安装套件管理工具"></a>必备安装套件管理工具</h2><p><a href="https://chocolatey.org/" target="_blank" rel="noopener">Chocolatey</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cmd</span></span><br><span class="line"><span class="comment"># powershell</span></span><br><span class="line"><span class="comment"># Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))</span></span><br></pre></td></tr></table></figure>
+
+<p>注：如果發生 调用“DownloadString”时发生异常:“请求被中止: 未能创建 SSL/TLS 安全通道。”</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Ssl3 -bor [Net.SecurityProtocolType]::Tls -bor [Net.SecurityProtocolType]::Tls11 -bor [Net.SecurityProtocolType]::Tls12</span><br><span class="line">[Net.ServicePointManager]::SecurityProtocol</span><br></pre></td></tr></table></figure>
+
+<h2 id="Kubernetes管理工具"><a href="#Kubernetes管理工具" class="headerlink" title="Kubernetes管理工具"></a>Kubernetes管理工具</h2><h3 id="Kubectl"><a href="#Kubectl" class="headerlink" title="Kubectl"></a>Kubectl</h3><p>kubectl install on windows<br><a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/" target="_blank" rel="noopener">https://kubernetes.io/docs/tasks/tools/install-kubectl/</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">choco install kubernetes-cli</span><br></pre></td></tr></table></figure>
+
+<h3 id="Helm"><a href="#Helm" class="headerlink" title="Helm"></a>Helm</h3><p>Kubernetes社區的成員為 Chocolatey貢獻了一份Helm軟件包。該軟件包通常是最新的。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># choco install kubernetes-helm</span></span><br></pre></td></tr></table></figure>
+
+
+<h2 id="Markdown-Blog管理工具Hexo"><a href="#Markdown-Blog管理工具Hexo" class="headerlink" title="Markdown Blog管理工具Hexo"></a>Markdown Blog管理工具Hexo</h2><p><a href="https://hexo.io/zh-tw/docs/" target="_blank" rel="noopener">Hexo</a></p>
+<h3 id="安装Hexo"><a href="#安装Hexo" class="headerlink" title="安装Hexo"></a>安装Hexo</h3><p>必备套件并安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">choco install git</span><br><span class="line">choco install nodejs</span><br><span class="line">choco install nodejs-lts</span><br><span class="line">choco install yarn</span><br><span class="line">yarn global add hexo</span><br></pre></td></tr></table></figure>
+
+
+<p>重启cmdline, 創建我的部落格</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo init blog</span><br><span class="line"><span class="built_in">cd</span> blog</span><br><span class="line">hexo server</span><br></pre></td></tr></table></figure>
+
+<p>新增文章</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new post xxxxx</span><br></pre></td></tr></table></figure>
+
+<p>建立草稿</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># hexo new draft test-draft</span></span><br></pre></td></tr></table></figure>
+
+<p>草稿转成正式文章<br>可下命令转成正式文章，也可手动将文章从 source/_posts 目录移动到 source/_drafts 目录即可。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># hexo P test-draft</span></span><br></pre></td></tr></table></figure>
+
+
+<p>佈署到github</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.email <span class="string">" your-name @ your-domain"</span></span><br><span class="line"></span><br><span class="line">git config --global user.name <span class="string">"your-github-name"</span></span><br><span class="line"></span><br><span class="line">hexo clean &amp;&amp; hexo deploy</span><br></pre></td></tr></table></figure>
+
+
+<img src="/kubernetes-windows-tools/hexoDeployOK.png" class=""> 
+
+
+<h3 id="永久連結（Permalinks）"><a href="#永久連結（Permalinks）" class="headerlink" title="永久連結（Permalinks）"></a>永久連結（Permalinks）</h3><p>文章預設是以日期來分區，但是這會造成文章鏈結時的困擾，以下透過permalinks來解決。</p>
+<p>1.修改站台下 _config.yaml</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">permalink:  :urlname/</span><br><span class="line">permalink_defaults:</span><br><span class="line">  urlname: index</span><br></pre></td></tr></table></figure>
+
+<p>2.修改scaffolds下的post.md</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">title: &#123;&#123; title &#125;&#125;</span><br><span class="line">urlname: </span><br><span class="line">date: &#123;&#123; date &#125;&#125;</span><br><span class="line">tags:</span><br><span class="line">categories:</span><br></pre></td></tr></table></figure>
+
+<p>3.最後別忘了每篇文章要加上urlname</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: Kubernetes工具超好用der</span><br><span class="line">urlname: kubernetes-tool</span><br><span class="line">date: 2019-12-29</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
+
+
+
+<p>More info:<br><a href="https://yogapan.github.io/2017/08/11/%E7%94%A8Hexo-Github-Pages%E6%90%AD%E5%BB%BA%E5%80%8B%E4%BA%BA%E9%83%A8%E8%90%BD%E6%A0%BC/" target="_blank" rel="noopener">https://yogapan.github.io/2017/08/11/%E7%94%A8Hexo-Github-Pages%E6%90%AD%E5%BB%BA%E5%80%8B%E4%BA%BA%E9%83%A8%E8%90%BD%E6%A0%BC/</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-tw">
+    <link itemprop="mainEntityOfPage" href="https://ansonlin.github.io/kubernetes-ingress/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/docker-icon.png">
+      <meta itemprop="name" content="Anson Lin">
+      <meta itemprop="description" content="小小攻城獅技術宅">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Anson Tech Note">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/kubernetes-ingress/" class="post-title-link" itemprop="url">Kubernetes管理集群服务的外部访问Ingress</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2019-11-30 00:00:00" itemprop="dateCreated datePublished" datetime="2019-11-30T00:00:00+08:00">2019-11-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-02-15 14:51:15" itemprop="dateModified" datetime="2020-02-15T14:51:15+08:00">2020-02-15</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>一个 API 对象，用于管理对集群中服务的外部访问，通常是 HTTP。Ingress 可以提供负载平衡，SSL 终端和基于名称的虚拟主机。</p>
+<h1 id="Ingress是什麼？"><a href="#Ingress是什麼？" class="headerlink" title="Ingress是什麼？"></a>Ingress是什麼？</h1><p>Ingress公开了从群集外部到群集内 services 的HTTP和HTTPS路由。 流量路由由Ingress资源上定义的规则控制。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> internet</span><br><span class="line">     |</span><br><span class="line">[ Ingress ]</span><br><span class="line">--|-----|--</span><br><span class="line">[ Services ]</span><br></pre></td></tr></table></figure>
+
+<p>可以将Ingress配置为提供服务外部可访问的URL，负载平衡流量，终止 SSL / TLS 并提供基于名称的虚拟主机。 Ingress 控制器通常负责通过负载平衡器来实现入口，尽管它也可以配置边缘路由器或其他前端以帮助处理流量。</p>
+<p>Ingress 不会公开任意端口或协议。 将 HTTP 和 HTTPS 以外的服务公开给 Internet 时，通常使用以下类型的服务 Service.Type=NodePort 或者 Service.Type=LoadBalancer.</p>
+<h1 id="Ingress控制器"><a href="#Ingress控制器" class="headerlink" title="Ingress控制器"></a>Ingress控制器</h1><p>您必须具有 Ingress 控制器才能满足Ingress的要求。 仅创建Ingress资源无效。</p>
+<p>GCE／Google Kubernetes Engine 是在主节点上部署 Ingress 控制器。 您可以在 Pod 中部署任意数量的自定义 Ingress 控制器。 一定要检查一下这个控制器的 beta 限制。 在 GCE／Google Kubernetes Engine 之外的环境中，需要将控制器部署 为 Pod。</p>
+<h2 id="Traefik-Ingress-Controller"><a href="#Traefik-Ingress-Controller" class="headerlink" title="Traefik Ingress Controller"></a>Traefik Ingress Controller</h2><p>more info: <a href="https://docs.traefik.io/v1.7/user-guide/kubernetes/" target="_blank" rel="noopener">Deploy Traefik 1.7 Ingress Controller to Kubernetes</a></p>
+<p><img src="https://docs.traefik.io/v1.7/img/architecture.png" alt="traefik_arch"></p>
+<h3 id="RBAC"><a href="#RBAC" class="headerlink" title="RBAC"></a>RBAC</h3><p>Kubernetes在1.6+中引入了基於角色的訪問控制（RBAC），以實現對Kubernetes資源和API的細粒度控制。<br>如果您的集群配置了RBAC，則需要授權Traefik使用Kubernetes API。有兩種設置適當權限的方法：通過特定於名稱空間的RoleBindings或單個全局ClusterRoleBinding。<br>每個命名空間的RoleBindings可以將授予的權限僅限制於Traefik所監視的命名空間，從而遵循最小特權原則。如果不應讓Traefik監視所有名稱空間，並且名稱空間集不會動態更改，則這是首選方法。否則，必須使用單個ClusterRoleBinding。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">kind: ClusterRole</span><br><span class="line">apiVersion: rbac.authorization.k8s.io/v1beta1</span><br><span class="line">metadata:</span><br><span class="line">  name: traefik-ingress-controller</span><br><span class="line">rules:</span><br><span class="line">  - apiGroups:</span><br><span class="line">      - <span class="string">""</span></span><br><span class="line">    resources:</span><br><span class="line">      - services</span><br><span class="line">      - endpoints</span><br><span class="line">      - secrets</span><br><span class="line">    verbs:</span><br><span class="line">      - get</span><br><span class="line">      - list</span><br><span class="line">      - watch</span><br><span class="line">  - apiGroups:</span><br><span class="line">      - extensions</span><br><span class="line">    resources:</span><br><span class="line">      - ingresses</span><br><span class="line">    verbs:</span><br><span class="line">      - get</span><br><span class="line">      - list</span><br><span class="line">      - watch</span><br><span class="line">---</span><br><span class="line">kind: ClusterRoleBinding</span><br><span class="line">apiVersion: rbac.authorization.k8s.io/v1beta1</span><br><span class="line">metadata:</span><br><span class="line">  name: traefik-ingress-controller</span><br><span class="line">roleRef:</span><br><span class="line">  apiGroup: rbac.authorization.k8s.io</span><br><span class="line">  kind: ClusterRole</span><br><span class="line">  name: traefik-ingress-controller</span><br><span class="line">subjects:</span><br><span class="line">- kind: ServiceAccount</span><br><span class="line">  name: traefik-ingress-controller</span><br><span class="line">  namespace: kube-system</span><br></pre></td></tr></table></figure>
+
+
+<p>或是直接採用線上yaml檔 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f https://raw.githubusercontent.com/containous/traefik/v1.7/examples/k8s/traefik-rbac.yaml</span><br></pre></td></tr></table></figure>
+
+<h3 id="使用Daemonset方式部署Traefik"><a href="#使用Daemonset方式部署Traefik" class="headerlink" title="使用Daemonset方式部署Traefik"></a>使用Daemonset方式部署Traefik</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: ServiceAccount</span><br><span class="line">metadata:</span><br><span class="line">  name: traefik-ingress-controller</span><br><span class="line">  namespace: kube-system</span><br><span class="line">---</span><br><span class="line">kind: DaemonSet</span><br><span class="line">apiVersion: extensions/v1beta1</span><br><span class="line">metadata:</span><br><span class="line">  name: traefik-ingress-controller</span><br><span class="line">  namespace: kube-system</span><br><span class="line">  labels:</span><br><span class="line">    k8s-app: traefik-ingress-lb</span><br><span class="line">spec:</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      labels:</span><br><span class="line">        k8s-app: traefik-ingress-lb</span><br><span class="line">        name: traefik-ingress-lb</span><br><span class="line">    spec:</span><br><span class="line">      serviceAccountName: traefik-ingress-controller</span><br><span class="line">      terminationGracePeriodSeconds: 60</span><br><span class="line">      containers:</span><br><span class="line">      - image: traefik:v1.7</span><br><span class="line">        name: traefik-ingress-lb</span><br><span class="line">        ports:</span><br><span class="line">        - name: http</span><br><span class="line">          containerPort: 80</span><br><span class="line">          hostPort: 80</span><br><span class="line">        - name: admin</span><br><span class="line">          containerPort: 8080</span><br><span class="line">        securityContext:</span><br><span class="line">          capabilities:</span><br><span class="line">            drop:</span><br><span class="line">            - ALL</span><br><span class="line">            add:</span><br><span class="line">            - NET_BIND_SERVICE</span><br><span class="line">        args:</span><br><span class="line">        - --api</span><br><span class="line">        - --kubernetes</span><br><span class="line">        - --logLevel=INFO</span><br><span class="line">---</span><br><span class="line">kind: Service</span><br><span class="line">apiVersion: v1</span><br><span class="line">metadata:</span><br><span class="line">  name: traefik-ingress-service</span><br><span class="line">  namespace: kube-system</span><br><span class="line">spec:</span><br><span class="line">  selector:</span><br><span class="line">    k8s-app: traefik-ingress-lb</span><br><span class="line">  ports:</span><br><span class="line">    - protocol: TCP</span><br><span class="line">      port: 80</span><br><span class="line">      name: web</span><br><span class="line">    - protocol: TCP</span><br><span class="line">      port: 8080</span><br><span class="line">      name: admin</span><br></pre></td></tr></table></figure>
+
+
+<p>或是直接採用線上yaml檔</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f https://raw.githubusercontent.com/containous/traefik/v1.7/examples/k8s/traefik-ds.yaml</span><br></pre></td></tr></table></figure>
+
+<h3 id="部署Traefik-WebUI管理介面"><a href="#部署Traefik-WebUI管理介面" class="headerlink" title="部署Traefik WebUI管理介面"></a>部署Traefik WebUI管理介面</h3><p>這也是愛用Traefik的地方，可以透過WebUI一次明瞭目前發布的Ingress服務。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Service</span><br><span class="line">metadata:</span><br><span class="line">  name: traefik-web-ui</span><br><span class="line">  namespace: kube-system</span><br><span class="line">spec:</span><br><span class="line">  selector:</span><br><span class="line">    k8s-app: traefik-ingress-lb</span><br><span class="line">  ports:</span><br><span class="line">  - name: web</span><br><span class="line">    port: 80</span><br><span class="line">    targetPort: 8080</span><br><span class="line">---</span><br><span class="line">apiVersion: extensions/v1beta1</span><br><span class="line">kind: Ingress</span><br><span class="line">metadata:</span><br><span class="line">  name: traefik-web-ui</span><br><span class="line">  namespace: kube-system</span><br><span class="line">spec:</span><br><span class="line">  rules:</span><br><span class="line">  - host: traefik.192.168.1.1.nip.io &lt;===請修改成你的Domain name</span><br><span class="line">    http:</span><br><span class="line">      paths:</span><br><span class="line">      - path: /</span><br><span class="line">        backend:</span><br><span class="line">          serviceName: traefik-web-ui</span><br><span class="line">          servicePort: web</span><br></pre></td></tr></table></figure>
+
+<p>或是直接採用線上yaml檔</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f https://raw.githubusercontent.com/containous/traefik/v1.7/examples/k8s/ui.yaml</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="檢查部署狀況"><a href="#檢查部署狀況" class="headerlink" title="檢查部署狀況"></a>檢查部署狀況</h3><p>現在讓我們檢查命令是否成功。首先列出kube-system名稱空間中的Pod ：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl --namespace=kube-system get pods</span><br></pre></td></tr></table></figure>
+<p>或是直接開啟瀏覽器確認(traefik.192.168.1.1.nip.io &lt;===請修改成你的Domain name)</p>
+<h2 id="Nginx-Ingress-Controller"><a href="#Nginx-Ingress-Controller" class="headerlink" title="Nginx Ingress Controller"></a>Nginx Ingress Controller</h2><p>more info: <a href="https://kubernetes.github.io/ingress-nginx/deploy/#bare-metal" target="_blank" rel="noopener">Deploy Nginx Ingress Controller through Helm to Kubernetes</a></p>
+<p>直接透過Helm方式來安裝是最快的方式，但需要先安裝<a href="../kubernetes-helm/">Helm</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">helm install stable/nginx-ingress --name my-nginx --<span class="built_in">set</span> rbac.create=<span class="literal">true</span> --generate-name</span><br></pre></td></tr></table></figure>
+
+<h3 id="LoadBalancer-IP-地端自建"><a href="#LoadBalancer-IP-地端自建" class="headerlink" title="LoadBalancer IP(地端自建)"></a>LoadBalancer IP(地端自建)</h3><p>more info: <a href="https://kubernetes.github.io/ingress-nginx/deploy/baremetal/" target="_blank" rel="noopener">Bare Metal Considerations</a></p>
+<ol>
+<li>指定externalIPs方式<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># kubectl edit svc nginx-ingress-controller</span></span><br></pre></td></tr></table></figure>
+在 type: LoadBalancer 下方加入兩行(依實際狀況調整IP地址)<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">externalIPs:</span><br><span class="line">- 10.40.46.101</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ol>
+<ol start="2">
+<li>透過MetalLB發配LoadBalancer IP<br><img src="https://kubernetes.github.io/ingress-nginx/images/baremetal/metallb.jpg" alt="MetalLB"></li>
+</ol>
+<p>必須先安裝<a href="../kubernetes-metallb">MetalLB</a>，然後修改nginx ingress 服務，新增兩筆允許共用IP地址</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># kubectl edit svc nginx-ingress-1575428352-controller</span></span><br></pre></td></tr></table></figure>
+
+<p>在 metadata 下方加入兩行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">annotations:</span><br><span class="line">  metallb.universe.tf/allow-shared-ip: shared</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="檢查部署狀況-1"><a href="#檢查部署狀況-1" class="headerlink" title="檢查部署狀況"></a>檢查部署狀況</h3><ol>
+<li><p>部署狀況</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl get pods --all-namespaces -l app.kubernetes.io/name=ingress-nginx --watch</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安裝版本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">POD_NAME=$(kubectl get pods -l app.kubernetes.io/name=ingress-nginx -o jsonpath=<span class="string">'&#123;.items[0].metadata.name&#125;'</span>)</span><br><span class="line">kubectl <span class="built_in">exec</span> -it <span class="variable">$POD_NAME</span> -- /nginx-ingress-controller --version</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Default Backend<br>開啟瀏覽器，打入IP位址，確認是否出現</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">default backend - 404</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ol>
+<h1 id="Ingress服務資源"><a href="#Ingress服務資源" class="headerlink" title="Ingress服務資源"></a>Ingress服務資源</h1><p>Ingress 资源仅支持用于定向HTTP流量的规则。</p>
+<h2 id="使用Path方式發布"><a href="#使用Path方式發布" class="headerlink" title="使用Path方式發布"></a>使用Path方式發布</h2><p>通过Ingress，您可以将负载均衡器的数量保持在最低水平。 例如，如下设置：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">foo.bar.com -&gt; 178.91.123.132 -&gt; / foo    service1:4200</span><br><span class="line">                                 / bar    service2:8080</span><br><span class="line">``` bash</span><br><span class="line"></span><br><span class="line">實際部署yaml</span><br><span class="line">``` bash</span><br><span class="line">apiVersion: networking.k8s.io/v1beta1</span><br><span class="line">kind: Ingress</span><br><span class="line">metadata:</span><br><span class="line">  name: simple-fanout-example</span><br><span class="line">  annotations:</span><br><span class="line">    nginx.ingress.kubernetes.io/rewrite-target: /</span><br><span class="line">spec:</span><br><span class="line">  rules:</span><br><span class="line">  - host: foo.bar.com</span><br><span class="line">    http:</span><br><span class="line">      paths:</span><br><span class="line">      - path: /foo</span><br><span class="line">        backend:</span><br><span class="line">          serviceName: service1</span><br><span class="line">          servicePort: 4200</span><br><span class="line">      - path: /bar</span><br><span class="line">        backend:</span><br><span class="line">          serviceName: service2</span><br><span class="line">          servicePort: 8080</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="使用-Domain-name方式發布"><a href="#使用-Domain-name方式發布" class="headerlink" title="使用 Domain name方式發布"></a>使用 Domain name方式發布</h2><p>基于名称的虚拟主机支持将 HTTP 流量路由到同一 IP 地址上的多个主机名。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">foo.bar.com --|                 |-&gt; foo.bar.com service1:80</span><br><span class="line">              | 178.91.123.132  |</span><br><span class="line">bar.foo.com --|                 |-&gt; bar.foo.com service2:80</span><br></pre></td></tr></table></figure>
+
+<p>實際部署yaml</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: networking.k8s.io/v1beta1</span><br><span class="line">kind: Ingress</span><br><span class="line">metadata:</span><br><span class="line">  name: name-virtual-host-ingress</span><br><span class="line">spec:</span><br><span class="line">  rules:</span><br><span class="line">  - host: foo.bar.com</span><br><span class="line">    http:</span><br><span class="line">      paths:</span><br><span class="line">      - backend:</span><br><span class="line">          serviceName: service1</span><br><span class="line">          servicePort: 80</span><br><span class="line">  - host: bar.foo.com</span><br><span class="line">    http:</span><br><span class="line">      paths:</span><br><span class="line">      - backend:</span><br><span class="line">          serviceName: service2</span><br><span class="line">          servicePort: 80</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h1 id="Ingress加密-TLS"><a href="#Ingress加密-TLS" class="headerlink" title="Ingress加密-TLS"></a>Ingress加密-TLS</h1><p>您可以通过指定包含TLS私钥和证书的 Secret 来加密 Ingress。 目前，Ingress 只支持单个 TLS 端口，443，并假定 TLS 终止。 如果 Ingress 中的 TLS 配置部分指定了不同的主机，那么它们将根据通过 SNI TLS 扩展指定的主机名（如果 Ingress 控制器支持 SNI）在同一端口上进行复用。 TLS Secret 必须包含名为 tls.crt 和 tls.key 的密钥，这些密钥包含用于 TLS 的证书和私钥，例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Secret</span><br><span class="line">metadata:</span><br><span class="line">  name: testsecret-tls</span><br><span class="line">  namespace: default</span><br><span class="line">data:</span><br><span class="line">  tls.crt: base64 encoded cert</span><br><span class="line">  tls.key: base64 encoded key</span><br><span class="line"><span class="built_in">type</span>: kubernetes.io/tls</span><br></pre></td></tr></table></figure>
+
+<p>然後在 Ingress 中引用此秘钥会告诉 Ingress 控制器使用 TLS 保护从客户端到负载均衡器的通道。 您需要确保创建包含 sslexample.foo.com 的 TLS 秘钥的 CN 的证书。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: networking.k8s.io/v1beta1</span><br><span class="line">kind: Ingress</span><br><span class="line">metadata:</span><br><span class="line">  name: tls-example-ingress</span><br><span class="line">spec:</span><br><span class="line">  tls:</span><br><span class="line">  - hosts:</span><br><span class="line">    - sslexample.foo.com</span><br><span class="line">    secretName: testsecret-tls</span><br><span class="line">  rules:</span><br><span class="line">    - host: sslexample.foo.com</span><br><span class="line">      http:</span><br><span class="line">        paths:</span><br><span class="line">        - path: /</span><br><span class="line">          backend:</span><br><span class="line">            serviceName: service1</span><br><span class="line">            servicePort: 80</span><br></pre></td></tr></table></figure>
+
+
+
+
+<p>more info: <a href="https://kubernetes.io/zh/docs/concepts/services-networking/ingress/" target="_blank" rel="noopener">Ingress</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-tw">
+    <link itemprop="mainEntityOfPage" href="https://ansonlin.github.io/kubernetes-helm/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/docker-icon.png">
+      <meta itemprop="name" content="Anson Lin">
+      <meta itemprop="description" content="小小攻城獅技術宅">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Anson Tech Note">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/kubernetes-helm/" class="post-title-link" itemprop="url">Kubernetes套件管理工具Helm(v3)</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2019-11-29 00:00:00" itemprop="dateCreated datePublished" datetime="2019-11-29T00:00:00+08:00">2019-11-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-02-15 14:52:33" itemprop="dateModified" datetime="2020-02-15T14:52:33+08:00">2020-02-15</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="Helm介紹"><a href="#Helm介紹" class="headerlink" title="Helm介紹"></a>Helm介紹</h3><img src="/kubernetes-helm/helm-logo.svg" class=""> 
+<p>Helm能幫助我們方便的管理Kubernetes應用程式，就像Redhat/CentOS裡面的yum、Java裡面的Maven、前端常用的NPM…等。<br>2019年11中發布的Helm v3版本，少了需要tiller及修正一些功能，變得更方便好用！目前有Microsoft、Goole、bitnami、SAMSUNG…等加入專案，另外也是<a href="https://cncf.io" target="_blank" rel="noopener">CNCF</a>的孵化專案(Incubating Project)。</p>
+<img src="/kubernetes-helm/chart-illustration.png" class=""> 
+
+
+
+<h3 id="Helm安裝"><a href="#Helm安裝" class="headerlink" title="Helm安裝"></a>Helm安裝</h3><p><a href="https://github.com/helm/helm/releases" target="_blank" rel="noopener">下載Helm</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ tar -zxvf helm-v3.0.0-linux-amd64.tgz</span><br><span class="line">$ mv linux-amd64/helm  /usr/bin/helm</span><br></pre></td></tr></table></figure>
+
+<h3 id="Helm-Repository"><a href="#Helm-Repository" class="headerlink" title="Helm Repository"></a>Helm Repository</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ helm repo add stable https://kubernetes-charts.storage.googleapis.com</span><br><span class="line">$ helm repo add bitnami https://charts.bitnami.com/bitnami </span><br><span class="line">$ helm repo add mattermost https://helm.mattermost.com</span><br><span class="line">$ helm repo add kiwigrid  https://kiwigrid.github.io</span><br><span class="line">...</span><br><span class="line">$ helm repo update</span><br></pre></td></tr></table></figure>
+
+
+
+
+<p>more info: <a href="https://helm.sh/" target="_blank" rel="noopener">Helm</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-tw">
+    <link itemprop="mainEntityOfPage" href="https://ansonlin.github.io/kubernetes-kubeadm/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/docker-icon.png">
+      <meta itemprop="name" content="Anson Lin">
+      <meta itemprop="description" content="小小攻城獅技術宅">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Anson Tech Note">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/kubernetes-kubeadm/" class="post-title-link" itemprop="url">使用kubeadm建立Kubernetes環境</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2019-11-29 00:00:00" itemprop="dateCreated datePublished" datetime="2019-11-29T00:00:00+08:00">2019-11-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-02-15 14:50:44" itemprop="dateModified" datetime="2020-02-15T14:50:44+08:00">2020-02-15</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <img src="/kubernetes-kubeadm/kubeadm-stacked-color.png" class=""> 
+
+<p>此篇介紹透過kubeadm來建立單一control plane角色的Kubernetes，關於HA集群請參考 <a href="../kubernetes-ha/">Kubernetes HA</a></p>
+<h2 id="安裝前必備"><a href="#安裝前必備" class="headerlink" title="安裝前必備"></a>安裝前必備</h2><ol>
+<li><p>Hardware<br> 至少有2 GB或以上的記憶體(依應用而定)、2顆 CPU、節點之間網路連接正常</p>
+</li>
+<li><p>OS<br> Redhat / CentOS 7.6、Minimum install</p>
+</li>
+<li><p>Container Runtime<br> 為擺脫單一 Container Runtime的依賴，後續多家推出各式各樣的 open source container runtime，但Docker還是普羅大眾最上手好用的，以下也以docker為例</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># yum install docker</span></span><br><span class="line"><span class="comment"># systemctl enable docker &amp;&amp; systemctl start docker</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>防火牆設置</p>
+</li>
+</ol>
+<p>以下描述不同角色，需要開放的Inbound Ports</p>
+<ol>
+<li>Control-plane node(s) ports<br>TCP  6443              ==&gt;     Kubernetes API Server<br>TCP  2379-2380        ==&gt;     etcd server client API<br>TCP  10250-10252    ==&gt;     Self</li>
+</ol>
+<p>指令如下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo firewall-cmd --add-port 6443/tcp,2379-2380/tcp,10250-10252/tcp,80/tcp,443/tcp --permanent </span><br><span class="line">$ sudo firewall-cmd --reload</span><br><span class="line">$ sudo firewall-cmd --list-all</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>Worker node(s) ports<br>TCP  10250            ==&gt;     Kubernetes API<br>TCP  30000-32767    ==&gt;     NodePort Service</li>
+</ol>
+<p>指令如下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo firewall-cmd --add-port 10250/tcp,30000-32767/tcp,80/tcp,443/tcp --permanent </span><br><span class="line">$ sudo firewall-cmd --reload</span><br><span class="line">$ sudo firewall-cmd --list-all</span><br></pre></td></tr></table></figure>
+
+<p>或直接停用防火牆(不推薦)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo systemctl <span class="built_in">disable</span> firewalld &amp;&amp; sudo systemctl stop firewalld</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="環境設置"><a href="#環境設置" class="headerlink" title="環境設置"></a>環境設置</h2><ol>
+<li>停用分頁Swap</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cat &lt;&lt;EOF &gt;  /etc/sysctl.d/k8s.conf</span></span><br><span class="line">net.bridge.bridge-nf-call-ip6tables = 1</span><br><span class="line">net.bridge.bridge-nf-call-iptables = 1</span><br><span class="line">net.ipv4_ip_forward = 1</span><br><span class="line">vm.swappiness = 0</span><br><span class="line">vm.max_map_count=262144</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line"><span class="comment"># sysctl --system</span></span><br><span class="line"><span class="comment"># sed  -i  '/ swap / s/^\(.*\)$/#\1/g'  /etc/fstab</span></span><br><span class="line"><span class="comment"># swapoff -a</span></span><br></pre></td></tr></table></figure>
+
+<p>Check br_netfilter module</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># lsmod | grep br_netfilter</span></span><br><span class="line"><span class="comment"># modprobe br_netfilter</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>停用安全增強Linux</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># setenforce  0</span></span><br><span class="line"><span class="comment"># sed  -i  's/^SELINUX=.*/SELINUX=disabled/g'   /etc/selinux/config</span></span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>其它檢查</li>
+</ol>
+<p>MAC地址</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ip link </span></span><br><span class="line">or</span><br><span class="line"><span class="comment"># ifconfig -a</span></span><br></pre></td></tr></table></figure>
+
+<p>UUID是否唯一</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cat /sys/class/dmi/id/product_uuid</span></span><br></pre></td></tr></table></figure>
+
+
+<h2 id="安裝kubeadm"><a href="#安裝kubeadm" class="headerlink" title="安裝kubeadm"></a>安裝kubeadm</h2><p>接著就是安裝啟動Kubernetes的主角Kubeadm，以下介紹三個角色：<br>kubeadm         ==&gt;        用來引導啟動整個集群<br>kubelet            ==&gt;        在所有節點上執行,用來控制啟動pod及容器<br>kubectl         ==&gt;        用來控制整個集群</p>
+<ol>
+<li><p>加入Kubernetes Repository </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ sudo su</span><br><span class="line"><span class="comment"># cat &lt;&lt;EOF &gt; /etc/yum.repos.d/kubernetes.repo</span></span><br><span class="line">[kubernetes]</span><br><span class="line">name=Kubernetes</span><br><span class="line">baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64</span><br><span class="line">enabled=1</span><br><span class="line">gpgcheck=1</span><br><span class="line">repo_gpgcheck=1</span><br><span class="line">gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安裝kubeadm</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes</span></span><br><span class="line"><span class="comment"># systemctl enable --now kubelet</span></span><br><span class="line"><span class="comment"># systemctl start kubelet</span></span><br></pre></td></tr></table></figure>
+<p>或者選擇要安裝的版本： yum list kubeadm –showduplicates –disableexcludes=kubernetes</p>
+</li>
+</ol>
+<h2 id="建立單一控制平面的Kubernetes環境"><a href="#建立單一控制平面的Kubernetes環境" class="headerlink" title="建立單一控制平面的Kubernetes環境"></a>建立單一控制平面的Kubernetes環境</h2><p>建立Master及網路插件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubeadm init --pod-network-cidr=192.168.0.0/16  --apiserver-advertise-address=0.0.0.0(depend on your network adapter)</span><br></pre></td></tr></table></figure>
+
+<p>配置kubectl環境</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p <span class="variable">$HOME</span>/.kube</span><br><span class="line">sudo cp -i /etc/kubernetes/admin.conf <span class="variable">$HOME</span>/.kube/config</span><br><span class="line">sudo chown $(id -u):$(id -g) <span class="variable">$HOME</span>/.kube/config</span><br></pre></td></tr></table></figure>
+
+<p>安裝pod network add-on(Calico)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># kubectl apply -f https://docs.projectcalico.org/v3.8/manifests/calico.yaml</span></span><br><span class="line"><span class="comment"># kubectl get pods --all-namespace</span></span><br></pre></td></tr></table></figure>
+
+
+<p>加入Kubernetes節點<br>加入節點</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubeadm join --token &lt;token&gt; &lt;control-plane-host&gt;:&lt;control-plane-port&gt; --discovery-token-ca-cert-hash sha256:&lt;<span class="built_in">hash</span>&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="其它常見操作"><a href="#其它常見操作" class="headerlink" title="其它常見操作"></a>其它常見操作</h2><p>Master主機加入分配資源(Develop only)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl taint nodes --all node-role.kubernetes.io/master-</span><br></pre></td></tr></table></figure>
+
+<p>token相關(在Master節點)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kubeadm token list</span><br><span class="line">kubeadm token create</span><br></pre></td></tr></table></figure>
+
+<p>產生hash(在Master節點)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">openssl x509 -pubkey -<span class="keyword">in</span> /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2&gt;/dev/null | \</span><br><span class="line">   openssl dgst -sha256 -hex | sed <span class="string">'s/^.* //'</span></span><br></pre></td></tr></table></figure>
+
+<p>從Master主機複製設定檔到節點主機</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">scp root@&lt;control-plane-host&gt;:/etc/kubernetes/admin.conf .</span><br><span class="line">kubectl --kubeconfig ./admin.conf get nodes</span><br></pre></td></tr></table></figure>
+
+<p>移除節點</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kubectl drain &lt;node name&gt; --delete-local-data --force --ignore-daemonsets</span><br><span class="line">kubectl delete node &lt;node name&gt;</span><br></pre></td></tr></table></figure>
+
+<p>重設kubernetes集群(在Master主機)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kubeadm reset</span><br><span class="line">iptables -F &amp;&amp; iptables -t nat -F &amp;&amp; iptables -t mangle -F &amp;&amp; iptables -X</span><br></pre></td></tr></table></figure>
+
+<p>備份etcd<br>資料放置在Master節點的/var/lib/etcd位置上</p>
+<p>more info: <a href="https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/" target="_blank" rel="noopener">Kubeadm bootraping Kubernetes</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-tw">
+    <link itemprop="mainEntityOfPage" href="https://ansonlin.github.io/vmware-harbor/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/docker-icon.png">
+      <meta itemprop="name" content="Anson Lin">
+      <meta itemprop="description" content="小小攻城獅技術宅">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Anson Tech Note">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/vmware-harbor/" class="post-title-link" itemprop="url">自建Docker Image倉庫 - VMware Harbor</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2019-11-28 00:00:00" itemprop="dateCreated datePublished" datetime="2019-11-28T00:00:00+08:00">2019-11-28</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-02-15 14:50:01" itemprop="dateModified" datetime="2020-02-15T14:50:01+08:00">2020-02-15</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <img src="/vmware-harbor/harbor_logo.png" class=""> 
+
+
+<h3 id="安裝前必備"><a href="#安裝前必備" class="headerlink" title="安裝前必備"></a>安裝前必備</h3><ol>
+<li>CentOS 7、docker、 <a href="https://docs.docker.com/compose/install/" target="_blank" rel="noopener">docker-compose</a></li>
+<li><a href="https://github.com/vmware/harbor/releases" target="_blank" rel="noopener">Download</a> Harbor Installer</li>
+</ol>
+<h3 id="設定檔"><a href="#設定檔" class="headerlink" title="設定檔"></a>設定檔</h3><p>修改harbor.cfg，推薦修改的項目有：hostname、db_password、harbor_admin_password 、clair_db_password</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vi harbor/harbor.cfg</span><br></pre></td></tr></table></figure>
+
+<h3 id="安裝並啟動Harbor"><a href="#安裝並啟動Harbor" class="headerlink" title="安裝並啟動Harbor"></a>安裝並啟動Harbor</h3><p>預設儲存位置為  /data</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ./installer.sh --with-clair</span><br></pre></td></tr></table></figure>
+
+<img src="/vmware-harbor/harbor-1.png" class=""> 
+
+
+<h3 id="其他維運問題"><a href="#其他維運問題" class="headerlink" title="其他維運問題"></a>其他維運問題</h3><p>備份 Clair DB</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ docker <span class="built_in">exec</span> clair-db /bin/bash -c  <span class="string">"pg_dump -U postgres -a -t feature \-t keyvalue -t namespace -t schema_migrations -t vulnerability \</span></span><br><span class="line"><span class="string">-t vulnerability_fixedin_feature"</span> &gt; vulnerability.sql$ docker <span class="built_in">exec</span> clair-db /bin/bash -c <span class="string">"pg_dump -U postgres -c -s"</span> &gt; clear.sql</span><br></pre></td></tr></table></figure>
+
+
+<p>還原 Clair DB</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ docker <span class="built_in">exec</span> -i clair-db psql -U postgres &lt; clear.sql</span><br><span class="line">$ docker <span class="built_in">exec</span> -i clair-db psql -U postgres &lt; vulnerability.sql</span><br></pre></td></tr></table></figure>
+
+
+<p>刪除Image後容量卻沒有下降</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span>  <span class="variable">$HARBOR_DIR</span></span><br><span class="line">$ docker-compose stop</span><br><span class="line">$ docker run -it --name gc --rm --volumes-from registry vmware/registry:2.6.2-photon garbage-collect  /etc/registry/config.yml</span><br><span class="line">$ docker-compose start</span><br></pre></td></tr></table></figure>
+
+
+
+
+<p>Docker Image複寫</p>
+<img src="/vmware-harbor/harbor-2.png" class=""> 
+
+
+
+<p>more info: <a href="https://github.com/goharbor/harbor" target="_blank" rel="noopener">Harbor</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+  </div>
+
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+  </nav>
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Anson Lin"
+      src="/images/docker-icon.png">
+  <p class="site-author-name" itemprop="name">Anson Lin</p>
+  <div class="site-description" itemprop="description">小小攻城獅技術宅</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ansonlin" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ansonlin" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:ansonlin@digiwin.com" title="E-Mail → mailto:ansonlin@digiwin.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://linanson.blogspot.com/" title="Google → https:&#x2F;&#x2F;linanson.blogspot.com&#x2F;" rel="noopener" target="_blank"><i class="fa fa-fw fa-google"></i>Google</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ansonlin Ops-Lab.</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.7.2
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.getAttribute('pjax') !== null) {
+      script.setAttribute('pjax', '');
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+    </div>
+</body>
+</html>

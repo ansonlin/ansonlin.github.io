@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="zh-tw">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="manifest" href="/images/manifest.json">
+  <meta name="google-site-verification" content="vk-35kXC1s-Z1uHwRHcTm-fpdFp6yRJn4x3ypkq8hs4">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"ansonlin.github.io","root":"/","scheme":"Pisces","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Volume介绍與管理計算實例相比，管理存儲是一個明顯的問題。該PersistentVolume子系統提供了用戶和管理員抽象的存儲如何從它是如何消費提供信息的API。為此，我們引入了兩個新的API資源：PersistentVolume(PV)和PersistentVolumeClaim(PVC)。PV是集群中的資源。PVC是對這些資源的請求，並且還充當對資源的聲明檢查。可以通過兩種方式設置PV：靜">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kubernetes儲存StorageClass">
+<meta property="og:url" content="https://ansonlin.github.io/kubernetes-storageclass-nfs/index.html">
+<meta property="og:site_name" content="Anson Tech Note">
+<meta property="og:description" content="Volume介绍與管理計算實例相比，管理存儲是一個明顯的問題。該PersistentVolume子系統提供了用戶和管理員抽象的存儲如何從它是如何消費提供信息的API。為此，我們引入了兩個新的API資源：PersistentVolume(PV)和PersistentVolumeClaim(PVC)。PV是集群中的資源。PVC是對這些資源的請求，並且還充當對資源的聲明檢查。可以通過兩種方式設置PV：靜">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https://ansonlin.github.io/kubernetes-storageclass-nfs/pv&sc.jpg">
+<meta property="og:image" content="https://ansonlin.github.io/kubernetes-storageclass-nfs/kube-nfs-client.jpg">
+<meta property="og:image" content="https://ansonlin.github.io/kubernetes-storageclass-nfs/sc-nfs.jpg">
+<meta property="og:image" content="https://ansonlin.github.io/kubernetes-storageclass-nfs/test-pod.jpg">
+<meta property="article:published_time" content="2019-12-10T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-03-05T03:53:37.685Z">
+<meta property="article:author" content="Anson Lin">
+<meta property="article:tag" content="kubernetes">
+<meta property="article:tag" content="helm">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ansonlin.github.io/kubernetes-storageclass-nfs/pv&sc.jpg">
+
+<link rel="canonical" href="https://ansonlin.github.io/kubernetes-storageclass-nfs/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>Kubernetes儲存StorageClass | Anson Tech Note</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Anson Tech Note</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-fw fa-sitemap"></i>Sitemap</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-tw">
+    <link itemprop="mainEntityOfPage" href="https://ansonlin.github.io/kubernetes-storageclass-nfs/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/docker-icon.png">
+      <meta itemprop="name" content="Anson Lin">
+      <meta itemprop="description" content="小小攻城獅技術宅">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Anson Tech Note">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Kubernetes儲存StorageClass
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2019-12-11 00:00:00" itemprop="dateCreated datePublished" datetime="2019-12-11T00:00:00+08:00">2019-12-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-03-05 11:53:37" itemprop="dateModified" datetime="2020-03-05T11:53:37+08:00">2020-03-05</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Volume介绍"><a href="#Volume介绍" class="headerlink" title="Volume介绍"></a>Volume介绍</h1><p>與管理計算實例相比，管理存儲是一個明顯的問題。該PersistentVolume子系統提供了用戶和管理員抽象的存儲如何從它是如何消費提供信息的API。為此，我們引入了兩個新的API資源：PersistentVolume(PV)和PersistentVolumeClaim(PVC)。<br>PV是集群中的資源。PVC是對這些資源的請求，並且還充當對資源的聲明檢查。可以通過兩種方式設置PV：靜態或動態。</p>
+<ol>
+<li><p>靜態<br>集群管理員創建許多PV。它們帶有實際存儲的詳細信息，可供群集用戶使用。它們存在於Kubernetes API中，可供使用。 (使用上不方便)</p>
+</li>
+<li><p>動態 (推薦)<br>此供應基於StorageClasses：PVC必須請求 存儲類，並且管理員必須已經創建並配置了該類，才能進行動態供應。要求該類的聲明””實際上為其自身禁用了動態預配置。要基於存儲類別啟用動態存儲配置，集群管理員需要 在API服務器上啟用DefaultStorageClass。</p>
+</li>
+</ol>
+<h1 id="PersistentVolume介绍"><a href="#PersistentVolume介绍" class="headerlink" title="PersistentVolume介绍"></a>PersistentVolume介绍</h1><p>PersistentVolume可以當成是 Kubernetes Cluster 中專們用來儲存資料的地方。不但能將 container 的資料儲存下來，也可以透過掛載(mounting)的方式，供許多個 Pods 同時存取。<br>more info: <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/#types-of-persistent-volumes" target="_blank" rel="noopener">Kubernetes Persistent Volume</a></p>
+<p>以下介绍幾個常用的Persistent Volume類型:</p>
+<ol>
+<li>emptyDir類型<br>每當我們建立一個新的 Pod 物件時，Kubernetes 就會在這個 Pod 裏建立一個 emptyDir，該 Pod 中所有的 container 都可以讀寫 emptyDir 中的資料。當 Pod 從 Node 中被移除時，emptyDir 也會隨之消失，範例如下：</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Pod</span><br><span class="line">metadata:</span><br><span class="line">  name: <span class="built_in">test</span>-pd</span><br><span class="line">spec:</span><br><span class="line">  containers:</span><br><span class="line">  - image: k8s.gcr.io/<span class="built_in">test</span>-webserver</span><br><span class="line">    name: <span class="built_in">test</span>-container</span><br><span class="line">    volumeMounts:</span><br><span class="line">    - mountPath: /cache</span><br><span class="line">      name: cache-volume</span><br><span class="line">  volumes:</span><br><span class="line">  - name: cache-volume</span><br><span class="line">    emptyDir: &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>2.hostpath類型</p>
+<p>hostPath 的生命週期與 Node 相同，當 Pod 因某些原因而須重啟時，檔案仍保存在 Node 的檔案系統(file system)底下，直到該 Node 物件被 Kubernetes Cluster 移除，資料才會消失，範例如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Pod</span><br><span class="line">metadata:</span><br><span class="line">  name: <span class="built_in">test</span>-pd</span><br><span class="line">spec:</span><br><span class="line">  containers:</span><br><span class="line">  - image: k8s.gcr.io/<span class="built_in">test</span>-webserver</span><br><span class="line">    name: <span class="built_in">test</span>-container</span><br><span class="line">    volumeMounts:</span><br><span class="line">    - mountPath: /<span class="built_in">test</span>-pd</span><br><span class="line">      name: <span class="built_in">test</span>-volume</span><br><span class="line">  volumes:</span><br><span class="line">  - name: <span class="built_in">test</span>-volume</span><br><span class="line">    hostPath:</span><br><span class="line">      <span class="comment"># directory location on host</span></span><br><span class="line">      path: /data</span><br><span class="line">      <span class="comment"># this field is optional</span></span><br><span class="line">      <span class="built_in">type</span>: Directory</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h1 id="動態-Volume-storageClass"><a href="#動態-Volume-storageClass" class="headerlink" title="動態 Volume - storageClass"></a>動態 Volume - storageClass</h1><p>StorageClass為管理員提供了一種描述他們提供的存儲“類”的方式。不同的類可能會映射到服務質量級別，備份策略或群集管理員確定的任意策略。Kubernetes本身對類表示什麼沒有意見。在其他存儲系統中，有時也將此概念稱為”配置文件”，以下範例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: storage.k8s.io/v1</span><br><span class="line">kind: StorageClass</span><br><span class="line">metadata:</span><br><span class="line">  name: standard</span><br><span class="line">provisioner: kubernetes.io/aws-ebs</span><br><span class="line">parameters:</span><br><span class="line">  <span class="built_in">type</span>: gp2</span><br><span class="line">reclaimPolicy: Retain</span><br><span class="line">allowVolumeExpansion: <span class="literal">true</span></span><br><span class="line">mountOptions:</span><br><span class="line">  - debug</span><br><span class="line">volumeBindingMode: Immediate</span><br></pre></td></tr></table></figure>
+
+<p>然而Storage classes的Provisioner(供應商)常見的有： AWSElasticBlockStore、AzureFile、AzureDisk、CephFS、GCEPersistentDisk、Gluster、iSCSI、VsphereVolume、NFS</p>
+<img src="/kubernetes-storageclass-nfs/pv&sc.jpg" class=""> 
+
+<h2 id="透過helm建立nfs-storage-class"><a href="#透過helm建立nfs-storage-class" class="headerlink" title="透過helm建立nfs storage class"></a>透過helm建立nfs storage class</h2><img src="/kubernetes-storageclass-nfs/kube-nfs-client.jpg" class=""> 
+
+<h3 id="預先準備"><a href="#預先準備" class="headerlink" title="預先準備"></a>預先準備</h3><ol>
+<li>需要一台NAS，手邊一台Synology就拿來用了，或是自建一台VM使用NFS服務(不建議)，</li>
+<li>每一台Worker需要安裝nfs client服務<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo yum install -y nfs-utils</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ol>
+<h3 id="安裝nfs-storage-class"><a href="#安裝nfs-storage-class" class="headerlink" title="安裝nfs storage class"></a>安裝nfs storage class</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">helm repo add stable  https://kubernetes-charts.storage.googleapis.com</span><br><span class="line">helm repo update</span><br><span class="line">helm install --<span class="built_in">set</span> nfs.server=10.40.141.130 --<span class="built_in">set</span> nfs.path=/volume1/k8ssc --<span class="built_in">set</span> storageClass.defaultClass=<span class="literal">true</span>  --<span class="built_in">set</span> storageClass.name=nfs-client --generate-name stable/nfs-client-provisioner</span><br></pre></td></tr></table></figure>
+
+<p>確認佈署狀況</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl get sc</span><br></pre></td></tr></table></figure>
+<img src="/kubernetes-storageclass-nfs/sc-nfs.jpg" class=""> 
+
+<h3 id="實際部署pod"><a href="#實際部署pod" class="headerlink" title="實際部署pod"></a>實際部署pod</h3><p>實際部署pod測試是否正常寫入到nfs，先建立pvc</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">kind: PersistentVolumeClaim</span><br><span class="line">apiVersion: v1</span><br><span class="line">metadata:</span><br><span class="line">  name: <span class="built_in">test</span>-claim</span><br><span class="line">  annotations:</span><br><span class="line">    volume.beta.kubernetes.io/storage-class: <span class="string">"nfs-client"</span></span><br><span class="line">spec:</span><br><span class="line">  accessModes:</span><br><span class="line">    - ReadWriteMany</span><br><span class="line">  resources:</span><br><span class="line">    requests:</span><br><span class="line">      storage: 1Mi</span><br></pre></td></tr></table></figure>
+
+<p>在建立pod</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">kind: Pod</span><br><span class="line">apiVersion: v1</span><br><span class="line">metadata:</span><br><span class="line">  name: <span class="built_in">test</span>-pod</span><br><span class="line">spec:</span><br><span class="line">  containers:</span><br><span class="line">  - name: <span class="built_in">test</span>-pod</span><br><span class="line">    image: gcr.io/google_containers/busybox:1.24</span><br><span class="line">    <span class="built_in">command</span>:</span><br><span class="line">      - <span class="string">"/bin/sh"</span></span><br><span class="line">    args:</span><br><span class="line">      - <span class="string">"-c"</span></span><br><span class="line">      - <span class="string">"touch /mnt/SUCCESS &amp;&amp; exit 0 || exit 1"</span></span><br><span class="line">    volumeMounts:</span><br><span class="line">      - name: nfs-pvc</span><br><span class="line">        mountPath: <span class="string">"/mnt"</span></span><br><span class="line">  restartPolicy: <span class="string">"Never"</span></span><br><span class="line">  volumes:</span><br><span class="line">    - name: nfs-pvc</span><br><span class="line">      persistentVolumeClaim:</span><br><span class="line">        claimName: <span class="built_in">test</span>-claim</span><br></pre></td></tr></table></figure>
+
+<p>確認nfs是否有寫入檔案</p>
+<img src="/kubernetes-storageclass-nfs/test-pod.jpg" class=""> 
+
+
+
+
+<p>more info: <a href="https://github.com/helm/charts/tree/master/stable/nfs-client-provisioner" target="_blank" rel="noopener">Helm NFS Client provisioner</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/kubernetes/" rel="tag"># kubernetes</a>
+              <a href="/tags/helm/" rel="tag"># helm</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/kubernetes-metallb/" rel="prev" title="Kubernetes地端裸機負載均衡器MetalLB">
+      <i class="fa fa-chevron-left"></i> Kubernetes地端裸機負載均衡器MetalLB
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/kubernetes-ha/" rel="next" title="建立高可用Kubernetes集群">
+      建立高可用Kubernetes集群 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Volume介绍"><span class="nav-text">Volume介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PersistentVolume介绍"><span class="nav-text">PersistentVolume介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#動態-Volume-storageClass"><span class="nav-text">動態 Volume - storageClass</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#透過helm建立nfs-storage-class"><span class="nav-text">透過helm建立nfs storage class</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#預先準備"><span class="nav-text">預先準備</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安裝nfs-storage-class"><span class="nav-text">安裝nfs storage class</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#實際部署pod"><span class="nav-text">實際部署pod</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Anson Lin"
+      src="/images/docker-icon.png">
+  <p class="site-author-name" itemprop="name">Anson Lin</p>
+  <div class="site-description" itemprop="description">小小攻城獅技術宅</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ansonlin" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ansonlin" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:ansonlin@digiwin.com" title="E-Mail → mailto:ansonlin@digiwin.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://linanson.blogspot.com/" title="Google → https:&#x2F;&#x2F;linanson.blogspot.com&#x2F;" rel="noopener" target="_blank"><i class="fa fa-fw fa-google"></i>Google</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ansonlin Ops-Lab.</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.7.2
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.getAttribute('pjax') !== null) {
+      script.setAttribute('pjax', '');
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+    </div>
+</body>
+</html>
