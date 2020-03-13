@@ -19,29 +19,29 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Pisces","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"ansonlin.github.io","root":"/","scheme":"Pisces","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="Volume介绍與管理計算實例相比，管理存儲是一個明顯的問題。該PersistentVolume子系統提供了用戶和管理員抽象的存儲如何從它是如何消費提供信息的API。為此，我們引入了兩個新的API資源：PersistentVolume(PV)和PersistentVolumeClaim(PVC)。PV是集群中的資源。PVC是對這些資源的請求，並且還充當對資源的聲明檢查。可以通過兩種方式設置PV：靜">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Kubernetes儲存StorageClass">
-<meta property="og:url" content="http://yoursite.com/kubernetes-storageclass-nfs/index.html">
+<meta property="og:url" content="https://ansonlin.github.io/kubernetes-storageclass-nfs/index.html">
 <meta property="og:site_name" content="Anson Tech Note">
 <meta property="og:description" content="Volume介绍與管理計算實例相比，管理存儲是一個明顯的問題。該PersistentVolume子系統提供了用戶和管理員抽象的存儲如何從它是如何消費提供信息的API。為此，我們引入了兩個新的API資源：PersistentVolume(PV)和PersistentVolumeClaim(PVC)。PV是集群中的資源。PVC是對這些資源的請求，並且還充當對資源的聲明檢查。可以通過兩種方式設置PV：靜">
 <meta property="og:locale" content="zh_TW">
-<meta property="og:image" content="http://yoursite.com/kubernetes-storageclass-nfs/pv&sc.jpg">
-<meta property="og:image" content="http://yoursite.com/kubernetes-storageclass-nfs/kube-nfs-client.jpg">
-<meta property="og:image" content="http://yoursite.com/kubernetes-storageclass-nfs/sc-nfs.jpg">
-<meta property="og:image" content="http://yoursite.com/kubernetes-storageclass-nfs/test-pod.jpg">
+<meta property="og:image" content="https://ansonlin.github.io/kubernetes-storageclass-nfs/pv&sc.jpg">
+<meta property="og:image" content="https://ansonlin.github.io/kubernetes-storageclass-nfs/kube-nfs-client.jpg">
+<meta property="og:image" content="https://ansonlin.github.io/kubernetes-storageclass-nfs/sc-nfs.jpg">
+<meta property="og:image" content="https://ansonlin.github.io/kubernetes-storageclass-nfs/test-pod.jpg">
 <meta property="article:published_time" content="2019-12-10T16:00:00.000Z">
 <meta property="article:modified_time" content="2020-03-05T03:53:37.685Z">
 <meta property="article:author" content="Anson Lin">
 <meta property="article:tag" content="kubernetes">
 <meta property="article:tag" content="helm">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://yoursite.com/kubernetes-storageclass-nfs/pv&sc.jpg">
+<meta name="twitter:image" content="https://ansonlin.github.io/kubernetes-storageclass-nfs/pv&sc.jpg">
 
-<link rel="canonical" href="http://yoursite.com/kubernetes-storageclass-nfs/">
+<link rel="canonical" href="https://ansonlin.github.io/kubernetes-storageclass-nfs/">
 
 
 <script id="page-configurations">
@@ -162,7 +162,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-tw">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/kubernetes-storageclass-nfs/">
+    <link itemprop="mainEntityOfPage" href="https://ansonlin.github.io/kubernetes-storageclass-nfs/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/docker-icon.png">
