@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="zh-tw">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="manifest" href="/images/manifest.json">
+  <meta name="google-site-verification" content="vk-35kXC1s-Z1uHwRHcTm-fpdFp6yRJn4x3ypkq8hs4">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"ansonlin.github.io","root":"/","scheme":"Pisces","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="目的：透過Gitlab CI&#x2F;CD的功能，來撰寫gitlab-ci.yaml，自動化進行程式碼測試、構建、佈署。 Gitlab Runner安装Gitlab  Runner本章節透過docker-compose，佈署gitlab runner環境供pipeline使用。 $ docker volume create gitlab-runner-config &amp;&amp; vi docker">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用Gitlab CI&#x2F;CD進行程式碼自動打包">
+<meta property="og:url" content="https://ansonlin.github.io/gitlab-ci/index.html">
+<meta property="og:site_name" content="Anson Tech Note">
+<meta property="og:description" content="目的：透過Gitlab CI&#x2F;CD的功能，來撰寫gitlab-ci.yaml，自動化進行程式碼測試、構建、佈署。 Gitlab Runner安装Gitlab  Runner本章節透過docker-compose，佈署gitlab runner環境供pipeline使用。 $ docker volume create gitlab-runner-config &amp;&amp; vi docker">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https://ansonlin.github.io/gitlab-ci/gitlab-runner-token.png">
+<meta property="og:image" content="https://ansonlin.github.io/gitlab-ci/ci-secret-var.png">
+<meta property="og:image" content="https://ansonlin.github.io/gitlab-ci/gitlab-runner-enableUntagJobs.jpg">
+<meta property="og:image" content="https://ansonlin.github.io/gitlab-ci/AccessTokens.png">
+<meta property="og:image" content="https://ansonlin.github.io/gitlab-ci/AccessTokensCreated.png">
+<meta property="article:published_time" content="2020-04-05T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-04-06T03:44:57.817Z">
+<meta property="article:author" content="Anson Lin">
+<meta property="article:tag" content="gitlab">
+<meta property="article:tag" content="ci">
+<meta property="article:tag" content="npm">
+<meta property="article:tag" content="maven">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ansonlin.github.io/gitlab-ci/gitlab-runner-token.png">
+
+<link rel="canonical" href="https://ansonlin.github.io/gitlab-ci/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>使用Gitlab CI/CD進行程式碼自動打包 | Anson Tech Note</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Anson Tech Note</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-fw fa-sitemap"></i>Sitemap</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-tw">
+    <link itemprop="mainEntityOfPage" href="https://ansonlin.github.io/gitlab-ci/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/docker-icon.png">
+      <meta itemprop="name" content="Anson Lin">
+      <meta itemprop="description" content="小小攻城獅技術宅">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Anson Tech Note">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          使用Gitlab CI/CD進行程式碼自動打包
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-04-06 00:00:00 / Modified: 11:44:57" itemprop="dateCreated datePublished" datetime="2020-04-06T00:00:00+08:00">2020-04-06</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>目的：透過Gitlab CI/CD的功能，來撰寫gitlab-ci.yaml，自動化進行程式碼測試、構建、佈署。</p>
+<h1 id="Gitlab-Runner"><a href="#Gitlab-Runner" class="headerlink" title="Gitlab Runner"></a>Gitlab Runner</h1><h2 id="安装Gitlab-Runner"><a href="#安装Gitlab-Runner" class="headerlink" title="安装Gitlab  Runner"></a>安装Gitlab  Runner</h2><p>本章節透過docker-compose，佈署gitlab runner環境供pipeline使用。</p>
+<p>$ docker volume create gitlab-runner-config &amp;&amp; vi docker-compose.yaml</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">version: <span class="string">'3'</span></span><br><span class="line"></span><br><span class="line">services:</span><br><span class="line">  runner:</span><br><span class="line">    image: gitlab/gitlab-runner:alpine-v12.9.0</span><br><span class="line">    container_name: gitlab-runner</span><br><span class="line">    restart: always</span><br><span class="line">    volumes:</span><br><span class="line">      - gitlab-runner-config:/etc/gitlab-runner</span><br><span class="line">	  - /var/run/docker.sock:/var/run/docker.sock</span><br><span class="line">    environment:</span><br><span class="line">	  - DOCKER_DRIVER=overlay2</span><br><span class="line">      - DOCKER_TLS_CERTDIR=<span class="string">""</span></span><br><span class="line">      <span class="comment">#- DOCKER_HOST=tcp://dind:2375</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">#dind:</span></span><br><span class="line">    <span class="comment">#image: docker:18.09.7-dind</span></span><br><span class="line">    <span class="comment">#container_name: dind</span></span><br><span class="line">    <span class="comment">#privileged: false</span></span><br><span class="line">    <span class="comment">#restart: always</span></span><br><span class="line">    <span class="comment">#command: --storage-driver=overlay --insecure-registry=10.40.40.158:5000 --registry-mirror=http://repo.10.40.40.158.nip.io</span></span><br><span class="line">	</span><br><span class="line">volumes:</span><br><span class="line">  gitlab-runner-config:</span><br><span class="line">    external: <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<p>$ docker-compose -f docker-compose.yml up -d</p>
+<h2 id="註冊-Gitlab-runner"><a href="#註冊-Gitlab-runner" class="headerlink" title="註冊 Gitlab-runner"></a>註冊 Gitlab-runner</h2><p>此步驟註冊gitlab runner，首先必須先取得gitlab url及token，然後進入容器進行註冊。<br>more info: <a href="https://docs.gitlab.com/runner/register/" target="_blank" rel="noopener">gitlab runner register</a></p>
+<p>(1) 取得gitlab url&amp;token<br>開啟 gitlab站台 &gt; Admin Area &gt; Runers &gt;  </p>
+<img src="/gitlab-ci/gitlab-runner-token.png" class="">
+
+<p>(2) gitlab-runner註冊</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">$ docker <span class="built_in">exec</span> -it gitlab-runner sh</span><br><span class="line">$ gitlab-runner register</span><br><span class="line"></span><br><span class="line">依照指示進行註冊，需注意的是:</span><br><span class="line">(1) executor</span><br><span class="line">docker</span><br><span class="line">(2) image</span><br><span class="line">docker:19.03.1</span><br><span class="line"></span><br><span class="line">成功如下圖。</span><br><span class="line">&#123;% asset_img npmTokenRealm.png %&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">## Gitlab-runner Config.toml</span></span><br><span class="line">sudo cat <span class="string">"/var/lib/docker/volumes/gitlab-runner-config/_data/config.toml"</span></span><br><span class="line">``` bash</span><br><span class="line">concurrent = 1</span><br><span class="line">check_interval = 0</span><br><span class="line">[[runners]]</span><br><span class="line">  name = <span class="string">"158dind-runner"</span></span><br><span class="line">  url = <span class="string">"http://10.40.42.38/"</span></span><br><span class="line">  token = <span class="string">"XXXXXXXXXXXXXXXX"</span></span><br><span class="line">  executor = <span class="string">"docker"</span></span><br><span class="line">  environment = [<span class="string">"DOCKER_DRIVER=overlay2"</span>]</span><br><span class="line">  [runners.docker]</span><br><span class="line">    image = <span class="string">"docker:19.03.1"</span></span><br><span class="line">    privileged = <span class="literal">true</span></span><br><span class="line">    disable_cache = <span class="literal">false</span></span><br><span class="line">    volumes = [<span class="string">"/certs/client"</span>,<span class="string">"/cache"</span>]</span><br><span class="line">    shm_size = 0</span><br><span class="line">	tls_verify = <span class="literal">false</span></span><br><span class="line">	registry_mirrors = [<span class="string">"http://mirror.10.40.40.158.nip.io"</span>]</span><br><span class="line">  [runners.cache]</span><br></pre></td></tr></table></figure>
+
+<h1 id="Gitlab-CI-yaml-Example"><a href="#Gitlab-CI-yaml-Example" class="headerlink" title="Gitlab CI yaml Example"></a>Gitlab CI yaml Example</h1><p>more info: <a href="https://docs.gitlab.com/ce/ci/docker/using_docker_build.html" target="_blank" rel="noopener">Building Docker images with GitLab CI/CD</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">docker_release:</span><br><span class="line">  cache: &#123;&#125;</span><br><span class="line">  stage: release</span><br><span class="line">  image: docker:19.03.0</span><br><span class="line">  variables:</span><br><span class="line">    DOCKER_DRIVER: overlay2</span><br><span class="line">    DOCKER_TLS_CERTDIR: <span class="string">""</span></span><br><span class="line"></span><br><span class="line">  services:</span><br><span class="line">    - name: docker:19.03.0-dind</span><br><span class="line">	  <span class="built_in">command</span>: [<span class="string">"--insecure-registry=10.40.40.158:5000"</span>,<span class="string">"--registry-mirror=http://mirror.10.40.40.158.nip.io"</span>]</span><br></pre></td></tr></table></figure>
+
+
+<h1 id="NPM"><a href="#NPM" class="headerlink" title="NPM"></a>NPM</h1><h2 id="npm打包設定檔"><a href="#npm打包設定檔" class="headerlink" title="npm打包設定檔"></a>npm打包設定檔</h2><p>透過npm打包會使用到的相關檔案有:<br>(1) .npmrc: 用來放置打包會用的設定檔案，或可使用npm config來設置(Global: $HOME/.npmrc、每個專案: project/.npmrc)。<br>(2) package.json:描述打包使用的相依套件、test/build/lint/publish階段的command…等等。</p>
+<p>$ vi .npmrc<br>設置root權限，避免安裝失敗。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unsafe-perm=<span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<p>$ vi package.json</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"publishConfig"</span>: &#123;</span><br><span class="line">    <span class="string">"registry"</span>: <span class="string">"http://10.40.40.158:8081/repository/dwnpmrepo/"</span></span><br><span class="line">  &#125;,</span><br><span class="line"><span class="string">"start"</span>: <span class="string">"ng serve --host=0.0.0.0"</span>,</span><br><span class="line"><span class="string">"test"</span>: <span class="string">"./node_modules/@angular/cli/bin/ng test ng-webdpt --code-coverage"</span>,</span><br><span class="line"><span class="string">"lint"</span>: <span class="string">"./node_modules/@angular/cli/bin/ng lint"</span>,</span><br><span class="line"><span class="string">"build"</span>: <span class="string">"node --max_old_space_size=5120 ./node_modules/@angular/cli/bin/ng build --prod"</span>,</span><br></pre></td></tr></table></figure>
+
+<p>常用的命令有</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ npm config list</span><br><span class="line">$ npm install --registry http://nexus.10.40.40.158.nip.io/repository/npm-proxy/</span><br><span class="line">$ npm publish --registry http://nexus.10.40.40.158.nip.io/repository/dwnpmrepo</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="Gitlab-CI-CD參數"><a href="#Gitlab-CI-CD參數" class="headerlink" title="Gitlab CI/CD參數"></a>Gitlab CI/CD參數</h2><h3 id="取得NPM-Repository-token"><a href="#取得NPM-Repository-token" class="headerlink" title="取得NPM Repository token"></a>取得NPM Repository token</h3><p>說明：此處透過一台測試主機,透過npm登陸後，由global .npmrc檔案取的NPM TOKEN，然後將這token設定到gitlab-ci.yml。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ npm login --registry http://nexus.10.40.40.158.nip.io/repository/dwnpmrepo</span><br><span class="line">Username: (npmadm) npmadm</span><br><span class="line">Password: (&lt;default hidden&gt;)</span><br><span class="line">Email: (this IS public) (ansonlin@digiwin.com) ansonlin@digiwin.com</span><br><span class="line">Logged <span class="keyword">in</span> as npmadm on http://nexus.10.40.40.158.nip.io/repository/dwnpmrepo.</span><br><span class="line">$ cat <span class="variable">$HOME</span>/.npmrc</span><br><span class="line">//nexus.10.40.40.158.nip.io/repository/:_authToken=NpmToken.ceb05a49-1e07-3b25-a499-67f9ed8ef63d</span><br></pre></td></tr></table></figure>
+
+<h3 id="設置gitlab-CI-CD變數"><a href="#設置gitlab-CI-CD變數" class="headerlink" title="設置gitlab CI/CD變數"></a>設置gitlab CI/CD變數</h3><p>步驟：gitlab 專案 &gt;   Settings &gt; CI/CD &gt; Secret variables  &gt; </p>
+<p>|  Variable key      |   Value   |<br>|  NPM_TOKEN      |   NpmToken.ceb05a49-1e07-3b25-a499-67f9ed8ef63d   |<br>|  NPM_PROXY      |   <a href="http://nexus.10.40.40.158.nip.io/repository/npm-proxy/" target="_blank" rel="noopener">http://nexus.10.40.40.158.nip.io/repository/npm-proxy/</a>   |<br>|  NPM_REGISTRY   |   nexus.10.40.40.158.nip.io/repository/dwnpmrepo/   |</p>
+<p>彙整到以下數值囉</p>
+<img src="/gitlab-ci/ci-secret-var.png" class="">
+
+
+<h2 id="CI-CD描述檔"><a href="#CI-CD描述檔" class="headerlink" title="CI/CD描述檔"></a>CI/CD描述檔</h2><p>建議先在測試機器上測試下，再來撰寫yaml檔比較不浪費掉debug時間…(底下有些註解都是血淚史啊!!!)</p>
+<p>$ vi gitlab-ci.yaml</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br></pre></td><td class="code"><pre><span class="line">image: node:12-alpine</span><br><span class="line"></span><br><span class="line">stages:</span><br><span class="line">  - <span class="built_in">test</span></span><br><span class="line">  - build</span><br><span class="line">  - publish</span><br><span class="line">  - release</span><br><span class="line"></span><br><span class="line">source_dependence:</span><br><span class="line">  stage: <span class="built_in">test</span></span><br><span class="line">  cache:</span><br><span class="line">    <span class="comment">##建議使用指定的cache-key，預設為default</span></span><br><span class="line">    key: <span class="string">"<span class="variable">$CI_PROJECT_NAME</span>"</span></span><br><span class="line">    paths:</span><br><span class="line">      - node_modules/</span><br><span class="line">  script:</span><br><span class="line">    - npm install --registry <span class="variable">$&#123;NPM_PROXY&#125;</span></span><br><span class="line">    - <span class="built_in">echo</span> <span class="string">"檢查"</span></span><br><span class="line">    - sh list.sh</span><br><span class="line">  only:</span><br><span class="line">   - master</span><br><span class="line"></span><br><span class="line">source_build:</span><br><span class="line">  stage: build</span><br><span class="line">  cache:</span><br><span class="line">    <span class="comment">##建議使用指定的cache-key，預設為default</span></span><br><span class="line">    key: <span class="string">"<span class="variable">$CI_PROJECT_NAME</span>"</span></span><br><span class="line">    paths:</span><br><span class="line">      - node_modules/</span><br><span class="line">      - dist/</span><br><span class="line">  script:</span><br><span class="line">    - <span class="built_in">echo</span> <span class="string">"檢查"</span></span><br><span class="line">    - sh list.sh</span><br><span class="line">    - npm run build -- --prod</span><br><span class="line">    - sh list.sh</span><br><span class="line">  dependencies:</span><br><span class="line">    - source_dependence</span><br><span class="line">  artifacts:</span><br><span class="line">    name: <span class="string">"<span class="variable">$CI_PROJECT_NAME</span>"</span></span><br><span class="line">    expire_in: <span class="string">"1 days"</span></span><br><span class="line">    untracked: <span class="literal">false</span></span><br><span class="line">    when: on_success</span><br><span class="line">    paths:</span><br><span class="line">    - dist/</span><br><span class="line">  when: manual</span><br><span class="line"></span><br><span class="line">source_publish:</span><br><span class="line">  stage: publish</span><br><span class="line">  cache:</span><br><span class="line">    <span class="comment">##建議使用指定的cache-key，預設為default</span></span><br><span class="line">    key: <span class="string">"<span class="variable">$CI_PROJECT_NAME</span>"</span></span><br><span class="line">    paths:</span><br><span class="line">      - dist/</span><br><span class="line">  script:</span><br><span class="line">    <span class="comment">#獲取git倉庫的tag,把該tag作為npm包發布的版本號</span></span><br><span class="line">    <span class="comment">#- export GIT_TAG=$(git describe --tags)</span></span><br><span class="line">    <span class="comment">#- echo $GIT_TAG</span></span><br><span class="line">	<span class="comment">#設定NPM Token,用來存取Private NPM Repository</span></span><br><span class="line">    <span class="comment">#- echo "//nexus.10.40.40.158.nip.io/repository/:_authToken=$&#123;NPM_TOKEN&#125;" &gt;&gt; $HOME/.npmrc</span></span><br><span class="line">    - <span class="built_in">echo</span> <span class="string">"//<span class="variable">$&#123;NPM_REGISTRY&#125;</span>:_authToken=<span class="variable">$&#123;NPM_TOKEN&#125;</span>"</span> &gt;&gt; <span class="variable">$HOME</span>/.npmrc</span><br><span class="line">    <span class="comment">#- npm login --registry http://$&#123;NPM_REGISTRY&#125; </span></span><br><span class="line">    - npm publish --registry http://<span class="variable">$&#123;NPM_REGISTRY&#125;</span> --verbose</span><br><span class="line">  <span class="comment">## Disable Artifacts</span></span><br><span class="line">  dependencies: []</span><br><span class="line">  when: manual</span><br><span class="line">  </span><br><span class="line">docker_release:</span><br><span class="line">  cache: &#123;&#125;</span><br><span class="line">  stage: release</span><br><span class="line">  image: docker:19.03.0</span><br><span class="line">  variables:</span><br><span class="line">    DOCKER_DRIVER: overlay2</span><br><span class="line">    DOCKER_TLS_CERTDIR: <span class="string">""</span></span><br><span class="line">    IMAGE_NAME: dwboss</span><br><span class="line">    <span class="comment">#DOCKER_HOST: tcp://localhost:2375</span></span><br><span class="line">    DOCKER_DRIVER: overlay2</span><br><span class="line"></span><br><span class="line">  services:</span><br><span class="line">    - name: docker:19.03.0-dind</span><br><span class="line">      <span class="built_in">command</span>: [<span class="string">"--insecure-registry=10.40.40.158:5000"</span>,<span class="string">"--registry-mirror=http://mirror.10.40.40.158.nip.io"</span>]</span><br><span class="line"></span><br><span class="line">  before_script:</span><br><span class="line">    - <span class="built_in">export</span> PACKAGE_VERSION=$(grep version package.json | cut -c 15- | rev | cut -c 3- | rev)</span><br><span class="line">    - <span class="built_in">echo</span> <span class="variable">$PACKAGE_VERSION</span></span><br><span class="line">    <span class="comment">#- export VERSION_IMAGE="$REGISTRY/$REPOSITORY/$IMAGE_NAME:$PACKAGE_VERSION"</span></span><br><span class="line">    <span class="comment">#- export VERSION_IMAGE="$REGISTRY/$REPOSITORY/$IMAGE_NAME:$CI_COMMIT_REF_NAME"</span></span><br><span class="line">    <span class="comment">#- docker login  -u "$REGISTRY_USER" -p "$REGISTRY_PASSWORD" $REGISTRY</span></span><br><span class="line">  script:</span><br><span class="line">    - docker info</span><br><span class="line">    - docker build -t 10.40.40.158:5000/<span class="variable">$IMAGE_NAME</span>:<span class="variable">$PACKAGE_VERSION</span>   .</span><br><span class="line">    - docker push 10.40.40.158:5000/<span class="variable">$IMAGE_NAME</span>:<span class="variable">$PACKAGE_VERSION</span></span><br><span class="line">  <span class="comment">## Disable Artifacts</span></span><br><span class="line">  dependencies: []</span><br><span class="line">  only:</span><br><span class="line">   - master</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+<h1 id="Maven"><a href="#Maven" class="headerlink" title="Maven"></a>Maven</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">待补上</span><br></pre></td></tr></table></figure>
+
+
+<h1 id="Troubeshooting"><a href="#Troubeshooting" class="headerlink" title="Troubeshooting"></a>Troubeshooting</h1><h2 id="Gitlab-Artifacts-Max-size"><a href="#Gitlab-Artifacts-Max-size" class="headerlink" title="Gitlab: Artifacts Max size"></a>Gitlab: Artifacts Max size</h2><p>Admin Area &gt; Settings &gt; Continuous Integration and Deployment &gt; Maximum artifacts size (MB) &gt; 1024</p>
+<h2 id="Gitlab-Enable-untagged-jobs"><a href="#Gitlab-Enable-untagged-jobs" class="headerlink" title="Gitlab: Enable untagged jobs"></a>Gitlab: Enable untagged jobs</h2><p>Open gitlab &gt; Admin Area &gt; Runers &gt;  Runner  token &gt; Choose “Indicates whether this runner can pick jobs without tags”</p>
+<img src="/gitlab-ci/gitlab-runner-enableUntagJobs.jpg" class="">
+
+<h2 id="Gitlab-Add-Personal-Access-Tokens"><a href="#Gitlab-Add-Personal-Access-Tokens" class="headerlink" title="Gitlab: Add Personal Access Tokens"></a>Gitlab: Add Personal Access Tokens</h2><p>Users &gt; Settings &gt; Access Tokens &gt; </p>
+<img src="/gitlab-ci/AccessTokens.png" class="">
+<img src="/gitlab-ci/AccessTokensCreated.png" class="">
+
+<h2 id="Gitlab-Runner-Get-GitlabCI-environment-variables"><a href="#Gitlab-Runner-Get-GitlabCI-environment-variables" class="headerlink" title="Gitlab-Runner: Get GitlabCI environment variables"></a>Gitlab-Runner: Get GitlabCI environment variables</h2><p>進入dind容器確認<br>$ docker exec -it dind sh<br>$ docker ps<br>$ docker inspect YOUR-CONTAINER-ID (在Config底下)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"CI_PROJECT_DIR=/builds/ansonlin/boss"</span>,</span><br><span class="line">            <span class="string">"CI_SERVER=yes"</span>,</span><br><span class="line">            <span class="string">"CI_JOB_ID=11150"</span>,</span><br><span class="line">            <span class="string">"CI_JOB_TOKEN=Hpa9y1zyxGxUsCL_8HnK"</span>,</span><br><span class="line">            <span class="string">"CI_BUILD_ID=11150"</span>,</span><br><span class="line">            <span class="string">"CI_BUILD_TOKEN=Hpa9y1zyxGxUsCL_8HnK"</span>,</span><br><span class="line">            <span class="string">"CI_REGISTRY_USER=gitlab-ci-token"</span>,</span><br><span class="line">            <span class="string">"CI_REGISTRY_PASSWORD=Hpa9y1zyxGxUsCL_8HnK"</span>,</span><br><span class="line">            <span class="string">"CI_REPOSITORY_URL=http://gitlab-ci-token:Hpa9y1zyxGxUsCL_8HnK@10.40.42.38/ansonlin/boss.git"</span>,</span><br><span class="line">            <span class="string">"CI=true"</span>,</span><br><span class="line">            <span class="string">"GITLAB_CI=true"</span>,</span><br><span class="line">            <span class="string">"GITLAB_FEATURES="</span>,</span><br><span class="line">            <span class="string">"CI_SERVER_NAME=GitLab"</span>,</span><br><span class="line">            <span class="string">"CI_SERVER_VERSION=10.8.4"</span>,</span><br><span class="line">            <span class="string">"CI_SERVER_REVISION=2268d0c"</span>,</span><br><span class="line">            <span class="string">"CI_JOB_NAME=source_build"</span>,</span><br><span class="line">            <span class="string">"CI_JOB_STAGE=build"</span>,</span><br><span class="line">            <span class="string">"CI_COMMIT_SHA=6079993e067adacaca24f77a55401e1df4c4974f"</span>,</span><br><span class="line">            <span class="string">"CI_COMMIT_REF_NAME=master"</span>,</span><br><span class="line">            <span class="string">"CI_COMMIT_REF_SLUG=master"</span>,</span><br><span class="line">            <span class="string">"CI_JOB_MANUAL=true"</span>,</span><br><span class="line">            <span class="string">"CI_BUILD_REF=6079993e067adacaca24f77a55401e1df4c4974f"</span>,</span><br><span class="line">            <span class="string">"CI_BUILD_BEFORE_SHA=376c20f89215f7c7484168e0d6c0fff23959848f"</span>,</span><br><span class="line">            <span class="string">"CI_BUILD_REF_NAME=master"</span>,</span><br><span class="line">            <span class="string">"CI_BUILD_REF_SLUG=master"</span>,</span><br><span class="line">            <span class="string">"CI_BUILD_NAME=source_build"</span>,</span><br><span class="line">            <span class="string">"CI_BUILD_STAGE=build"</span>,</span><br><span class="line">            <span class="string">"CI_BUILD_MANUAL=true"</span>,</span><br><span class="line">            <span class="string">"CI_PROJECT_ID=266"</span>,</span><br><span class="line">            <span class="string">"CI_PROJECT_NAME=boss"</span>,</span><br><span class="line">            <span class="string">"CI_PROJECT_PATH=ansonlin/boss"</span>,</span><br><span class="line">            <span class="string">"CI_PROJECT_PATH_SLUG=ansonlin-boss"</span>,</span><br><span class="line">            <span class="string">"CI_PROJECT_NAMESPACE=ansonlin"</span>,</span><br><span class="line">            <span class="string">"CI_PROJECT_URL=http://10.40.42.38/ansonlin/boss"</span>,</span><br><span class="line">            <span class="string">"CI_PROJECT_VISIBILITY=private"</span>,</span><br><span class="line">            <span class="string">"CI_PIPELINE_ID=4720"</span>,</span><br><span class="line">            <span class="string">"CI_CONFIG_PATH=.gitlab-ci.yml"</span>,</span><br><span class="line">            <span class="string">"CI_PIPELINE_SOURCE=push"</span>,</span><br><span class="line">            <span class="string">"CI_COMMIT_MESSAGE=remove build-npm install\n"</span>,</span><br><span class="line">            <span class="string">"CI_COMMIT_TITLE=remove build-npm install"</span>,</span><br><span class="line">            <span class="string">"CI_COMMIT_DESCRIPTION="</span>,</span><br><span class="line">            <span class="string">"CI_RUNNER_ID=17"</span>,</span><br><span class="line">            <span class="string">"CI_RUNNER_DESCRIPTION=158dindrunner"</span>,</span><br><span class="line">            <span class="string">"CI_RUNNER_TAGS=dind"</span>,</span><br><span class="line">            <span class="string">"GITLAB_USER_ID=2"</span>,</span><br><span class="line">            <span class="string">"GITLAB_USER_EMAIL=ansonlin@dg.com"</span>,</span><br><span class="line">            <span class="string">"GITLAB_USER_LOGIN=ansonlin"</span>,</span><br><span class="line">            <span class="string">"GITLAB_USER_NAME=anson"</span>,</span><br><span class="line">            <span class="string">"NPM_TOKEN=NpmToken.ceb05a49-1e07-3b25-a499-67f9ed8ef63d"</span>,</span><br><span class="line">            <span class="string">"NPM_REGISTRY=http://125.227.202.82:8081/repository/dwnpmrepo/"</span>,</span><br><span class="line">            <span class="string">"CI_DISPOSABLE_ENVIRONMENT=true"</span>,</span><br><span class="line">            <span class="string">"CI_RUNNER_VERSION=10.8.0"</span>,</span><br><span class="line">            <span class="string">"CI_RUNNER_REVISION=079aad9e"</span>,</span><br><span class="line">            <span class="string">"CI_RUNNER_EXECUTABLE_ARCH=linux/amd64"</span>,</span><br><span class="line">            <span class="string">"PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"</span>,</span><br><span class="line">            <span class="string">"NODE_VERSION=12.16.1"</span>,</span><br><span class="line">            <span class="string">"YARN_VERSION=1.22.0"</span></span><br></pre></td></tr></table></figure>
+
+
+<h1 id="Gitlab-API"><a href="#Gitlab-API" class="headerlink" title="Gitlab API"></a>Gitlab API</h1><p>more info:<br>GitlabAPI(<a href="https://docs.gitlab.com/ee/api/pipelines.html" target="_blank" rel="noopener">https://docs.gitlab.com/ee/api/pipelines.html</a>)</p>
+<h2 id="List-project-pipelines"><a href="#List-project-pipelines" class="headerlink" title="List project pipelines"></a>List project pipelines</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl --header <span class="string">"PRIVATE-TOKEN: PmKri5x1kvM_Jfar7Nwo"</span> <span class="string">"http://10.40.42.38/ansonlin/boss/pipelines/"</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Get-a-single-pipeline"><a href="#Get-a-single-pipeline" class="headerlink" title="Get a single pipeline"></a>Get a single pipeline</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl --header <span class="string">"PRIVATE-TOKEN: PmKri5x1kvM_Jfar7Nwo"</span> <span class="string">"http://10.40.42.38/ansonlin/boss/pipelines/4750"</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Retry-jobs-in-a-pipeline"><a href="#Retry-jobs-in-a-pipeline" class="headerlink" title="Retry jobs in a pipeline"></a>Retry jobs in a pipeline</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl --header <span class="string">"PRIVATE-TOKEN: PmKri5x1kvM_Jfar7Nwo"</span> <span class="string">"http://10.40.42.38/ansonlin/boss/pipelines/4750/retry"</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Cancel-a-pipelines-jobs"><a href="#Cancel-a-pipelines-jobs" class="headerlink" title="Cancel a pipelines jobs"></a>Cancel a pipelines jobs</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl --header <span class="string">"PRIVATE-TOKEN: PmKri5x1kvM_Jfar7Nwo"</span> <span class="string">"http://10.40.42.38/ansonlin/boss/pipelines/4750/cancel"</span></span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/gitlab/" rel="tag"># gitlab</a>
+              <a href="/tags/ci/" rel="tag"># ci</a>
+              <a href="/tags/npm/" rel="tag"># npm</a>
+              <a href="/tags/maven/" rel="tag"># maven</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/nexus-repo/" rel="prev" title="使用Nexus自建docker、npm及maven私有及快取倉庫">
+      <i class="fa fa-chevron-left"></i> 使用Nexus自建docker、npm及maven私有及快取倉庫
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Gitlab-Runner"><span class="nav-text">Gitlab Runner</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装Gitlab-Runner"><span class="nav-text">安装Gitlab  Runner</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#註冊-Gitlab-runner"><span class="nav-text">註冊 Gitlab-runner</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Gitlab-CI-yaml-Example"><span class="nav-text">Gitlab CI yaml Example</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NPM"><span class="nav-text">NPM</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#npm打包設定檔"><span class="nav-text">npm打包設定檔</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Gitlab-CI-CD參數"><span class="nav-text">Gitlab CI&#x2F;CD參數</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#取得NPM-Repository-token"><span class="nav-text">取得NPM Repository token</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#設置gitlab-CI-CD變數"><span class="nav-text">設置gitlab CI&#x2F;CD變數</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CI-CD描述檔"><span class="nav-text">CI&#x2F;CD描述檔</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Maven"><span class="nav-text">Maven</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Troubeshooting"><span class="nav-text">Troubeshooting</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Gitlab-Artifacts-Max-size"><span class="nav-text">Gitlab: Artifacts Max size</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Gitlab-Enable-untagged-jobs"><span class="nav-text">Gitlab: Enable untagged jobs</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Gitlab-Add-Personal-Access-Tokens"><span class="nav-text">Gitlab: Add Personal Access Tokens</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Gitlab-Runner-Get-GitlabCI-environment-variables"><span class="nav-text">Gitlab-Runner: Get GitlabCI environment variables</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Gitlab-API"><span class="nav-text">Gitlab API</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#List-project-pipelines"><span class="nav-text">List project pipelines</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Get-a-single-pipeline"><span class="nav-text">Get a single pipeline</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Retry-jobs-in-a-pipeline"><span class="nav-text">Retry jobs in a pipeline</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cancel-a-pipelines-jobs"><span class="nav-text">Cancel a pipelines jobs</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Anson Lin"
+      src="/images/docker-icon.png">
+  <p class="site-author-name" itemprop="name">Anson Lin</p>
+  <div class="site-description" itemprop="description">小小攻城獅技術宅</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ansonlin" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ansonlin" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:ansonlin@digiwin.com" title="E-Mail → mailto:ansonlin@digiwin.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://linanson.blogspot.com/" title="Google → https:&#x2F;&#x2F;linanson.blogspot.com&#x2F;" rel="noopener" target="_blank"><i class="fa fa-fw fa-google"></i>Google</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ansonlin Ops-Lab.</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.7.2
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.getAttribute('pjax') !== null) {
+      script.setAttribute('pjax', '');
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+    </div>
+</body>
+</html>

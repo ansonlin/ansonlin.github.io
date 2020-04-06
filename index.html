@@ -153,6 +153,496 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-tw">
+    <link itemprop="mainEntityOfPage" href="https://ansonlin.github.io/gitlab-ci/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/docker-icon.png">
+      <meta itemprop="name" content="Anson Lin">
+      <meta itemprop="description" content="小小攻城獅技術宅">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Anson Tech Note">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/gitlab-ci/" class="post-title-link" itemprop="url">使用Gitlab CI/CD進行程式碼自動打包</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-04-06 00:00:00 / Modified: 11:44:57" itemprop="dateCreated datePublished" datetime="2020-04-06T00:00:00+08:00">2020-04-06</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>目的：透過Gitlab CI/CD的功能，來撰寫gitlab-ci.yaml，自動化進行程式碼測試、構建、佈署。</p>
+<h1 id="Gitlab-Runner"><a href="#Gitlab-Runner" class="headerlink" title="Gitlab Runner"></a>Gitlab Runner</h1><h2 id="安装Gitlab-Runner"><a href="#安装Gitlab-Runner" class="headerlink" title="安装Gitlab  Runner"></a>安装Gitlab  Runner</h2><p>本章節透過docker-compose，佈署gitlab runner環境供pipeline使用。</p>
+<p>$ docker volume create gitlab-runner-config &amp;&amp; vi docker-compose.yaml</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">version: <span class="string">'3'</span></span><br><span class="line"></span><br><span class="line">services:</span><br><span class="line">  runner:</span><br><span class="line">    image: gitlab/gitlab-runner:alpine-v12.9.0</span><br><span class="line">    container_name: gitlab-runner</span><br><span class="line">    restart: always</span><br><span class="line">    volumes:</span><br><span class="line">      - gitlab-runner-config:/etc/gitlab-runner</span><br><span class="line">	  - /var/run/docker.sock:/var/run/docker.sock</span><br><span class="line">    environment:</span><br><span class="line">	  - DOCKER_DRIVER=overlay2</span><br><span class="line">      - DOCKER_TLS_CERTDIR=<span class="string">""</span></span><br><span class="line">      <span class="comment">#- DOCKER_HOST=tcp://dind:2375</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">#dind:</span></span><br><span class="line">    <span class="comment">#image: docker:18.09.7-dind</span></span><br><span class="line">    <span class="comment">#container_name: dind</span></span><br><span class="line">    <span class="comment">#privileged: false</span></span><br><span class="line">    <span class="comment">#restart: always</span></span><br><span class="line">    <span class="comment">#command: --storage-driver=overlay --insecure-registry=10.40.40.158:5000 --registry-mirror=http://repo.10.40.40.158.nip.io</span></span><br><span class="line">	</span><br><span class="line">volumes:</span><br><span class="line">  gitlab-runner-config:</span><br><span class="line">    external: <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<p>$ docker-compose -f docker-compose.yml up -d</p>
+<h2 id="註冊-Gitlab-runner"><a href="#註冊-Gitlab-runner" class="headerlink" title="註冊 Gitlab-runner"></a>註冊 Gitlab-runner</h2><p>此步驟註冊gitlab runner，首先必須先取得gitlab url及token，然後進入容器進行註冊。<br>more info: <a href="https://docs.gitlab.com/runner/register/" target="_blank" rel="noopener">gitlab runner register</a></p>
+<p>(1) 取得gitlab url&amp;token<br>開啟 gitlab站台 &gt; Admin Area &gt; Runers &gt;  </p>
+<img src="/gitlab-ci/gitlab-runner-token.png" class="">
+
+<p>(2) gitlab-runner註冊</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">$ docker <span class="built_in">exec</span> -it gitlab-runner sh</span><br><span class="line">$ gitlab-runner register</span><br><span class="line"></span><br><span class="line">依照指示進行註冊，需注意的是:</span><br><span class="line">(1) executor</span><br><span class="line">docker</span><br><span class="line">(2) image</span><br><span class="line">docker:19.03.1</span><br><span class="line"></span><br><span class="line">成功如下圖。</span><br><span class="line">&#123;% asset_img npmTokenRealm.png %&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">## Gitlab-runner Config.toml</span></span><br><span class="line">sudo cat <span class="string">"/var/lib/docker/volumes/gitlab-runner-config/_data/config.toml"</span></span><br><span class="line">``` bash</span><br><span class="line">concurrent = 1</span><br><span class="line">check_interval = 0</span><br><span class="line">[[runners]]</span><br><span class="line">  name = <span class="string">"158dind-runner"</span></span><br><span class="line">  url = <span class="string">"http://10.40.42.38/"</span></span><br><span class="line">  token = <span class="string">"XXXXXXXXXXXXXXXX"</span></span><br><span class="line">  executor = <span class="string">"docker"</span></span><br><span class="line">  environment = [<span class="string">"DOCKER_DRIVER=overlay2"</span>]</span><br><span class="line">  [runners.docker]</span><br><span class="line">    image = <span class="string">"docker:19.03.1"</span></span><br><span class="line">    privileged = <span class="literal">true</span></span><br><span class="line">    disable_cache = <span class="literal">false</span></span><br><span class="line">    volumes = [<span class="string">"/certs/client"</span>,<span class="string">"/cache"</span>]</span><br><span class="line">    shm_size = 0</span><br><span class="line">	tls_verify = <span class="literal">false</span></span><br><span class="line">	registry_mirrors = [<span class="string">"http://mirror.10.40.40.158.nip.io"</span>]</span><br><span class="line">  [runners.cache]</span><br></pre></td></tr></table></figure>
+
+<h1 id="Gitlab-CI-yaml-Example"><a href="#Gitlab-CI-yaml-Example" class="headerlink" title="Gitlab CI yaml Example"></a>Gitlab CI yaml Example</h1><p>more info: <a href="https://docs.gitlab.com/ce/ci/docker/using_docker_build.html" target="_blank" rel="noopener">Building Docker images with GitLab CI/CD</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">docker_release:</span><br><span class="line">  cache: &#123;&#125;</span><br><span class="line">  stage: release</span><br><span class="line">  image: docker:19.03.0</span><br><span class="line">  variables:</span><br><span class="line">    DOCKER_DRIVER: overlay2</span><br><span class="line">    DOCKER_TLS_CERTDIR: <span class="string">""</span></span><br><span class="line"></span><br><span class="line">  services:</span><br><span class="line">    - name: docker:19.03.0-dind</span><br><span class="line">	  <span class="built_in">command</span>: [<span class="string">"--insecure-registry=10.40.40.158:5000"</span>,<span class="string">"--registry-mirror=http://mirror.10.40.40.158.nip.io"</span>]</span><br></pre></td></tr></table></figure>
+
+
+<h1 id="NPM"><a href="#NPM" class="headerlink" title="NPM"></a>NPM</h1><h2 id="npm打包設定檔"><a href="#npm打包設定檔" class="headerlink" title="npm打包設定檔"></a>npm打包設定檔</h2><p>透過npm打包會使用到的相關檔案有:<br>(1) .npmrc: 用來放置打包會用的設定檔案，或可使用npm config來設置(Global: $HOME/.npmrc、每個專案: project/.npmrc)。<br>(2) package.json:描述打包使用的相依套件、test/build/lint/publish階段的command…等等。</p>
+<p>$ vi .npmrc<br>設置root權限，避免安裝失敗。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unsafe-perm=<span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<p>$ vi package.json</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"publishConfig"</span>: &#123;</span><br><span class="line">    <span class="string">"registry"</span>: <span class="string">"http://10.40.40.158:8081/repository/dwnpmrepo/"</span></span><br><span class="line">  &#125;,</span><br><span class="line"><span class="string">"start"</span>: <span class="string">"ng serve --host=0.0.0.0"</span>,</span><br><span class="line"><span class="string">"test"</span>: <span class="string">"./node_modules/@angular/cli/bin/ng test ng-webdpt --code-coverage"</span>,</span><br><span class="line"><span class="string">"lint"</span>: <span class="string">"./node_modules/@angular/cli/bin/ng lint"</span>,</span><br><span class="line"><span class="string">"build"</span>: <span class="string">"node --max_old_space_size=5120 ./node_modules/@angular/cli/bin/ng build --prod"</span>,</span><br></pre></td></tr></table></figure>
+
+<p>常用的命令有</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ npm config list</span><br><span class="line">$ npm install --registry http://nexus.10.40.40.158.nip.io/repository/npm-proxy/</span><br><span class="line">$ npm publish --registry http://nexus.10.40.40.158.nip.io/repository/dwnpmrepo</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="Gitlab-CI-CD參數"><a href="#Gitlab-CI-CD參數" class="headerlink" title="Gitlab CI/CD參數"></a>Gitlab CI/CD參數</h2><h3 id="取得NPM-Repository-token"><a href="#取得NPM-Repository-token" class="headerlink" title="取得NPM Repository token"></a>取得NPM Repository token</h3><p>說明：此處透過一台測試主機,透過npm登陸後，由global .npmrc檔案取的NPM TOKEN，然後將這token設定到gitlab-ci.yml。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ npm login --registry http://nexus.10.40.40.158.nip.io/repository/dwnpmrepo</span><br><span class="line">Username: (npmadm) npmadm</span><br><span class="line">Password: (&lt;default hidden&gt;)</span><br><span class="line">Email: (this IS public) (ansonlin@digiwin.com) ansonlin@digiwin.com</span><br><span class="line">Logged <span class="keyword">in</span> as npmadm on http://nexus.10.40.40.158.nip.io/repository/dwnpmrepo.</span><br><span class="line">$ cat <span class="variable">$HOME</span>/.npmrc</span><br><span class="line">//nexus.10.40.40.158.nip.io/repository/:_authToken=NpmToken.ceb05a49-1e07-3b25-a499-67f9ed8ef63d</span><br></pre></td></tr></table></figure>
+
+<h3 id="設置gitlab-CI-CD變數"><a href="#設置gitlab-CI-CD變數" class="headerlink" title="設置gitlab CI/CD變數"></a>設置gitlab CI/CD變數</h3><p>步驟：gitlab 專案 &gt;   Settings &gt; CI/CD &gt; Secret variables  &gt; </p>
+<p>|  Variable key      |   Value   |<br>|  NPM_TOKEN      |   NpmToken.ceb05a49-1e07-3b25-a499-67f9ed8ef63d   |<br>|  NPM_PROXY      |   <a href="http://nexus.10.40.40.158.nip.io/repository/npm-proxy/" target="_blank" rel="noopener">http://nexus.10.40.40.158.nip.io/repository/npm-proxy/</a>   |<br>|  NPM_REGISTRY   |   nexus.10.40.40.158.nip.io/repository/dwnpmrepo/   |</p>
+<p>彙整到以下數值囉</p>
+<img src="/gitlab-ci/ci-secret-var.png" class="">
+
+
+<h2 id="CI-CD描述檔"><a href="#CI-CD描述檔" class="headerlink" title="CI/CD描述檔"></a>CI/CD描述檔</h2><p>建議先在測試機器上測試下，再來撰寫yaml檔比較不浪費掉debug時間…(底下有些註解都是血淚史啊!!!)</p>
+<p>$ vi gitlab-ci.yaml</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br></pre></td><td class="code"><pre><span class="line">image: node:12-alpine</span><br><span class="line"></span><br><span class="line">stages:</span><br><span class="line">  - <span class="built_in">test</span></span><br><span class="line">  - build</span><br><span class="line">  - publish</span><br><span class="line">  - release</span><br><span class="line"></span><br><span class="line">source_dependence:</span><br><span class="line">  stage: <span class="built_in">test</span></span><br><span class="line">  cache:</span><br><span class="line">    <span class="comment">##建議使用指定的cache-key，預設為default</span></span><br><span class="line">    key: <span class="string">"<span class="variable">$CI_PROJECT_NAME</span>"</span></span><br><span class="line">    paths:</span><br><span class="line">      - node_modules/</span><br><span class="line">  script:</span><br><span class="line">    - npm install --registry <span class="variable">$&#123;NPM_PROXY&#125;</span></span><br><span class="line">    - <span class="built_in">echo</span> <span class="string">"檢查"</span></span><br><span class="line">    - sh list.sh</span><br><span class="line">  only:</span><br><span class="line">   - master</span><br><span class="line"></span><br><span class="line">source_build:</span><br><span class="line">  stage: build</span><br><span class="line">  cache:</span><br><span class="line">    <span class="comment">##建議使用指定的cache-key，預設為default</span></span><br><span class="line">    key: <span class="string">"<span class="variable">$CI_PROJECT_NAME</span>"</span></span><br><span class="line">    paths:</span><br><span class="line">      - node_modules/</span><br><span class="line">      - dist/</span><br><span class="line">  script:</span><br><span class="line">    - <span class="built_in">echo</span> <span class="string">"檢查"</span></span><br><span class="line">    - sh list.sh</span><br><span class="line">    - npm run build -- --prod</span><br><span class="line">    - sh list.sh</span><br><span class="line">  dependencies:</span><br><span class="line">    - source_dependence</span><br><span class="line">  artifacts:</span><br><span class="line">    name: <span class="string">"<span class="variable">$CI_PROJECT_NAME</span>"</span></span><br><span class="line">    expire_in: <span class="string">"1 days"</span></span><br><span class="line">    untracked: <span class="literal">false</span></span><br><span class="line">    when: on_success</span><br><span class="line">    paths:</span><br><span class="line">    - dist/</span><br><span class="line">  when: manual</span><br><span class="line"></span><br><span class="line">source_publish:</span><br><span class="line">  stage: publish</span><br><span class="line">  cache:</span><br><span class="line">    <span class="comment">##建議使用指定的cache-key，預設為default</span></span><br><span class="line">    key: <span class="string">"<span class="variable">$CI_PROJECT_NAME</span>"</span></span><br><span class="line">    paths:</span><br><span class="line">      - dist/</span><br><span class="line">  script:</span><br><span class="line">    <span class="comment">#獲取git倉庫的tag,把該tag作為npm包發布的版本號</span></span><br><span class="line">    <span class="comment">#- export GIT_TAG=$(git describe --tags)</span></span><br><span class="line">    <span class="comment">#- echo $GIT_TAG</span></span><br><span class="line">	<span class="comment">#設定NPM Token,用來存取Private NPM Repository</span></span><br><span class="line">    <span class="comment">#- echo "//nexus.10.40.40.158.nip.io/repository/:_authToken=$&#123;NPM_TOKEN&#125;" &gt;&gt; $HOME/.npmrc</span></span><br><span class="line">    - <span class="built_in">echo</span> <span class="string">"//<span class="variable">$&#123;NPM_REGISTRY&#125;</span>:_authToken=<span class="variable">$&#123;NPM_TOKEN&#125;</span>"</span> &gt;&gt; <span class="variable">$HOME</span>/.npmrc</span><br><span class="line">    <span class="comment">#- npm login --registry http://$&#123;NPM_REGISTRY&#125; </span></span><br><span class="line">    - npm publish --registry http://<span class="variable">$&#123;NPM_REGISTRY&#125;</span> --verbose</span><br><span class="line">  <span class="comment">## Disable Artifacts</span></span><br><span class="line">  dependencies: []</span><br><span class="line">  when: manual</span><br><span class="line">  </span><br><span class="line">docker_release:</span><br><span class="line">  cache: &#123;&#125;</span><br><span class="line">  stage: release</span><br><span class="line">  image: docker:19.03.0</span><br><span class="line">  variables:</span><br><span class="line">    DOCKER_DRIVER: overlay2</span><br><span class="line">    DOCKER_TLS_CERTDIR: <span class="string">""</span></span><br><span class="line">    IMAGE_NAME: dwboss</span><br><span class="line">    <span class="comment">#DOCKER_HOST: tcp://localhost:2375</span></span><br><span class="line">    DOCKER_DRIVER: overlay2</span><br><span class="line"></span><br><span class="line">  services:</span><br><span class="line">    - name: docker:19.03.0-dind</span><br><span class="line">      <span class="built_in">command</span>: [<span class="string">"--insecure-registry=10.40.40.158:5000"</span>,<span class="string">"--registry-mirror=http://mirror.10.40.40.158.nip.io"</span>]</span><br><span class="line"></span><br><span class="line">  before_script:</span><br><span class="line">    - <span class="built_in">export</span> PACKAGE_VERSION=$(grep version package.json | cut -c 15- | rev | cut -c 3- | rev)</span><br><span class="line">    - <span class="built_in">echo</span> <span class="variable">$PACKAGE_VERSION</span></span><br><span class="line">    <span class="comment">#- export VERSION_IMAGE="$REGISTRY/$REPOSITORY/$IMAGE_NAME:$PACKAGE_VERSION"</span></span><br><span class="line">    <span class="comment">#- export VERSION_IMAGE="$REGISTRY/$REPOSITORY/$IMAGE_NAME:$CI_COMMIT_REF_NAME"</span></span><br><span class="line">    <span class="comment">#- docker login  -u "$REGISTRY_USER" -p "$REGISTRY_PASSWORD" $REGISTRY</span></span><br><span class="line">  script:</span><br><span class="line">    - docker info</span><br><span class="line">    - docker build -t 10.40.40.158:5000/<span class="variable">$IMAGE_NAME</span>:<span class="variable">$PACKAGE_VERSION</span>   .</span><br><span class="line">    - docker push 10.40.40.158:5000/<span class="variable">$IMAGE_NAME</span>:<span class="variable">$PACKAGE_VERSION</span></span><br><span class="line">  <span class="comment">## Disable Artifacts</span></span><br><span class="line">  dependencies: []</span><br><span class="line">  only:</span><br><span class="line">   - master</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+<h1 id="Maven"><a href="#Maven" class="headerlink" title="Maven"></a>Maven</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">待补上</span><br></pre></td></tr></table></figure>
+
+
+<h1 id="Troubeshooting"><a href="#Troubeshooting" class="headerlink" title="Troubeshooting"></a>Troubeshooting</h1><h2 id="Gitlab-Artifacts-Max-size"><a href="#Gitlab-Artifacts-Max-size" class="headerlink" title="Gitlab: Artifacts Max size"></a>Gitlab: Artifacts Max size</h2><p>Admin Area &gt; Settings &gt; Continuous Integration and Deployment &gt; Maximum artifacts size (MB) &gt; 1024</p>
+<h2 id="Gitlab-Enable-untagged-jobs"><a href="#Gitlab-Enable-untagged-jobs" class="headerlink" title="Gitlab: Enable untagged jobs"></a>Gitlab: Enable untagged jobs</h2><p>Open gitlab &gt; Admin Area &gt; Runers &gt;  Runner  token &gt; Choose “Indicates whether this runner can pick jobs without tags”</p>
+<img src="/gitlab-ci/gitlab-runner-enableUntagJobs.jpg" class="">
+
+<h2 id="Gitlab-Add-Personal-Access-Tokens"><a href="#Gitlab-Add-Personal-Access-Tokens" class="headerlink" title="Gitlab: Add Personal Access Tokens"></a>Gitlab: Add Personal Access Tokens</h2><p>Users &gt; Settings &gt; Access Tokens &gt; </p>
+<img src="/gitlab-ci/AccessTokens.png" class="">
+<img src="/gitlab-ci/AccessTokensCreated.png" class="">
+
+<h2 id="Gitlab-Runner-Get-GitlabCI-environment-variables"><a href="#Gitlab-Runner-Get-GitlabCI-environment-variables" class="headerlink" title="Gitlab-Runner: Get GitlabCI environment variables"></a>Gitlab-Runner: Get GitlabCI environment variables</h2><p>進入dind容器確認<br>$ docker exec -it dind sh<br>$ docker ps<br>$ docker inspect YOUR-CONTAINER-ID (在Config底下)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"CI_PROJECT_DIR=/builds/ansonlin/boss"</span>,</span><br><span class="line">            <span class="string">"CI_SERVER=yes"</span>,</span><br><span class="line">            <span class="string">"CI_JOB_ID=11150"</span>,</span><br><span class="line">            <span class="string">"CI_JOB_TOKEN=Hpa9y1zyxGxUsCL_8HnK"</span>,</span><br><span class="line">            <span class="string">"CI_BUILD_ID=11150"</span>,</span><br><span class="line">            <span class="string">"CI_BUILD_TOKEN=Hpa9y1zyxGxUsCL_8HnK"</span>,</span><br><span class="line">            <span class="string">"CI_REGISTRY_USER=gitlab-ci-token"</span>,</span><br><span class="line">            <span class="string">"CI_REGISTRY_PASSWORD=Hpa9y1zyxGxUsCL_8HnK"</span>,</span><br><span class="line">            <span class="string">"CI_REPOSITORY_URL=http://gitlab-ci-token:Hpa9y1zyxGxUsCL_8HnK@10.40.42.38/ansonlin/boss.git"</span>,</span><br><span class="line">            <span class="string">"CI=true"</span>,</span><br><span class="line">            <span class="string">"GITLAB_CI=true"</span>,</span><br><span class="line">            <span class="string">"GITLAB_FEATURES="</span>,</span><br><span class="line">            <span class="string">"CI_SERVER_NAME=GitLab"</span>,</span><br><span class="line">            <span class="string">"CI_SERVER_VERSION=10.8.4"</span>,</span><br><span class="line">            <span class="string">"CI_SERVER_REVISION=2268d0c"</span>,</span><br><span class="line">            <span class="string">"CI_JOB_NAME=source_build"</span>,</span><br><span class="line">            <span class="string">"CI_JOB_STAGE=build"</span>,</span><br><span class="line">            <span class="string">"CI_COMMIT_SHA=6079993e067adacaca24f77a55401e1df4c4974f"</span>,</span><br><span class="line">            <span class="string">"CI_COMMIT_REF_NAME=master"</span>,</span><br><span class="line">            <span class="string">"CI_COMMIT_REF_SLUG=master"</span>,</span><br><span class="line">            <span class="string">"CI_JOB_MANUAL=true"</span>,</span><br><span class="line">            <span class="string">"CI_BUILD_REF=6079993e067adacaca24f77a55401e1df4c4974f"</span>,</span><br><span class="line">            <span class="string">"CI_BUILD_BEFORE_SHA=376c20f89215f7c7484168e0d6c0fff23959848f"</span>,</span><br><span class="line">            <span class="string">"CI_BUILD_REF_NAME=master"</span>,</span><br><span class="line">            <span class="string">"CI_BUILD_REF_SLUG=master"</span>,</span><br><span class="line">            <span class="string">"CI_BUILD_NAME=source_build"</span>,</span><br><span class="line">            <span class="string">"CI_BUILD_STAGE=build"</span>,</span><br><span class="line">            <span class="string">"CI_BUILD_MANUAL=true"</span>,</span><br><span class="line">            <span class="string">"CI_PROJECT_ID=266"</span>,</span><br><span class="line">            <span class="string">"CI_PROJECT_NAME=boss"</span>,</span><br><span class="line">            <span class="string">"CI_PROJECT_PATH=ansonlin/boss"</span>,</span><br><span class="line">            <span class="string">"CI_PROJECT_PATH_SLUG=ansonlin-boss"</span>,</span><br><span class="line">            <span class="string">"CI_PROJECT_NAMESPACE=ansonlin"</span>,</span><br><span class="line">            <span class="string">"CI_PROJECT_URL=http://10.40.42.38/ansonlin/boss"</span>,</span><br><span class="line">            <span class="string">"CI_PROJECT_VISIBILITY=private"</span>,</span><br><span class="line">            <span class="string">"CI_PIPELINE_ID=4720"</span>,</span><br><span class="line">            <span class="string">"CI_CONFIG_PATH=.gitlab-ci.yml"</span>,</span><br><span class="line">            <span class="string">"CI_PIPELINE_SOURCE=push"</span>,</span><br><span class="line">            <span class="string">"CI_COMMIT_MESSAGE=remove build-npm install\n"</span>,</span><br><span class="line">            <span class="string">"CI_COMMIT_TITLE=remove build-npm install"</span>,</span><br><span class="line">            <span class="string">"CI_COMMIT_DESCRIPTION="</span>,</span><br><span class="line">            <span class="string">"CI_RUNNER_ID=17"</span>,</span><br><span class="line">            <span class="string">"CI_RUNNER_DESCRIPTION=158dindrunner"</span>,</span><br><span class="line">            <span class="string">"CI_RUNNER_TAGS=dind"</span>,</span><br><span class="line">            <span class="string">"GITLAB_USER_ID=2"</span>,</span><br><span class="line">            <span class="string">"GITLAB_USER_EMAIL=ansonlin@dg.com"</span>,</span><br><span class="line">            <span class="string">"GITLAB_USER_LOGIN=ansonlin"</span>,</span><br><span class="line">            <span class="string">"GITLAB_USER_NAME=anson"</span>,</span><br><span class="line">            <span class="string">"NPM_TOKEN=NpmToken.ceb05a49-1e07-3b25-a499-67f9ed8ef63d"</span>,</span><br><span class="line">            <span class="string">"NPM_REGISTRY=http://125.227.202.82:8081/repository/dwnpmrepo/"</span>,</span><br><span class="line">            <span class="string">"CI_DISPOSABLE_ENVIRONMENT=true"</span>,</span><br><span class="line">            <span class="string">"CI_RUNNER_VERSION=10.8.0"</span>,</span><br><span class="line">            <span class="string">"CI_RUNNER_REVISION=079aad9e"</span>,</span><br><span class="line">            <span class="string">"CI_RUNNER_EXECUTABLE_ARCH=linux/amd64"</span>,</span><br><span class="line">            <span class="string">"PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"</span>,</span><br><span class="line">            <span class="string">"NODE_VERSION=12.16.1"</span>,</span><br><span class="line">            <span class="string">"YARN_VERSION=1.22.0"</span></span><br></pre></td></tr></table></figure>
+
+
+<h1 id="Gitlab-API"><a href="#Gitlab-API" class="headerlink" title="Gitlab API"></a>Gitlab API</h1><p>more info:<br>GitlabAPI(<a href="https://docs.gitlab.com/ee/api/pipelines.html" target="_blank" rel="noopener">https://docs.gitlab.com/ee/api/pipelines.html</a>)</p>
+<h2 id="List-project-pipelines"><a href="#List-project-pipelines" class="headerlink" title="List project pipelines"></a>List project pipelines</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl --header <span class="string">"PRIVATE-TOKEN: PmKri5x1kvM_Jfar7Nwo"</span> <span class="string">"http://10.40.42.38/ansonlin/boss/pipelines/"</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Get-a-single-pipeline"><a href="#Get-a-single-pipeline" class="headerlink" title="Get a single pipeline"></a>Get a single pipeline</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl --header <span class="string">"PRIVATE-TOKEN: PmKri5x1kvM_Jfar7Nwo"</span> <span class="string">"http://10.40.42.38/ansonlin/boss/pipelines/4750"</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Retry-jobs-in-a-pipeline"><a href="#Retry-jobs-in-a-pipeline" class="headerlink" title="Retry jobs in a pipeline"></a>Retry jobs in a pipeline</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl --header <span class="string">"PRIVATE-TOKEN: PmKri5x1kvM_Jfar7Nwo"</span> <span class="string">"http://10.40.42.38/ansonlin/boss/pipelines/4750/retry"</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Cancel-a-pipelines-jobs"><a href="#Cancel-a-pipelines-jobs" class="headerlink" title="Cancel a pipelines jobs"></a>Cancel a pipelines jobs</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl --header <span class="string">"PRIVATE-TOKEN: PmKri5x1kvM_Jfar7Nwo"</span> <span class="string">"http://10.40.42.38/ansonlin/boss/pipelines/4750/cancel"</span></span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-tw">
+    <link itemprop="mainEntityOfPage" href="https://ansonlin.github.io/nexus-repo/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/docker-icon.png">
+      <meta itemprop="name" content="Anson Lin">
+      <meta itemprop="description" content="小小攻城獅技術宅">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Anson Tech Note">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/nexus-repo/" class="post-title-link" itemprop="url">使用Nexus自建docker、npm及maven私有及快取倉庫</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-03-27 00:00:00 / Modified: 15:47:54" itemprop="dateCreated datePublished" datetime="2020-03-27T00:00:00+08:00">2020-03-27</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>目的：本文透過Nexus自建npm及maven私有及快取倉庫，存儲並加快下載速度。</p>
+<p>1.快取倉庫:快取常用的倉庫,加快構建速度，此處以docker、npm、maven作為範例。<br>2.私有倉庫:並上傳打包好的專案,上傳至私有倉庫，此處以docker、npm、maven作為範例。。</p>
+<p>安裝前必備<br>1.CentOS 7<br>2.docker<br>3.<a href="https://docs.docker.com/compose/install/" target="_blank" rel="noopener">docker-compose</a><br>4.Nexus OSS 3.21</p>
+<h1 id="Nexus安裝設置"><a href="#Nexus安裝設置" class="headerlink" title="Nexus安裝設置"></a>Nexus安裝設置</h1><p>此處透過docker-compose來啟動Nexus，套用以下YAML</p>
+<p>$ docker-compose -f nexus/docker-compose-traefik.yaml</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">version: <span class="string">'3'</span></span><br><span class="line">services:</span><br><span class="line">  traefik:</span><br><span class="line">    image: traefik:1.7.21-alpine</span><br><span class="line">    container_name: traefik</span><br><span class="line">    restart: always</span><br><span class="line">    ports:</span><br><span class="line">      - 80:80</span><br><span class="line">    networks:</span><br><span class="line">      - net</span><br><span class="line">    volumes:</span><br><span class="line">      - /var/run/docker.sock:/var/run/docker.sock</span><br><span class="line">    <span class="built_in">command</span>: -c /dev/null --web --docker --docker.domain=10.40.40.158.nip.io --docker.exposedbydefault=<span class="literal">false</span> --docker.watch --entryPoints=<span class="string">'Name:http Address::80                                  '</span> --defaultEntryPoints=<span class="string">'http'</span></span><br><span class="line">    labels:</span><br><span class="line">      - traefik.enable=<span class="literal">true</span></span><br><span class="line">      - traefik.frontend.rule=Host:traefik.10.40.40.158.nip.io</span><br><span class="line">      - traefik.port=8080</span><br><span class="line">      - traefik.frontend.entryPoints=http</span><br><span class="line">  nexus:</span><br><span class="line">    image: sonatype/nexus3:3.21.1</span><br><span class="line">    container_name: nexus</span><br><span class="line">    restart: always</span><br><span class="line">    ports:</span><br><span class="line">      - <span class="string">"8081:8081"</span></span><br><span class="line">    expose:</span><br><span class="line">      - <span class="string">"8081"</span></span><br><span class="line">    networks:</span><br><span class="line">      - net</span><br><span class="line">    volumes:</span><br><span class="line">      - nexus-data:/nexus-data</span><br><span class="line">    labels:</span><br><span class="line">      - traefik.enable=<span class="literal">true</span></span><br><span class="line">      - traefik.docker.network=traefik_net</span><br><span class="line">      - traefik.frontend.entryPoints=http</span><br><span class="line">      - traefik.nexus.frontend.rule=Host:nexus.10.40.40.158.nip.io</span><br><span class="line">      - traefik.nexus.port=8081</span><br><span class="line">      - traefik.repo.frontend.rule=Host:repo.10.40.40.158.nip.io</span><br><span class="line">      - traefik.repo.port=5000</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">networks:</span><br><span class="line">  net:</span><br><span class="line"></span><br><span class="line">volumes:</span><br><span class="line">  nexus-data:</span><br></pre></td></tr></table></figure>
+
+<p>然後開啟站台測試下 <a href="http://nexus.你的Nexus" target="_blank" rel="noopener">http://nexus.你的Nexus</a> IP.nip.io</p>
+<h1 id="Docker-Repository"><a href="#Docker-Repository" class="headerlink" title="Docker Repository"></a>Docker Repository</h1><h2 id="Docker-Repository設置"><a href="#Docker-Repository設置" class="headerlink" title="Docker Repository設置"></a>Docker Repository設置</h2><p>Docker Repository分為三種模式：<br>1.Docker(Host)<br>2.Docker(Proxy)<br>3.Docker(group)</p>
+<h3 id="Docker-Host"><a href="#Docker-Host" class="headerlink" title="Docker(Host)"></a>Docker(Host)</h3><p>存放本地端image使用，操作簡略如下：<br>Repository &gt; Repositories &gt; Create repository &gt; docker (hosted)</p>
+<p>Name:取一個喜歡的名稱<br>Repository Connectors<br>此處不設置對外port(http/https)，在後續的group模式，統一對外即可、允許匿名下載(Allow anonymous docker pull)<br>Docker Registry API support<br>允許使用v1 API存取倉庫</p>
+<img src="/nexus-repo/docker-host.png" class=""> 
+
+
+<h3 id="Docker-Proxy"><a href="#Docker-Proxy" class="headerlink" title="Docker(Proxy)"></a>Docker(Proxy)</h3><p>用來加快爾後下載速度，操作簡略如下：<br>Repository &gt; Repositories &gt; Create repository –&gt; docker (proxy)</p>
+<img src="/nexus-repo/docker-proxy.png" class="">
+
+
+<h3 id="Docker-group"><a href="#Docker-group" class="headerlink" title="Docker(group)"></a>Docker(group)</h3><p>將host或proxy模式集合起來，統一對外使用，操作簡略如下：<br>Repository –&gt; Repositories –&gt; Create repository –&gt; docker (group)</p>
+<p>Name:取一個喜歡的名稱<br>Repository Connectors<br>設置對外port(5000)、允許匿名下載(Allow anonymous docker pull)<br>Docker Registry API support<br>允許使用v1 API存取倉庫</p>
+<img src="/nexus-repo/docker-group.png" class="">
+
+<p>然後把前面加入的兩個repository勾選進group即可。</p>
+<img src="/nexus-repo/docker-group2.png" class="">
+
+<p>最後別忘了要把docker realm勾選才會套用喔！！</p>
+<img src="/nexus-repo/docker-realms.png" class="">
+
+
+
+<h2 id="用戶端設置"><a href="#用戶端設置" class="headerlink" title="用戶端設置"></a>用戶端設置</h2><p>daemon.json設置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ sudo vi /etc/docker/daemon.json</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"group"</span>: <span class="string">"dockerroot"</span>,</span><br><span class="line">  <span class="string">"insecure-registries"</span>: [<span class="string">"repo.10.40.40.158.nip.io"</span>],</span><br><span class="line">  <span class="string">"live-restore"</span>: <span class="literal">true</span>,</span><br><span class="line">  <span class="string">"registry-mirrors"</span>: [<span class="string">"http://repo.10.40.40.158.nip.io"</span>]</span><br><span class="line">&#125;</span><br><span class="line">$ sudo systemctl restart docker</span><br><span class="line">$ docker info</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="Docker-Proxy測試"><a href="#Docker-Proxy測試" class="headerlink" title="Docker Proxy測試"></a>Docker Proxy測試</h2><p>安裝設置完一定要測試下是否有套用設置，在客戶端執行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker pull alpine</span><br></pre></td></tr></table></figure>
+<p>開啟站台確認是否有檔案</p>
+<img src="/nexus-repo/docker-test.png" class="">
+
+
+<h1 id="NPM-Repository"><a href="#NPM-Repository" class="headerlink" title="NPM Repository"></a>NPM Repository</h1><h2 id="NPM-Repository設置"><a href="#NPM-Repository設置" class="headerlink" title="NPM Repository設置"></a>NPM Repository設置</h2><h3 id="NPM-Host"><a href="#NPM-Host" class="headerlink" title="NPM(Host)"></a>NPM(Host)</h3><p>存放本地端image使用，操作簡略如下：<br>Repository &gt; Repositories &gt; Create repository &gt; npm (hosted)</p>
+<img src="/nexus-repo/npm-host.png" class="">
+
+<h3 id="NPM-Proxy"><a href="#NPM-Proxy" class="headerlink" title="NPM(Proxy)"></a>NPM(Proxy)</h3><p>用來加快爾後下載速度，操作簡略如下：<br>Repository &gt; Repositories &gt; Create repository –&gt; npm (proxy)</p>
+<p>分別設置官網以及淘寶</p>
+<img src="/nexus-repo/npm-proxy-taobao.png" class="">
+<img src="/nexus-repo/npm-proxy-npmjs.png" class="">
+
+<h3 id="NPM-Group"><a href="#NPM-Group" class="headerlink" title="NPM(Group)"></a>NPM(Group)</h3><p>將proxy模式集合起來，統一對外使用，操作簡略如下：<br>Repository –&gt; Repositories –&gt; Create repository –&gt; npm (group)</p>
+<img src="/nexus-repo/npm-group.png" class="">
+
+<h2 id="NPM-Proxy測試"><a href="#NPM-Proxy測試" class="headerlink" title="NPM Proxy測試"></a>NPM Proxy測試</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install @angular/cli --registry http://nexus.10.40.40.158.nip.io/repository/npm-proxy/</span><br></pre></td></tr></table></figure>
+
+<p>查看NPM(Group)倉庫確認是否有該套件</p>
+<img src="/nexus-repo/npm-test.png" class="">
+
+<img src="/nexus-repo/npm-test2.png" class="">
+
+
+<h1 id="Maven-Repository"><a href="#Maven-Repository" class="headerlink" title="Maven Repository"></a>Maven Repository</h1><h2 id="Maven-Repository設置"><a href="#Maven-Repository設置" class="headerlink" title="Maven Repository設置"></a>Maven Repository設置</h2><h3 id="Maven-Host"><a href="#Maven-Host" class="headerlink" title="Maven(Host)"></a>Maven(Host)</h3><p>存放本地端image使用，操作簡略如下：<br>Repository &gt; Repositories &gt; Create repository &gt; maven (hosted)</p>
+<img src="/nexus-repo/mvn-host.png" class="">
+
+<h3 id="Maven-Proxy"><a href="#Maven-Proxy" class="headerlink" title="Maven(Proxy)"></a>Maven(Proxy)</h3><p>用來加快爾後下載速度，操作簡略如下：<br>Repository &gt; Repositories &gt; Create repository –&gt; maven (proxy)</p>
+<p>分別設置官網以及阿里雲</p>
+<img src="/nexus-repo/mvn-proxy-aliyun.png" class="">
+<img src="/nexus-repo/mvn-proxy-mvn.png" class="">
+
+<h3 id="Maven-Group"><a href="#Maven-Group" class="headerlink" title="Maven(Group)"></a>Maven(Group)</h3><p>將proxy模式集合起來，統一對外使用，操作簡略如下：<br>Repository –&gt; Repositories –&gt; Create repository –&gt; maven (group)</p>
+<img src="/nexus-repo/mvn-group.png" class="">
+
+<h2 id="Maven-Proxy測試"><a href="#Maven-Proxy測試" class="headerlink" title="Maven Proxy測試"></a>Maven Proxy測試</h2><p>先新增設定檔<br>$ vi .m2/settings.xml</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;settings xsi:schemaLocation=<span class="string">"http://maven.apache.org/SETTINGS/1.1.0 http://maven.apache.org/xsd/settings-1.1.0.xsd"</span></span><br><span class="line">          xmlns=<span class="string">"http://maven.apache.org/SETTINGS/1.1.0"</span> xmlns:xsi=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span>&gt;</span><br><span class="line">    &lt;mirrors&gt;</span><br><span class="line">      &lt;mirror&gt;</span><br><span class="line">        &lt;id&gt;digiwin-mirror&lt;/id&gt;</span><br><span class="line">        &lt;name&gt;Digiwin Maven Mirror&lt;/name&gt;</span><br><span class="line">        &lt;url&gt;http://nexus.10.40.40.158.nip.io/repository/mvn-proxy/&lt;/url&gt;</span><br><span class="line">        &lt;mirrorOf&gt;*&lt;/mirrorOf&gt;</span><br><span class="line">      &lt;/mirror&gt;</span><br><span class="line">    &lt;/mirrors&gt;</span><br><span class="line">&lt;/settings&gt;</span><br></pre></td></tr></table></figure>
+
+<p>執行verify確認套件可正常從指定的maven proxy中下載<br>$ mvn -s .m2/settings.xml –batch-mode verify</p>
+<p>正常執行就會顯示Success訊息</p>
+<img src="/nexus-repo/mvn-test.png" class="">
+
+<p>Nexus Maven Repository也可看到相關套件了</p>
+<img src="/nexus-repo/mvn-test2.png" class="">
+
+<p>more info:<br><a href="https://help.sonatype.com/repomanager3/formats/docker-registry/proxy-repository-for-docker" target="_blank" rel="noopener">Nexus document</a><br><a href="https://blog.sonatype.com/using-nexus-3-as-your-repository-part-3-docker-images" target="_blank" rel="noopener">Nexus docker repository</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-tw">
+    <link itemprop="mainEntityOfPage" href="https://ansonlin.github.io/redhat8docker/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/docker-icon.png">
+      <meta itemprop="name" content="Anson Lin">
+      <meta itemprop="description" content="小小攻城獅技術宅">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Anson Tech Note">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/redhat8docker/" class="post-title-link" itemprop="url">在Redhat 8 使用docker</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-03-20 00:00:00 / Modified: 10:06:30" itemprop="dateCreated datePublished" datetime="2020-03-20T00:00:00+08:00">2020-03-20</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="安装RHEL-8"><a href="#安装RHEL-8" class="headerlink" title="安装RHEL 8"></a>安装RHEL 8</h2><p>跟先前的安装差不多，这节省下、不多说啦！</p>
+<h2 id="安装docker-ce"><a href="#安装docker-ce" class="headerlink" title="安装docker-ce"></a>安装docker-ce</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">移除内建容器平台podman </span><br><span class="line">$ sudo dnf remove podman</span><br><span class="line"></span><br><span class="line">加入docker-ce 仓库</span><br><span class="line">$ sudo dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo</span><br><span class="line"></span><br><span class="line">寻找所有docker ce版本</span><br><span class="line">$ dnf list docker-ce --showduplicates | sort -r</span><br><span class="line"></span><br><span class="line">安装特定版本</span><br><span class="line">$ sudo dnf install docker-ce-3:18.09.1-3.el7</span><br><span class="line"></span><br><span class="line">安装最佳版本</span><br><span class="line">$ sudo dnf install --nobest docker-ce</span><br><span class="line">注：参数nobest指的是<span class="keyword">do</span> not <span class="built_in">limit</span> the transaction to the best candidate</span><br><span class="line"></span><br><span class="line">接著就是設置開機自啟動、並將目前使用者加入docker群組</span><br><span class="line">$ sudo systemctl <span class="built_in">disable</span> firewalld</span><br><span class="line">$ sudo systemctl <span class="built_in">enable</span> --now docker</span><br><span class="line">$ systemctl is-active docker</span><br><span class="line">$ systemctl is-enabled docker</span><br><span class="line">$ sudo usermod -aG docker $(whoami)</span><br></pre></td></tr></table></figure>
+
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Logout and Login并测试下命令</span><br><span class="line">$ docker info</span><br><span class="line"></span><br><span class="line">测试下跑个container</span><br><span class="line">$ docker run -it alpine sh</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-tw">
+    <link itemprop="mainEntityOfPage" href="https://ansonlin.github.io/mail-telnet/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/docker-icon.png">
+      <meta itemprop="name" content="Anson Lin">
+      <meta itemprop="description" content="小小攻城獅技術宅">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Anson Tech Note">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/mail-telnet/" class="post-title-link" itemprop="url">使用 Telnet 連接 SMTP 測試發信 - 須登入加密帳號密碼</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-03-19 00:00:00" itemprop="dateCreated datePublished" datetime="2020-03-19T00:00:00+08:00">2020-03-19</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-03-18 17:31:43" itemprop="dateModified" datetime="2020-03-18T17:31:43+08:00">2020-03-18</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="先產生加密的帳號-密碼"><a href="#先產生加密的帳號-密碼" class="headerlink" title="先產生加密的帳號/密碼"></a>先產生加密的帳號/密碼</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> -n <span class="string">'test'</span> | base64</span><br><span class="line">dGVzdA==</span><br><span class="line">$ <span class="built_in">echo</span> -n <span class="string">'testpassword'</span> | base64</span><br><span class="line">dGVzdHBhc3N3b3Jk</span><br></pre></td></tr></table></figure>
+
+<h3 id="連入mail-server進行發信測試"><a href="#連入mail-server進行發信測試" class="headerlink" title="連入mail server進行發信測試"></a>連入mail server進行發信測試</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">$ telnet 60.248.171.109 25</span><br><span class="line"></span><br><span class="line">$ ehlo localhost</span><br><span class="line"></span><br><span class="line">250-mail</span><br><span class="line">250-PIPELINING</span><br><span class="line">250-AUTH LOGIN PLAIN</span><br><span class="line">250-AUTH=LOGIN PLAIN</span><br><span class="line">250-coremail 1U3r2xKj7kG0xkI17x</span><br><span class="line">250-STARTTLS</span><br><span class="line">250-SMTPUTF8</span><br><span class="line">250 8BITMIME </span><br><span class="line"></span><br><span class="line"><span class="variable">$auth</span> login</span><br><span class="line">(334 dXNlcm5hbWU6)</span><br><span class="line"></span><br><span class="line">$ dGVzdA==</span><br><span class="line">$ dGVzdHBhc3N3b3Jk</span><br><span class="line">235 Authentication successful</span><br><span class="line"></span><br><span class="line">$ mail from:&lt;xxx@xxx&gt;</span><br><span class="line">250 Mail OK</span><br><span class="line"></span><br><span class="line"><span class="variable">$rcpt</span> to:&lt;xxx@xxx&gt;</span><br><span class="line">250 Mail OK</span><br><span class="line"></span><br><span class="line"><span class="variable">$data</span></span><br><span class="line"><span class="variable">$subject</span>:from my huaweicloud <span class="built_in">test</span></span><br><span class="line"><span class="variable">$test</span> ok</span><br><span class="line"><span class="variable">$thank</span> you mail server.</span><br><span class="line">$.</span><br></pre></td></tr></table></figure>
+
+<img src="/mail-telnet/mail-telnet.png" class="">
+
+
+<p>more info:<br><a href="https://blog.toright.com/posts/5194/%E7%AD%86%E8%A8%98-%E7%94%A8-telnet-%E9%80%A3%E6%8E%A5-smtp-%E6%B8%AC%E8%A9%A6%E7%99%BC%E4%BF%A1.html" target="_blank" rel="noopener">telnet smtp</a><br><a href="https://ssorc.tw/4499/%E7%94%A8-telnet-%E6%B8%AC%E8%A9%A6%E9%83%B5%E4%BB%B6%E5%B8%B3%E5%AF%86%E5%8F%8A%E6%94%AF%E6%8F%B4%E7%9A%84%E8%AA%8D%E8%AD%89%E6%96%B9%E5%BC%8F/" target="_blank" rel="noopener">smtp login</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-tw">
+    <link itemprop="mainEntityOfPage" href="https://ansonlin.github.io/kubernetes-kafka/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/docker-icon.png">
+      <meta itemprop="name" content="Anson Lin">
+      <meta itemprop="description" content="小小攻城獅技術宅">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Anson Tech Note">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/kubernetes-kafka/" class="post-title-link" itemprop="url">分散式串流服務-kafka on Kubernetes</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-03-18 00:00:00 / Modified: 10:27:25" itemprop="dateCreated datePublished" datetime="2020-03-18T00:00:00+08:00">2020-03-18</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <img src="/kubernetes-kafka/kafka-k8s.jpg" class="">
+
+
+<h2 id="預先安裝Helm"><a href="#預先安裝Helm" class="headerlink" title="預先安裝Helm"></a>預先安裝Helm</h2><p>參考先前文章 <a href="../kubernetes-helm/">安裝Helm</a></p>
+<h2 id="預先準備storageclass服務"><a href="#預先準備storageclass服務" class="headerlink" title="預先準備storageclass服務"></a>預先準備storageclass服務</h2><p>參考先前文章 <a href="../kubernetes-storageclass-nfs/">StorageClass</a></p>
+<h2 id="kafka安裝"><a href="#kafka安裝" class="headerlink" title="kafka安裝"></a>kafka安裝</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">helm -n <span class="built_in">test</span> install kafka \</span><br><span class="line">--<span class="built_in">set</span> global.storageClass=nfs-client,persistence.storageClass=nfs-client \</span><br><span class="line">--<span class="built_in">set</span> metrics.kafka.enabled=<span class="literal">true</span>,metrics.jmx.enabled=<span class="literal">true</span>,metrics.serviceMonitor.enabled=<span class="literal">true</span>,metrics.serviceMonitor.namespace=default \</span><br><span class="line">bitnami/kafka</span><br><span class="line">``` </span><br><span class="line"></span><br><span class="line">等待下產生相關Statefulset、pod、service</span><br><span class="line">``` bash</span><br><span class="line">Kafka can be accessed via port 9092 on the following DNS name from within your cluster:</span><br><span class="line"></span><br><span class="line">    kafka.test.svc.cluster.local</span><br><span class="line"></span><br><span class="line">To create a topic run the following <span class="built_in">command</span>:</span><br><span class="line"></span><br><span class="line">    <span class="built_in">export</span> POD_NAME=$(kubectl get pods --namespace <span class="built_in">test</span> -l <span class="string">"app.kubernetes.io/name=kafka,app.kubernetes.io/instance=kafka,app.kubernetes.io/component=kafka"</span> -o jsonpath=<span class="string">"&#123;.items[0].metadata.name&#125;"</span>)</span><br><span class="line">    kubectl --namespace <span class="built_in">test</span> <span class="built_in">exec</span> -it <span class="variable">$POD_NAME</span> -- kafka-topics.sh --create --zookeeper kafka-zookeeper:2181 --replication-factor 1 --partitions 1 --topic <span class="built_in">test</span></span><br><span class="line"></span><br><span class="line">To list all the topics run the following <span class="built_in">command</span>:</span><br><span class="line"></span><br><span class="line">    <span class="built_in">export</span> POD_NAME=$(kubectl get pods --namespace <span class="built_in">test</span> -l <span class="string">"app.kubernetes.io/name=kafka,app.kubernetes.io/instance=kafka,app.kubernetes.io/component=kafka"</span> -o jsonpath=<span class="string">"&#123;.items[0].metadata.name&#125;"</span>)</span><br><span class="line">    kubectl --namespace <span class="built_in">test</span> <span class="built_in">exec</span> -it <span class="variable">$POD_NAME</span> -- kafka-topics.sh --list --zookeeper kafka-zookeeper:2181</span><br><span class="line"></span><br><span class="line">To start a kafka producer run the following <span class="built_in">command</span>:</span><br><span class="line"></span><br><span class="line">    <span class="built_in">export</span> POD_NAME=$(kubectl get pods --namespace <span class="built_in">test</span> -l <span class="string">"app.kubernetes.io/name=kafka,app.kubernetes.io/instance=kafka,app.kubernetes.io/component=kafka"</span> -o jsonpath=<span class="string">"&#123;.items[0].metadata.name&#125;"</span>)</span><br><span class="line">    kubectl --namespace <span class="built_in">test</span> <span class="built_in">exec</span> -it <span class="variable">$POD_NAME</span> -- kafka-console-producer.sh --broker-list localhost:9092 --topic <span class="built_in">test</span></span><br><span class="line"></span><br><span class="line">To start a kafka consumer run the following <span class="built_in">command</span>:</span><br><span class="line"></span><br><span class="line">    <span class="built_in">export</span> POD_NAME=$(kubectl get pods --namespace <span class="built_in">test</span> -l <span class="string">"app.kubernetes.io/name=kafka,app.kubernetes.io/instance=kafka,app.kubernetes.io/component=kafka"</span> -o jsonpath=<span class="string">"&#123;.items[0].metadata.name&#125;"</span>)</span><br><span class="line">    kubectl --namespace <span class="built_in">test</span> <span class="built_in">exec</span> -it <span class="variable">$POD_NAME</span> -- kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic <span class="built_in">test</span> --from-beginning</span><br><span class="line"></span><br><span class="line">    PRODUCER:</span><br><span class="line">        kafka-console-producer.sh --broker-list 127.0.0.1:9092 --topic <span class="built_in">test</span></span><br><span class="line">    CONSUMER:</span><br><span class="line">        kafka-console-consumer.sh --bootstrap-server 127.0.0.1:9092 --topic <span class="built_in">test</span> --from-beginning</span><br></pre></td></tr></table></figure>
+
+<h2 id="Kafaka佈署後測試"><a href="#Kafaka佈署後測試" class="headerlink" title="Kafaka佈署後測試"></a>Kafaka佈署後測試</h2><p>確認下kafka發布的service狀態</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl -n <span class="built_in">test</span> get svc</span><br></pre></td></tr></table></figure>
+<img src="/kubernetes-kafka/kafka-service.png" class="">
+
+
+<p>測試發布消息</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl -n <span class="built_in">test</span> <span class="built_in">exec</span> testclient -- kafka-topics --zookeeper kafka-zookeeper:2181 --topic test2 --create --partitions 1 --replication-factor 1</span><br></pre></td></tr></table></figure>
+<p>(kafka-zookeeper此處為helm建立時的名稱”kafka”)</p>
+<p>正常回復訊息如下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Created topic <span class="string">"test2"</span>.</span><br></pre></td></tr></table></figure>
+
+<p>運行如下命令來監聽 test1 這個 topic 的消息：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl -n <span class="built_in">test</span> <span class="built_in">exec</span> -ti testclient -- kafka-console-consumer --bootstrap-server kafka:9092 --topic test2 --from-beginning</span><br></pre></td></tr></table></figure>
+
+<p>然后开启一个新的命令行终端生成一条消息：</p>
+<p>``` bash<br>kubectl -n test exec -ti testclient – kafka-console-producer –broker-list kafka-headless:9092 –topic test2</p>
+<blockquote>
+<p>Hello kafaka test on k8s</p>
+</blockquote>
+<p>``` bash</p>
+<p>在原本的commandline視窗上，可看到監聽的消息了！</p>
+<img src="/kubernetes-kafka/kafaka-response.png" class="">
+
+<p>more info:<br><a href="https://github.com/bitnami/charts/tree/master/bitnami/kafka" target="_blank" rel="noopener">kafka bitnami</a><br><a href="https://mp.weixin.qq.com/s?__biz=MzU4MjQ0MTU4Ng==&mid=2247484675&idx=1&sn=f0b39c28c79056cbfcb6cfc7876f6980&chksm=fdb90a1ecace8308597813358da72aa6e582ae32e610940576d7b531538cfd4288881e3b71dd&scene=126&sessionid=1584492206&key=b019c73774a726ce410af80e82a486b3dc24fb3499be95f3f4c5fc20b381e97ebb908b4a0e2560c92369dd399f71653b51d06d606cb180c4c3d7951e05923aed26af81acfe8265ec615ece1f9e1621f7&ascene=1&uin=MjY1ODg0NjI2MQ%3D%3D&devicetype=Windows+10&version=62080079&lang=zh_TW&exportkey=AtGEdEMzFUNFBogR6wn4ksU%3D&pass_ticket=VvOOOVcvJ3RX98gk7pIuwbbLea0qN53ey3zp6UJAvROXNqoRqOZFBNqwfQALV0Hd" target="_blank" rel="noopener">kafka kubernetes</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-tw">
     <link itemprop="mainEntityOfPage" href="https://ansonlin.github.io/kubernetes-mariadb/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -184,7 +674,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-03-13 17:01:20" itemprop="dateModified" datetime="2020-03-13T17:01:20+08:00">2020-03-13</time>
+                <time title="Modified: 2020-03-30 09:10:52" itemprop="dateModified" datetime="2020-03-30T09:10:52+08:00">2020-03-30</time>
               </span>
 
           
@@ -205,7 +695,11 @@
 <h3 id="圖表介紹"><a href="#圖表介紹" class="headerlink" title="圖表介紹"></a>圖表介紹</h3><p>該圖表使用Helm軟件包管理器在Kubernetes集群上引導了MariaDB複製集群的部署。</p>
 <p>Bitnami圖表可與Kubeapps一起用於在群集中部署和管理Helm Charts。該圖表已經過測試，可以在BKPR之上與NGINX Ingress，證書管理器，流利的軟件和Prometheus 一起使用。</p>
 <h2 id="先決條件"><a href="#先決條件" class="headerlink" title="先決條件"></a>先決條件</h2><p><a href="../kubernetes-kubeadm/">Kubernetes</a> 、<br><a href="../kubernetes-helm/">Helm</a> 、<br><a href="../kubernetes-storageclass-nfs/">StorageClass</a> </p>
-<h2 id="MariaDB安裝"><a href="#MariaDB安裝" class="headerlink" title="MariaDB安裝"></a>MariaDB安裝</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl create ns database</span><br><span class="line"></span><br><span class="line">$ helm repo add bitnami https://charts.bitnami.com/bitnami</span><br><span class="line"></span><br><span class="line">$ helm install -n database  mariadb \</span><br><span class="line">--<span class="built_in">set</span> global.storageClass=nfs-client,master.persistence.storageClass=nfs-client,slave.persistence.storageClass=nfs-client \</span><br><span class="line">--<span class="built_in">set</span> service.type=NodePort \</span><br><span class="line">--<span class="built_in">set</span> rootUser.forcePassword=<span class="literal">true</span>,rootUser.password=Abc1234567890 \</span><br><span class="line">--<span class="built_in">set</span> db.name=dop,db.user=digiwin,db.password=digiwin,db.forcePassword=<span class="literal">true</span> \</span><br><span class="line">--<span class="built_in">set</span> replication.enabled=<span class="literal">false</span> \</span><br><span class="line">--<span class="built_in">set</span> metrics.enabled=<span class="literal">true</span>,metrics.serviceMonitor.enabled=<span class="literal">true</span>,metrics.serviceMonitor.namespace=default \</span><br><span class="line">bitnami/mariadb</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">完成後存取的訊息</span><br><span class="line">``` bash</span><br><span class="line">Tip:</span><br><span class="line">  Watch the deployment status using the <span class="built_in">command</span>: kubectl get pods -w --namespace database -l release=mariadb</span><br><span class="line">Services:</span><br><span class="line">  <span class="built_in">echo</span> Master: mariadb.database.svc.cluster.local:3306</span><br><span class="line">Administrator credentials:</span><br><span class="line">  Username: root</span><br><span class="line">  Password : $(kubectl get secret --namespace database mariadb -o jsonpath=<span class="string">"&#123;.data.mariadb-root-password&#125;"</span> | base64 --decode)</span><br><span class="line"></span><br><span class="line">To connect to your database:</span><br><span class="line">  1. Run a pod that you can use as a client:</span><br><span class="line"></span><br><span class="line">      kubectl run mariadb-client --rm --tty -i --restart=<span class="string">'Never'</span> --image  docker.io/bitnami/mariadb:10.3.22-debian-10-r44 --namespace database --<span class="built_in">command</span> -- bash</span><br><span class="line"></span><br><span class="line">  2. To connect to master service (<span class="built_in">read</span>/write):</span><br><span class="line"></span><br><span class="line">      mysql -h mariadb.database.svc.cluster.local -uroot -p dop</span><br><span class="line"></span><br><span class="line">To upgrade this helm chart:</span><br><span class="line">  1. Obtain the password as described on the <span class="string">'Administrator credentials'</span> section and <span class="built_in">set</span> the <span class="string">'rootUser.password'</span> parameter as shown below:</span><br><span class="line"></span><br><span class="line">      ROOT_PASSWORD=$(kubectl get secret --namespace database mariadb -o jsonpath=<span class="string">"&#123;.data.mariadb-root-password&#125;"</span> | base64 --decode)</span><br><span class="line">      helm upgrade mariadb bitnami/mariadb --<span class="built_in">set</span> rootUser.password=<span class="variable">$ROOT_PASSWORD</span></span><br></pre></td></tr></table></figure>
+<h2 id="MariaDB安裝"><a href="#MariaDB安裝" class="headerlink" title="MariaDB安裝"></a>MariaDB安裝</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl create ns database</span><br><span class="line">$ helm repo add bitnami https://charts.bitnami.com/bitnami</span><br><span class="line">$ helm install -n database  mariadb \</span><br><span class="line">--<span class="built_in">set</span> global.storageClass=nfs-client,master.persistence.storageClass=nfs-client,slave.persistence.storageClass=nfs-client \</span><br><span class="line">--<span class="built_in">set</span> service.type=NodePort \</span><br><span class="line">--<span class="built_in">set</span> rootUser.forcePassword=<span class="literal">true</span>,rootUser.password=Abc1234567890 \</span><br><span class="line">--<span class="built_in">set</span> db.name=dop,db.user=digiwin,db.password=digiwin,db.forcePassword=<span class="literal">true</span> \</span><br><span class="line">--<span class="built_in">set</span> replication.enabled=<span class="literal">false</span> \</span><br><span class="line">--<span class="built_in">set</span> metrics.enabled=<span class="literal">true</span>,metrics.serviceMonitor.enabled=<span class="literal">true</span>,metrics.serviceMonitor.namespace=default \</span><br><span class="line">bitnami/mariadb</span><br></pre></td></tr></table></figure>
+
+
+<p>完成後存取的訊息</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">Tip:</span><br><span class="line">  Watch the deployment status using the <span class="built_in">command</span>: kubectl get pods -w --namespace database -l release=mariadb</span><br><span class="line">Services:</span><br><span class="line">  <span class="built_in">echo</span> Master: mariadb.database.svc.cluster.local:3306</span><br><span class="line">Administrator credentials:</span><br><span class="line">  Username: root</span><br><span class="line">  Password : $(kubectl get secret --namespace database mariadb -o jsonpath=<span class="string">"&#123;.data.mariadb-root-password&#125;"</span> | base64 --decode)</span><br><span class="line"></span><br><span class="line">To connect to your database:</span><br><span class="line">  1. Run a pod that you can use as a client:</span><br><span class="line">      kubectl run mariadb-client --rm --tty -i --restart=<span class="string">'Never'</span> --image  docker.io/bitnami/mariadb:10.3.22-debian-10-r44 --namespace database --<span class="built_in">command</span> -- bash</span><br><span class="line">	  </span><br><span class="line">  2. To connect to master service (<span class="built_in">read</span>/write):</span><br><span class="line">      mysql -h mariadb.database.svc.cluster.local -uroot -p dop</span><br><span class="line">	  </span><br><span class="line">To upgrade this helm chart:</span><br><span class="line">  1. Obtain the password as described on the <span class="string">'Administrator credentials'</span> section and <span class="built_in">set</span> the <span class="string">'rootUser.password'</span> parameter as shown below:</span><br><span class="line">      ROOT_PASSWORD=$(kubectl get secret --namespace database mariadb -o jsonpath=<span class="string">"&#123;.data.mariadb-root-password&#125;"</span> | base64 --decode)</span><br><span class="line">      helm upgrade mariadb bitnami/mariadb --<span class="built_in">set</span> rootUser.password=<span class="variable">$ROOT_PASSWORD</span></span><br></pre></td></tr></table></figure>
 
 
 <h2 id="使用DB客戶端工具測試連接"><a href="#使用DB客戶端工具測試連接" class="headerlink" title="使用DB客戶端工具測試連接"></a>使用DB客戶端工具測試連接</h2><p>這使用<a href="https://www.heidisql.com/download.php" target="_blank" rel="noopener">HeidiSQL</a>可攜版本做測試，有興趣搜尋一下，這邊不再囉嗦了！</p>
@@ -256,10 +750,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2020-03-13 00:00:00 / Modified: 15:56:53" itemprop="dateCreated datePublished" datetime="2020-03-13T00:00:00+08:00">2020-03-13</time>
+              <time title="Created: 2020-03-13 00:00:00" itemprop="dateCreated datePublished" datetime="2020-03-13T00:00:00+08:00">2020-03-13</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-04-01 15:09:35" itemprop="dateModified" datetime="2020-04-01T15:09:35+08:00">2020-04-01</time>
+              </span>
 
           
 
@@ -285,11 +785,16 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">MongoDB can be accessed via port 27017 on the following DNS name from within your cluster:</span><br><span class="line"></span><br><span class="line">    mongodb.database.svc.cluster.local</span><br><span class="line"></span><br><span class="line">To get the root password run:</span><br><span class="line"></span><br><span class="line">    <span class="built_in">export</span> MONGODB_ROOT_PASSWORD=$(kubectl get secret --namespace database mongodb -o jsonpath=<span class="string">"&#123;.data.mongodb-root-password&#125;"</span> | base64 --decode)</span><br><span class="line"></span><br><span class="line">To get the password <span class="keyword">for</span> <span class="string">"digiwin"</span> run:</span><br><span class="line"></span><br><span class="line">    <span class="built_in">export</span> MONGODB_PASSWORD=$(kubectl get secret --namespace database mongodb -o jsonpath=<span class="string">"&#123;.data.mongodb-password&#125;"</span> | base64 --decode)</span><br><span class="line"></span><br><span class="line">To connect to your database run the following <span class="built_in">command</span>:</span><br><span class="line"></span><br><span class="line">    kubectl run --namespace database mongodb-client --rm --tty -i --restart=<span class="string">'Never'</span> --image docker.io/bitnami/mongodb:4.2.4-debian-10-r3 --<span class="built_in">command</span> -- mongo admin --host mongodb --authenticationDatabase admin -u root -p <span class="variable">$MONGODB_ROOT_PASSWORD</span></span><br><span class="line"></span><br><span class="line">To connect to your database from outside the cluster execute the following commands:</span><br><span class="line"></span><br><span class="line">    <span class="built_in">export</span> NODE_IP=$(kubectl get nodes --namespace database -o jsonpath=<span class="string">"&#123;.items[0].status.addresses[0].address&#125;"</span>)</span><br><span class="line">    <span class="built_in">export</span> NODE_PORT=$(kubectl get --namespace database -o jsonpath=<span class="string">"&#123;.spec.ports[0].nodePort&#125;"</span> services mongodb)</span><br><span class="line">    mongo --host <span class="variable">$NODE_IP</span> --port <span class="variable">$NODE_PORT</span> --authenticationDatabase admin -p <span class="variable">$MONGODB_ROOT_PASSWORD</span></span><br></pre></td></tr></table></figure>
 
 
-<p>測試連線</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mongo --host 10.40.46.101 --port 327171 --authenticationDatabase admin -p <span class="variable">$MONGODB_ROOT_PASSWORD</span></span><br></pre></td></tr></table></figure>
+<h2 id="MongoDB工具"><a href="#MongoDB工具" class="headerlink" title="MongoDB工具"></a>MongoDB工具</h2><h3 id="測試連線"><a href="#測試連線" class="headerlink" title="測試連線"></a>測試連線</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mongo --host 10.40.46.101 --port 327171 --authenticationDatabase admin -p <span class="variable">$MONGODB_ROOT_PASSWORD</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Robo3T"><a href="#Robo3T" class="headerlink" title="Robo3T"></a>Robo3T</h3><p>Backend TW社群上推薦三個工具，先前用MongoDB Compass Community，操作上比較不便，這次這套無痛上手。</p>
+<p>由官網取得下載 <a href="https://robomongo.org/" target="_blank" rel="noopener">Robo3T</a></p>
+<p>這直接使用portable版本，使用上相當直覺，直接填入IP及帳密集可正常連線，Good!<br>Connection<br>| Type | Name | Address|<br>| Direct Connection | YOUR IP | 27017 (Default) |</p>
+<img src="/kubernetes-mongodb/roto3t.png" class=""> 
 
 
 
+<p>| Authentication | Username| Password |</p>
 <p>more info: <a href="https://github.com/bitnami/charts/tree/master/bitnami/mongodb" target="_blank" rel="noopener">MongoDB bitnami</a></p>
 
       
@@ -643,519 +1148,11 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-tw">
-    <link itemprop="mainEntityOfPage" href="https://ansonlin.github.io/kubernetes-rabbitmq/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/docker-icon.png">
-      <meta itemprop="name" content="Anson Lin">
-      <meta itemprop="description" content="小小攻城獅技術宅">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Anson Tech Note">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/kubernetes-rabbitmq/" class="post-title-link" itemprop="url">訊息佇列服務-RabbitMQ on Kubernetes</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020-02-12 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-12T00:00:00+08:00">2020-02-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-03-13 14:31:03" itemprop="dateModified" datetime="2020-03-13T14:31:03+08:00">2020-03-13</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <img src="/kubernetes-rabbitmq/rabbitmq-icon.png" class=""> 
-
-<h2 id="RabbitMQ介紹說明"><a href="#RabbitMQ介紹說明" class="headerlink" title="RabbitMQ介紹說明"></a>RabbitMQ介紹說明</h2><p>RabbitMQ is an open source message broker software that implements the Advanced Message Queuing Protocol (AMQP).</p>
-<p><a href="https://www.rabbitmq.com/documentation.html" target="_blank" rel="noopener">RabbitMQ文檔說明</a></p>
-<p><a href="https://mp.weixin.qq.com/s?__biz=MzI5ODQ2MzI3NQ==&mid=2247488929&idx=2&sn=5817a752b61ea82c2bb9a21f23dbbf71&chksm=eca42ce5dbd3a5f3a0883b31a7eb727f370520b422ffc5284ba8d44ffe4f300ca74c9f4c7cd5&scene=126&sessionid=1581900963&key=96db90385c72044dfbea96614497733baf63db911605dbd2328c18390c5a08faef181621e03fe986cdf98e88428616921c32f62f73e18061f8cb0745888aa8d7a7f2d58d18e5089471e8e763992bbd9d&ascene=1&uin=MjY1ODg0NjI2MQ%3D%3D&devicetype=Windows+10&version=62080079&lang=zh_TW&exportkey=ArAQWAOdwLbOLbIXUcPU57w%3D&pass_ticket=QmanDeP4YTBMwALbVH8d1LFKxOcdF3fbhz%2FobAM81YY5gZ%2BkXEG0HjK9qNpQX7oT" target="_blank" rel="noopener">高併發下RabbitMQ限流實踐</a></p>
-<h3 id="業務場景"><a href="#業務場景" class="headerlink" title="業務場景"></a>業務場景</h3><p>舉一些我們平常生活中的消費場景，例如：火車票、機票等，通常來說這些服務在下單之後，後續的出票結果都是異步通知的，如果服務本身只支持每秒1000訪問量，由於外部服務的原因突然訪問量增加到每秒2000並發，這個時候服務接收者因為流量的劇增，超過了自己系統本身所能處理的最大峰值，如果沒有對消息做限流措施，系統在這段時間內就會造成不可用，在生產環境這是一個很严重的問題，實際應用場景不止於這些，本文通過RabbitMQ來講解如何對消費端做限流措施。</p>
-<h3 id="消費端限流機制"><a href="#消費端限流機制" class="headerlink" title="消費端限流機制"></a>消費端限流機制</h3><p>RabbitMQ提供了服務質量保證( QOS)功能，對channel（通道）預先設置一定的消息數目，每次發送的消息條數都是基於預先設置的數目，如果消費端一旦有未確認的消息，這時服務端將不會再發送新的消費消息，直到消費端將消息進行完全確認，注意：此時消費端不能設置自動簽收，否則會無效。</p>
-<p>在之後，放寬了限制，除了對channel設置之外，還可以對每個消費者進行設置。</p>
-<h2 id="預先安裝Helm"><a href="#預先安裝Helm" class="headerlink" title="預先安裝Helm"></a>預先安裝Helm</h2><p>參考先前文章 <a href="../kubernetes-helm/">安裝Helm</a></p>
-<h2 id="預先準備storageclass服務"><a href="#預先準備storageclass服務" class="headerlink" title="預先準備storageclass服務"></a>預先準備storageclass服務</h2><p>參考先前文章 <a href="../kubernetes-storageclass-nfs/">StorageClass</a></p>
-<h2 id="安裝rabbitMQ"><a href="#安裝rabbitMQ" class="headerlink" title="安裝rabbitMQ"></a>安裝rabbitMQ</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">helm repo add bitnami https://charts.bitnami.com/bitnami</span><br><span class="line"></span><br><span class="line">curl https://raw.githubusercontent.com/bitnami/charts/master/bitnami/rabbitmq/values.yaml -o rabbitmq-values.yaml</span><br><span class="line"></span><br><span class="line">helm install rabbitmq bitnami/rabbitmq -f rabbitmq-values.yaml</span><br></pre></td></tr></table></figure>
-
-<p>常用參數</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">helm install \</span><br><span class="line">-n mq \</span><br><span class="line">--<span class="built_in">set</span> rabbitmq.username=dwadm,rabbitmq.password=dwadm \</span><br><span class="line">--<span class="built_in">set</span> rabbitmq.erlangCookie=SWQOKODSQALRPCLNMEQG	 \</span><br><span class="line">--<span class="built_in">set</span> ingress.enabled=<span class="literal">true</span>,ingress.hostName=rabbitmq.10.40.46.101.nip.io \</span><br><span class="line">--<span class="built_in">set</span> global.storageClass=nfs-client,persistence.storageClass=nfs-client \</span><br><span class="line">--<span class="built_in">set</span> metrics.enabled=<span class="literal">true</span>,metrics.serviceMonitor.enabled=<span class="literal">true</span>,metrics.prometheusRule.enabled=<span class="literal">true</span>,metrics.serviceMonitor.interval=20s \	</span><br><span class="line">--generate-name stable/rabbitmq</span><br></pre></td></tr></table></figure>
-
-
-<p>完成後存取的訊息</p>
-<pre><code class="bash">** Please be patient <span class="keyword">while</span> the chart is being deployed **
-
-Credentials:
-    <span class="built_in">echo</span> <span class="string">"Username      : digiwin"</span>
-    <span class="built_in">echo</span> <span class="string">"Password      : <span class="variable">$(kubectl get secret --namespace default rabbitmq -o jsonpath="{.data.rabbitmq-password}" | base64 --decode)</span>"</span>
-    <span class="built_in">echo</span> <span class="string">"ErLang Cookie : <span class="variable">$(kubectl get secret --namespace default rabbitmq -o jsonpath="{.data.rabbitmq-erlang-cookie}" | base64 --decode)</span>"</span>
-
-RabbitMQ can be accessed within the cluster on port  at rabbitmq.default.svc.cluster.local
-To access <span class="keyword">for</span> outside the cluster, perform the following steps:
-To Access the RabbitMQ AMQP port:
-
-    <span class="built_in">echo</span> <span class="string">"URL : amqp://127.0.0.1:5672/"</span>
-    kubectl port-forward --namespace default svc/rabbitmq 5672:5672
-
-To Access the RabbitMQ Management interface:
-
-    <span class="built_in">echo</span> <span class="string">"URL : http://127.0.0.1:15672/"</span>
-    kubectl port-forward --namespace default svc/rabbitmq 15672:15672
-
-To access the RabbitMQ Prometheus metrics, get the RabbitMQ Prometheus exporter URL by running:
-
-    <span class="built_in">echo</span> <span class="string">"Prometheus Metrics URL: http://127.0.0.1:9419/metrics"</span>
-    kubectl port-forward --namespace default rabbitmq-0 9419:9419
-
-Then, open the URL obtained <span class="keyword">in</span> a browser.
-</code></pre>
-<p>More info: <a href="https://github.com/bitnami/charts/tree/master/bitnami/rabbitmq" target="_blank" rel="noopener">rabbitMQ</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-tw">
-    <link itemprop="mainEntityOfPage" href="https://ansonlin.github.io/kubernetes-prometheus/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/docker-icon.png">
-      <meta itemprop="name" content="Anson Lin">
-      <meta itemprop="description" content="小小攻城獅技術宅">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Anson Tech Note">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/kubernetes-prometheus/" class="post-title-link" itemprop="url">Kubernetes监控管理工具prometheus-operator</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020-02-01 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-01T00:00:00+08:00">2020-02-01</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-03-13 10:01:21" itemprop="dateModified" datetime="2020-03-13T10:01:21+08:00">2020-03-13</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><img src="https://coreos.com/sites/default/files/inline-images/p1.png" alt="Prometheus-Operator workflow"></p>
-<h2 id="OOO-Operator-by-CoreOSs"><a href="#OOO-Operator-by-CoreOSs" class="headerlink" title="OOO-Operator by CoreOSs"></a>OOO-Operator by CoreOSs</h2><p>在以往原生的 Kubernetes 環境裡，管理維護 stateful service 是件困難的工作。雖然 kubernetes 有提供 statefulSet 這樣的物件，但對於要維護 stateful service 來說還是相當不足的。舉例來說，當建立一個 mysql 的 stateful service 時，我們可能希望第一個 pod 是 master，第二個 pod 對 master 做 replication，第三個 pod 對第二個 pod 做 replication。這樣的架構如果要靠 kubernets 管理者來設定的話，會需要對 mysql 有一定的了解才能進行，而且可能相當耗費心力。<br>而每種 stateful service 的管理維護方式都各有巧妙不同，像 redis、kafka、prometheus 等，這些都需要嫻熟於該領域的人，才知道最好的管理方式為何。因此 stateful service 一直是讓 Kubernetes 使用者相當困擾的事情，比較安全的做法往往都是放棄讓 stateful service 跑在 kubernetes 裡，用傳統的方式來維運，一直到 operator 的出現。</p>
-<p>對於在 Kubernetes 上維運 stateful service 的困難，CoreOS 這家公司看出了需求與契機，開發了 Operator 這種專門處理 stateful service 的機制。透過擴展 Kubernetes 的 API 與相對應的 controller，可以用更好更安全的方式來建立、配置和管理 stateful service。於是短短一兩年時間，許多軟體廠商開始主動提供 operator 的套件來協助使用者將其軟體放到 Kubernetes 維運，也因此 operator 也成為 Kubernetes 領域裡的顯學之一。</p>
-<p>Operator 的架構主要可以分成兩部分，一個是 CRD (使用者自定義資源，CustomResourceDefinition)，另一個是 controllers，而 controller 就是處理當 CRD 發生 CRUD 操作時的相對應動作。例如 CRD 可能是定義一個叫 mysqldatabase 的資源物件，當kuberetes API 收到有 mysqldatabase 要建立時，會透過相對應的 controller 來建立相關的資源物件。<br>是知名且良好的 operator 套件，多半是原廠或該領域的專家所提供，通常都提供了許多便利且安全的機制，讓使用者可以用簡單且符合 Kubernetes 架構的方式來管理使用，而 Prometheus-Operator 也是其中之一</p>
-<h2 id="預先安裝Helm"><a href="#預先安裝Helm" class="headerlink" title="預先安裝Helm"></a>預先安裝Helm</h2><p><a href="../kubernetes-helm/">Helm</a></p>
-<h2 id="安裝Prometheus-Operator"><a href="#安裝Prometheus-Operator" class="headerlink" title="安裝Prometheus-Operator"></a>安裝Prometheus-Operator</h2><h3 id="建立Namespace以及CRD"><a href="#建立Namespace以及CRD" class="headerlink" title="建立Namespace以及CRD"></a>建立Namespace以及CRD</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">kubectl create ns monitor</span><br><span class="line"></span><br><span class="line">kubectl -n prometheus apply -f https://raw.githubusercontent.com/coreos/prometheus-operator/release-0.35/example/prometheus-operator-crd/monitoring.coreos.com_alertmanagers.yaml</span><br><span class="line">kubectl -n prometheus apply -f https://raw.githubusercontent.com/coreos/prometheus-operator/release-0.35/example/prometheus-operator-crd/monitoring.coreos.com_podmonitors.yaml</span><br><span class="line">kubectl -n prometheus apply -f https://raw.githubusercontent.com/coreos/prometheus-operator/release-0.35/example/prometheus-operator-crd/monitoring.coreos.com_prometheuses.yaml</span><br><span class="line">kubectl -n prometheus apply -f https://raw.githubusercontent.com/coreos/prometheus-operator/release-0.35/example/prometheus-operator-crd/monitoring.coreos.com_prometheusrules.yaml</span><br><span class="line">kubectl -n prometheus apply -f https://raw.githubusercontent.com/coreos/prometheus-operator/release-0.35/example/prometheus-operator-crd/monitoring.coreos.com_servicemonitors.yaml</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="Prometheus-Operator參數值"><a href="#Prometheus-Operator參數值" class="headerlink" title="Prometheus-Operator參數值"></a>Prometheus-Operator參數值</h3><p>先下載Helm values檔案再修改需要的參數</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl   https://raw.githubusercontent.com/helm/charts/master/stable/prometheus-operator/values.yaml -o prometheus-operator-values.yaml</span><br></pre></td></tr></table></figure>
-
-
-<p>| 參數  | 描述  | Default<br>prometheus.enabled<br>prometheus.ingress.enabled<br>prometheus.ingress.hosts<br>alertmanager.enabled<br>ingress.enabled<br>ingress.hosts<br>grafana.enabled<br>grafana.ingress.enabled<br>grafana.ingress.hosts<br>grafana.persistence.enabled<br>grafana.persistence.size<br>grafana.persistence.storageClassName<br>prometheusOperator.admissionWebhooks.enabled<br>prometheusOperator.createCustomResource<br>prometheus.prometheusSpec.serviceMonitorSelectorNilUsesHelmValues</p>
-<p>開始安裝</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ helm install -n monitor  stable/prometheus-operator  -f prometheus-operator-values.yaml</span><br></pre></td></tr></table></figure>
-
-<h2 id="加入grafana-Dashboard"><a href="#加入grafana-Dashboard" class="headerlink" title="加入grafana Dashboard"></a>加入grafana Dashboard</h2><h3 id="加入-Mariadb-Dashboard"><a href="#加入-Mariadb-Dashboard" class="headerlink" title="加入 Mariadb Dashboard"></a>加入 Mariadb Dashboard</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -O https://raw.githubusercontent.com/percona/grafana-dashboards/master/dashboards/MySQL_Overview.json</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="加入-Redis-Dashboard"><a href="#加入-Redis-Dashboard" class="headerlink" title="加入 Redis Dashboard"></a>加入 Redis Dashboard</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -O https://grafana.com/api/dashboards/4074/revisions/1/download</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="加入-RabbitMQ-Dashboard"><a href="#加入-RabbitMQ-Dashboard" class="headerlink" title="加入 RabbitMQ Dashboard"></a>加入 RabbitMQ Dashboard</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -O https://grafana.com/api/dashboards/2121/revisions/1/download</span><br></pre></td></tr></table></figure>
-
-
-<h2 id="Troubleshooting"><a href="#Troubleshooting" class="headerlink" title="Troubleshooting"></a>Troubleshooting</h2><p>如果存在舊有CRD資源，需先移除</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">kubectl delete crd prometheuses.monitoring.coreos.com</span><br><span class="line">kubectl delete crd prometheusrules.monitoring.coreos.com</span><br><span class="line">kubectl delete crd servicemonitors.monitoring.coreos.com</span><br><span class="line">kubectl delete crd podmonitors.monitoring.coreos.com</span><br><span class="line">kubectl delete crd alertmanagers.monitoring.coreos.co</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-
-
-<p>more info:<br>[Prometheus Operator] (<a href="https://github.com/helm/charts/tree/master/stable/prometheus-operator" target="_blank" rel="noopener">https://github.com/helm/charts/tree/master/stable/prometheus-operator</a>)<br><a href="http://brobridge.com/bdsres/2019/10/21/prometheus-operator-i-efe748a6796b/" target="_blank" rel="noopener">prom-op-2</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-tw">
-    <link itemprop="mainEntityOfPage" href="https://ansonlin.github.io/kubernetes-demo-apps/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/docker-icon.png">
-      <meta itemprop="name" content="Anson Lin">
-      <meta itemprop="description" content="小小攻城獅技術宅">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Anson Tech Note">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/kubernetes-demo-apps/" class="post-title-link" itemprop="url">Kubernetes幾個Demo Apps</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2019-12-25 00:00:00" itemprop="dateCreated datePublished" datetime="2019-12-25T00:00:00+08:00">2019-12-25</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-02-15 14:53:09" itemprop="dateModified" datetime="2020-02-15T14:53:09+08:00">2020-02-15</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><img src="https://d33wubrfki0l68.cloudfront.net/1567471e7c58dc9b7d9c65dcd54e60cbf5870daa/da576/_common-resources/images/flower.png" alt="KubernetesDemoApps"><br>安裝玩Kubernetes集群後，當然要佈署一些程序，才能完成整個Lab測試囉！</p>
-<h2 id="Demo用Apps"><a href="#Demo用Apps" class="headerlink" title="Demo用Apps"></a>Demo用Apps</h2><h3 id="Nginx站台"><a href="#Nginx站台" class="headerlink" title="Nginx站台"></a>Nginx站台</h3><p><a href="./kubernetes-demo-apps-nginx.txt">Nginx</a></p>
-<h3 id="Azure投票系統"><a href="#Azure投票系統" class="headerlink" title="Azure投票系統"></a>Azure投票系統</h3><p><a href="./kubernetes-demo-apps-azurevote.txt">AzureVote</a></p>
-<h3 id="Wordpress"><a href="#Wordpress" class="headerlink" title="Wordpress"></a>Wordpress</h3><p><a href="./kubernetes-demo-apps-wordpress.txt">WordPress</a></p>
-<h2 id="下載套用"><a href="#下載套用" class="headerlink" title="下載套用"></a>下載套用</h2><p>接著把上方位置直接下載下來套用囉！</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ curl  http://xxxx.txt -o xxx.yaml</span><br><span class="line">$ kubectl apply -f xxx.yaml</span><br></pre></td></tr></table></figure>
-
-
-<p>more info:有空再補上吧！</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-tw">
-    <link itemprop="mainEntityOfPage" href="https://ansonlin.github.io/kubernetes-dashboard/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/docker-icon.png">
-      <meta itemprop="name" content="Anson Lin">
-      <meta itemprop="description" content="小小攻城獅技術宅">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Anson Tech Note">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/kubernetes-dashboard/" class="post-title-link" itemprop="url">Kubernetes UI管理站台-Dashboard</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2019-12-21 00:00:00" itemprop="dateCreated datePublished" datetime="2019-12-21T00:00:00+08:00">2019-12-21</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-02-15 14:53:20" itemprop="dateModified" datetime="2020-02-15T14:53:20+08:00">2020-02-15</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <img src="/kubernetes-dashboard/ui-dashboard.png" class=""> 
-
-
-<p>儀表板是基於Web的Kubernetes用戶界面。您可以使用儀表板將容器化應用程序部署到Kubernetes集群，對容器化應用程序進行故障排除，以及管理集群資源。您可以使用儀表板來概述群集上運行的應用程序，以及創建或修改單個Kubernetes資源（例如部署，作業，守護進程等）。例如，您可以使用部署嚮導擴展部署，啟動滾動更新，重新啟動Pod或部署新應用程序。<br>儀表板還提供有關群集中Kubernetes資源狀態以及可能發生的任何錯誤的信息。</p>
-<h3 id="佈署Dashboard"><a href="#佈署Dashboard" class="headerlink" title="佈署Dashboard"></a>佈署Dashboard</h3><ol>
-<li><p>使用線上的Yaml</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta6/aio/deploy/recommended.yaml</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>或使用2019/11/28的Yaml</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Copyright 2017 The Kubernetes Authors.</span></span><br><span class="line"><span class="comment"># Licensed under the Apache License, Version 2.0 (the "License");</span></span><br><span class="line"><span class="comment"># you may not use this file except in compliance with the License.</span></span><br><span class="line"><span class="comment"># You may obtain a copy of the License at</span></span><br><span class="line"><span class="comment">#     http://www.apache.org/licenses/LICENSE-2.0</span></span><br><span class="line"><span class="comment"># Unless required by applicable law or agreed to in writing, software</span></span><br><span class="line"><span class="comment"># distributed under the License is distributed on an "AS IS" BASIS,</span></span><br><span class="line"><span class="comment"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span></span><br><span class="line"><span class="comment"># See the License for the specific language governing permissions and</span></span><br><span class="line"><span class="comment"># limitations under the License.</span></span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Namespace</span><br><span class="line">metadata:</span><br><span class="line">  name: kubernetes-dashboard</span><br><span class="line">---</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: ServiceAccount</span><br><span class="line">metadata:</span><br><span class="line">  labels:</span><br><span class="line">    k8s-app: kubernetes-dashboard</span><br><span class="line">  name: kubernetes-dashboard</span><br><span class="line">  namespace: kubernetes-dashboard</span><br><span class="line">---</span><br><span class="line">kind: Service</span><br><span class="line">apiVersion: v1</span><br><span class="line">metadata:</span><br><span class="line">  labels:</span><br><span class="line">    k8s-app: kubernetes-dashboard</span><br><span class="line">  name: kubernetes-dashboard</span><br><span class="line">  namespace: kubernetes-dashboard</span><br><span class="line">spec:</span><br><span class="line">  ports:</span><br><span class="line">    - port: 443</span><br><span class="line">      targetPort: 8443</span><br><span class="line">  selector:</span><br><span class="line">    k8s-app: kubernetes-dashboard</span><br><span class="line">---</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Secret</span><br><span class="line">metadata:</span><br><span class="line">  labels:</span><br><span class="line">    k8s-app: kubernetes-dashboard</span><br><span class="line">  name: kubernetes-dashboard-certs</span><br><span class="line">  namespace: kubernetes-dashboard</span><br><span class="line"><span class="built_in">type</span>: Opaque</span><br><span class="line">---</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Secret</span><br><span class="line">metadata:</span><br><span class="line">  labels:</span><br><span class="line">    k8s-app: kubernetes-dashboard</span><br><span class="line">  name: kubernetes-dashboard-csrf</span><br><span class="line">  namespace: kubernetes-dashboard</span><br><span class="line"><span class="built_in">type</span>: Opaque</span><br><span class="line">data:</span><br><span class="line">  csrf: <span class="string">""</span></span><br><span class="line">---</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Secret</span><br><span class="line">metadata:</span><br><span class="line">  labels:</span><br><span class="line">    k8s-app: kubernetes-dashboard</span><br><span class="line">  name: kubernetes-dashboard-key-holder</span><br><span class="line">  namespace: kubernetes-dashboard</span><br><span class="line"><span class="built_in">type</span>: Opaque</span><br><span class="line">---</span><br><span class="line">kind: ConfigMap</span><br><span class="line">apiVersion: v1</span><br><span class="line">metadata:</span><br><span class="line">  labels:</span><br><span class="line">    k8s-app: kubernetes-dashboard</span><br><span class="line">  name: kubernetes-dashboard-settings</span><br><span class="line">  namespace: kubernetes-dashboard</span><br><span class="line">---</span><br><span class="line">kind: Role</span><br><span class="line">apiVersion: rbac.authorization.k8s.io/v1</span><br><span class="line">metadata:</span><br><span class="line">  labels:</span><br><span class="line">    k8s-app: kubernetes-dashboard</span><br><span class="line">  name: kubernetes-dashboard</span><br><span class="line">  namespace: kubernetes-dashboard</span><br><span class="line">rules:</span><br><span class="line">  <span class="comment"># Allow Dashboard to get, update and delete Dashboard exclusive secrets.</span></span><br><span class="line">  - apiGroups: [<span class="string">""</span>]</span><br><span class="line">    resources: [<span class="string">"secrets"</span>]</span><br><span class="line">    resourceNames: [<span class="string">"kubernetes-dashboard-key-holder"</span>, <span class="string">"kubernetes-dashboard-certs"</span>, <span class="string">"kubernetes-dashboard-csrf"</span>]</span><br><span class="line">    verbs: [<span class="string">"get"</span>, <span class="string">"update"</span>, <span class="string">"delete"</span>]</span><br><span class="line">    <span class="comment"># Allow Dashboard to get and update 'kubernetes-dashboard-settings' config map.</span></span><br><span class="line">  - apiGroups: [<span class="string">""</span>]</span><br><span class="line">    resources: [<span class="string">"configmaps"</span>]</span><br><span class="line">    resourceNames: [<span class="string">"kubernetes-dashboard-settings"</span>]</span><br><span class="line">    verbs: [<span class="string">"get"</span>, <span class="string">"update"</span>]</span><br><span class="line">    <span class="comment"># Allow Dashboard to get metrics.</span></span><br><span class="line">  - apiGroups: [<span class="string">""</span>]</span><br><span class="line">    resources: [<span class="string">"services"</span>]</span><br><span class="line">    resourceNames: [<span class="string">"heapster"</span>, <span class="string">"dashboard-metrics-scraper"</span>]</span><br><span class="line">    verbs: [<span class="string">"proxy"</span>]</span><br><span class="line">  - apiGroups: [<span class="string">""</span>]</span><br><span class="line">    resources: [<span class="string">"services/proxy"</span>]</span><br><span class="line">    resourceNames: [<span class="string">"heapster"</span>, <span class="string">"http:heapster:"</span>, <span class="string">"https:heapster:"</span>, <span class="string">"dashboard-metrics-scraper"</span>, <span class="string">"http:dashboard-metrics-scraper"</span>]</span><br><span class="line">    verbs: [<span class="string">"get"</span>]</span><br><span class="line">---</span><br><span class="line">kind: ClusterRole</span><br><span class="line">apiVersion: rbac.authorization.k8s.io/v1</span><br><span class="line">metadata:</span><br><span class="line">  labels:</span><br><span class="line">    k8s-app: kubernetes-dashboard</span><br><span class="line">  name: kubernetes-dashboard</span><br><span class="line">rules:</span><br><span class="line">  <span class="comment"># Allow Metrics Scraper to get metrics from the Metrics server</span></span><br><span class="line">  - apiGroups: [<span class="string">"metrics.k8s.io"</span>]</span><br><span class="line">    resources: [<span class="string">"pods"</span>, <span class="string">"nodes"</span>]</span><br><span class="line">    verbs: [<span class="string">"get"</span>, <span class="string">"list"</span>, <span class="string">"watch"</span>]</span><br><span class="line">---</span><br><span class="line">apiVersion: rbac.authorization.k8s.io/v1</span><br><span class="line">kind: RoleBinding</span><br><span class="line">metadata:</span><br><span class="line">  labels:</span><br><span class="line">    k8s-app: kubernetes-dashboard</span><br><span class="line">  name: kubernetes-dashboard</span><br><span class="line">  namespace: kubernetes-dashboard</span><br><span class="line">roleRef:</span><br><span class="line">  apiGroup: rbac.authorization.k8s.io</span><br><span class="line">  kind: Role</span><br><span class="line">  name: kubernetes-dashboard</span><br><span class="line">subjects:</span><br><span class="line">  - kind: ServiceAccount</span><br><span class="line">    name: kubernetes-dashboard</span><br><span class="line">    namespace: kubernetes-dashboard</span><br><span class="line">---</span><br><span class="line">apiVersion: rbac.authorization.k8s.io/v1</span><br><span class="line">kind: ClusterRoleBinding</span><br><span class="line">metadata:</span><br><span class="line">  name: kubernetes-dashboard</span><br><span class="line">  namespace: kubernetes-dashboard</span><br><span class="line">roleRef:</span><br><span class="line">  apiGroup: rbac.authorization.k8s.io</span><br><span class="line">  kind: ClusterRole</span><br><span class="line">  name: kubernetes-dashboard</span><br><span class="line">subjects:</span><br><span class="line">  - kind: ServiceAccount</span><br><span class="line">    name: kubernetes-dashboard</span><br><span class="line">    namespace: kubernetes-dashboard</span><br><span class="line">---</span><br><span class="line">kind: Deployment</span><br><span class="line">apiVersion: apps/v1</span><br><span class="line">metadata:</span><br><span class="line">  labels:</span><br><span class="line">    k8s-app: kubernetes-dashboard</span><br><span class="line">  name: kubernetes-dashboard</span><br><span class="line">  namespace: kubernetes-dashboard</span><br><span class="line">spec:</span><br><span class="line">  replicas: 1</span><br><span class="line">  revisionHistoryLimit: 10</span><br><span class="line">  selector:</span><br><span class="line">    matchLabels:</span><br><span class="line">      k8s-app: kubernetes-dashboard</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      labels:</span><br><span class="line">        k8s-app: kubernetes-dashboard</span><br><span class="line">    spec:</span><br><span class="line">      containers:</span><br><span class="line">        - name: kubernetes-dashboard</span><br><span class="line">          image: kubernetesui/dashboard:v2.0.0-beta4</span><br><span class="line">          imagePullPolicy: Always</span><br><span class="line">          ports:</span><br><span class="line">            - containerPort: 8443</span><br><span class="line">              protocol: TCP</span><br><span class="line">          args:</span><br><span class="line">            - --auto-generate-certificates</span><br><span class="line">            - --namespace=kubernetes-dashboard</span><br><span class="line">            <span class="comment"># Uncomment the following line to manually specify Kubernetes API server Host</span></span><br><span class="line">            <span class="comment"># If not specified, Dashboard will attempt to auto discover the API server and connect</span></span><br><span class="line">            <span class="comment"># to it. Uncomment only if the default does not work.</span></span><br><span class="line">            <span class="comment"># - --apiserver-host=http://my-address:port</span></span><br><span class="line">          volumeMounts:</span><br><span class="line">            - name: kubernetes-dashboard-certs</span><br><span class="line">              mountPath: /certs</span><br><span class="line">              <span class="comment"># Create on-disk volume to store exec logs</span></span><br><span class="line">            - mountPath: /tmp</span><br><span class="line">              name: tmp-volume</span><br><span class="line">          livenessProbe:</span><br><span class="line">            httpGet:</span><br><span class="line">              scheme: HTTPS</span><br><span class="line">              path: /</span><br><span class="line">              port: 8443</span><br><span class="line">            initialDelaySeconds: 30</span><br><span class="line">            timeoutSeconds: 30</span><br><span class="line">      volumes:</span><br><span class="line">        - name: kubernetes-dashboard-certs</span><br><span class="line">          secret:</span><br><span class="line">            secretName: kubernetes-dashboard-certs</span><br><span class="line">        - name: tmp-volume</span><br><span class="line">          emptyDir: &#123;&#125;</span><br><span class="line">      serviceAccountName: kubernetes-dashboard</span><br><span class="line">      <span class="comment"># Comment the following tolerations if Dashboard must not be deployed on master</span></span><br><span class="line">      tolerations:</span><br><span class="line">        - key: node-role.kubernetes.io/master</span><br><span class="line">          effect: NoSchedule</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">kind: Service</span><br><span class="line">apiVersion: v1</span><br><span class="line">metadata:</span><br><span class="line">  labels:</span><br><span class="line">    k8s-app: dashboard-metrics-scraper</span><br><span class="line">  name: dashboard-metrics-scraper</span><br><span class="line">  namespace: kubernetes-dashboard</span><br><span class="line">spec:</span><br><span class="line">  ports:</span><br><span class="line">    - port: 8000</span><br><span class="line">      targetPort: 8000</span><br><span class="line">  selector:</span><br><span class="line">    k8s-app: dashboard-metrics-scraper</span><br><span class="line">---</span><br><span class="line">kind: Deployment</span><br><span class="line">apiVersion: apps/v1</span><br><span class="line">metadata:</span><br><span class="line">  labels:</span><br><span class="line">    k8s-app: dashboard-metrics-scraper</span><br><span class="line">  name: dashboard-metrics-scraper</span><br><span class="line">  namespace: kubernetes-dashboard</span><br><span class="line">spec:</span><br><span class="line">  replicas: 1</span><br><span class="line">  revisionHistoryLimit: 10</span><br><span class="line">  selector:</span><br><span class="line">    matchLabels:</span><br><span class="line">      k8s-app: dashboard-metrics-scraper</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      labels:</span><br><span class="line">        k8s-app: dashboard-metrics-scraper</span><br><span class="line">    spec:</span><br><span class="line">      containers:</span><br><span class="line">        - name: dashboard-metrics-scraper</span><br><span class="line">          image: kubernetesui/metrics-scraper:v1.0.1</span><br><span class="line">          ports:</span><br><span class="line">            - containerPort: 8000</span><br><span class="line">              protocol: TCP</span><br><span class="line">          livenessProbe:</span><br><span class="line">            httpGet:</span><br><span class="line">              scheme: HTTP</span><br><span class="line">              path: /</span><br><span class="line">              port: 8000</span><br><span class="line">            initialDelaySeconds: 30</span><br><span class="line">            timeoutSeconds: 30</span><br><span class="line">          volumeMounts:</span><br><span class="line">          - mountPath: /tmp</span><br><span class="line">            name: tmp-volume</span><br><span class="line">      serviceAccountName: kubernetes-dashboard</span><br><span class="line">      <span class="comment"># Comment the following tolerations if Dashboard must not be deployed on master</span></span><br><span class="line">      tolerations:</span><br><span class="line">        - key: node-role.kubernetes.io/master</span><br><span class="line">          effect: NoSchedule</span><br><span class="line">      volumes:</span><br><span class="line">        - name: tmp-volume</span><br><span class="line">          emptyDir: &#123;&#125;</span><br></pre></td></tr></table></figure>
-
-
-</li>
-</ol>
-<h3 id="建立Dashboard管理員"><a href="#建立Dashboard管理員" class="headerlink" title="建立Dashboard管理員"></a>建立Dashboard管理員</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">cat &lt;&lt;EOF | kubectl apply -f -</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: ServiceAccount</span><br><span class="line">metadata:</span><br><span class="line">  name: admin-user</span><br><span class="line">  namespace: kubernetes-dashboard</span><br><span class="line">---</span><br><span class="line">apiVersion: rbac.authorization.k8s.io/v1</span><br><span class="line">kind: ClusterRoleBinding</span><br><span class="line">metadata:</span><br><span class="line">  name: admin-user</span><br><span class="line">roleRef:</span><br><span class="line">  apiGroup: rbac.authorization.k8s.io</span><br><span class="line">  kind: ClusterRole</span><br><span class="line">  name: cluster-admin</span><br><span class="line">subjects:</span><br><span class="line">- kind: ServiceAccount</span><br><span class="line">  name: admin-user</span><br><span class="line">  namespace: kubernetes-dashboard</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
-
-
-
-
-<h3 id="連接Dashboard方式"><a href="#連接Dashboard方式" class="headerlink" title="連接Dashboard方式"></a>連接Dashboard方式</h3><ol>
-<li>透過NodePort方式存取</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl -n kubernetes-dashboard edit svc kubernetes-dashboard</span><br><span class="line"><span class="comment">###targetPort下方加入</span></span><br><span class="line">     nodePort: 30443</span><br><span class="line">   <span class="built_in">type</span>: NodePort</span><br><span class="line"><span class="comment">###</span></span><br><span class="line">$ kubectl -n kubernetes-dashboard get svc kubernetes-dashboard</span><br></pre></td></tr></table></figure>
-
-
-<ol start="2">
-<li>透過proxy方式存取<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl proxy  --address=0.0.0.0  --accept-hosts=<span class="string">'^*$'</span></span><br></pre></td></tr></table></figure>
-
-</li>
-</ol>
-<p><a href="http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/" target="_blank" rel="noopener">http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/</a>.</p>
-<h3 id="查詢token"><a href="#查詢token" class="headerlink" title="查詢token"></a>查詢token</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl -n kubernetes-dashboard get svc</span><br><span class="line">$ kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep admin-user | awk <span class="string">'&#123;print $1&#125;'</span>)</span><br></pre></td></tr></table></figure>
-
-
-
-<p>more info: <a href="https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/" target="_blank" rel="noopener">Dashboard</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-tw">
-    <link itemprop="mainEntityOfPage" href="https://ansonlin.github.io/kubernetes-ha/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/docker-icon.png">
-      <meta itemprop="name" content="Anson Lin">
-      <meta itemprop="description" content="小小攻城獅技術宅">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Anson Tech Note">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/kubernetes-ha/" class="post-title-link" itemprop="url">建立高可用Kubernetes集群</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2019-12-12 00:00:00" itemprop="dateCreated datePublished" datetime="2019-12-12T00:00:00+08:00">2019-12-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-02-15 14:52:54" itemprop="dateModified" datetime="2020-02-15T14:52:54+08:00">2020-02-15</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>本篇文章目標是利用 Linux 作業系統虛擬機器(CentOS 7.6)，用 kubeadm 這套工具於自己的環境下從無到有打造一個具有高可用性(HA)的 K8S Cluster 環境，可以隨時進行擴充以應付日後成長的需求。</p>
-<h2 id="安裝前必備"><a href="#安裝前必備" class="headerlink" title="安裝前必備"></a>安裝前必備</h2><p>或參考先前文章 <a href="../kubernetes-kubeadm">安裝Kubeadm</a></p>
-<ol>
-<li><p>OS<br>Redhat / CentOS 7、Minimum install</p>
-</li>
-<li><p>Docker</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo yum install docker</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>安裝kubeadm 1.16.3</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo yum install kubeadm-1.16.3 ,kubelet-1.16.3, kubectl-1.16.3</span><br></pre></td></tr></table></figure>
-
-</li>
-</ol>
-<p>………….</p>
-<h2 id="Kubernetes-HA環境概述"><a href="#Kubernetes-HA環境概述" class="headerlink" title="Kubernetes HA環境概述"></a>Kubernetes HA環境概述</h2> 
-
-
-<p>由於資源限制，原本應該獨立的HA Proxy主機，因資源夠大，所以合併作為Worker01用了。<br>而K8S Cluster 主要運作的容器服務都在 worker 上面(預設上 master 是不開放運行的，除非特別取消這個限制)，因此資源上(尤其是記憶體)不妨給 worker 多一些。<br>為了快速部署，完成一台後可直接做成範本，複製成其它台VM。</p>
-<ol>
-<li><p>HA Proxy角色<br> lb01            10.40.46.101        (4vCPU、16GBvRAM、300GB HDD)</p>
-</li>
-<li><p>Masters角色<br> master01        10.40.141.101        (2vCPU、4GBvRAM、40GB HDD)<br> master02        10.40.141.102        (2vCPU、4GBvRAM、40GB HDD)<br> master02        10.40.141.102        (2vCPU、4GBvRAM、40GB HDD)</p>
-</li>
-<li><p>Workers角色<br> worker01        10.40.46.101        (4vCPU、16GBvRAM、300GB HDD)<br> worker02        10.40.141.112        (2vCPU、8GBvRAM、40GB HDD)<br> worker03        10.40.141.113        (2vCPU、4GBvRAM、40GB HDD)</p>
-</li>
-</ol>
-<p>由於第一台會先做成範本，所以先加入hosts，方便後續進行。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ sudo cat &lt;&lt;EOF &gt; /etc/hosts</span><br><span class="line">10.40.46.101    kube-lb01</span><br><span class="line">10.40.141.101   master01</span><br><span class="line">10.40.141.102   master02</span><br><span class="line">10.40.141.103   master03</span><br><span class="line">10.40.46.101    worker01</span><br><span class="line">10.40.141.112   worker02</span><br><span class="line">10.40.141.113   worker03</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
-
-<h2 id="安裝部署Kubernetes-HA"><a href="#安裝部署Kubernetes-HA" class="headerlink" title="安裝部署Kubernetes HA"></a>安裝部署Kubernetes HA</h2><h3 id="HA-Proxy角色"><a href="#HA-Proxy角色" class="headerlink" title="HA Proxy角色"></a>HA Proxy角色</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># sudo yum install haproxy</span></span><br><span class="line"><span class="comment"># cd /etc/haproxy &amp;&amp; mv haproxy.cfg haproxy.cfg.original</span></span><br><span class="line"><span class="comment"># cat &lt;&lt;EOF &gt; haproxy.cfg</span></span><br><span class="line">global</span><br><span class="line">    user haproxy</span><br><span class="line">    group haproxy</span><br><span class="line">defaults</span><br><span class="line">    mode http</span><br><span class="line">    <span class="built_in">log</span> global</span><br><span class="line">    retries 2</span><br><span class="line">    timeout connect 3000ms</span><br><span class="line">    timeout server 5000ms</span><br><span class="line">    timeout client 5000ms</span><br><span class="line">frontend kubernetes</span><br><span class="line">    <span class="built_in">bind</span> 10.40.46.101:6443</span><br><span class="line">    option tcplog</span><br><span class="line">    mode tcp</span><br><span class="line">    default_backend kubernetes-master-nodes</span><br><span class="line">backend kubernetes-master-nodes</span><br><span class="line">    mode tcp</span><br><span class="line">    balance roundrobin</span><br><span class="line">    option tcp-check</span><br><span class="line">    server master01 10.40.141.101:6443 check fall 3 rise 2</span><br><span class="line">    server master02 10.40.141.102:6443 check fall 3 rise 2</span><br><span class="line">    server master03 10.40.141.103:6443 check fall 3 rise 2</span><br><span class="line">EOF</span><br><span class="line"><span class="comment"># systemctl enable haproxy &amp;&amp; systemctl start haproxy &amp;&amp; systemctl status haproxy</span></span><br><span class="line"><span class="comment"># yum install nc &amp;&amp; nc -v localhost 6443</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="Master角色"><a href="#Master角色" class="headerlink" title="Master角色"></a>Master角色</h3><ol>
-<li>Master01服务器<br>先於第一台Mater01主機啟用及群，再將其他台分別加入<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># kubeadm init \</span></span><br><span class="line">--pod-network-cidr=192.168.0.0/16 \</span><br><span class="line">--control-plane-endpoint <span class="string">"kube-lb01:6443"</span> \</span><br><span class="line">--upload-certs</span><br></pre></td></tr></table></figure>
-
-</li>
-</ol>
-<p>加入kubectl所需變數</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># mkdir -p $HOME/.kube</span></span><br><span class="line"><span class="comment"># sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config</span></span><br><span class="line"><span class="comment"># sudo chown $(id -u):$(id -g) $HOME/.kube/config</span></span><br></pre></td></tr></table></figure>
-
-<p>設置Kubernetes 網路套件Calico</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># kubectl apply -f https://docs.projectcalico.org/v3.8/manifests/calico.yaml</span></span><br><span class="line"><span class="comment"># kubectl get pod -n kube-system -w</span></span><br></pre></td></tr></table></figure>
-
-<img src="/kubernetes-ha/kube-ha-master-ok.jpg" class=""> 
-
-<ol start="2">
-<li>Master02、Master03服务器<br>加入kubernetes Master<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># kubeadm join kube-lb01:6443 --token 6pkk9m.elns1xxxxxxxxxxx \</span></span><br><span class="line">    --discovery-token-ca-cert-hash sha256:eded5303dcb0001e6c1bb90cffxxxxxxxxxxxxxx \</span><br><span class="line">    --control-plane --certificate-key 092ba50f514e6a3f1c11636537f56xxxxxxxxxxxxxxxxxxx</span><br></pre></td></tr></table></figure>
-
-
-</li>
-</ol>
-<h3 id="Worker角色"><a href="#Worker角色" class="headerlink" title="Worker角色"></a>Worker角色</h3><p>加入kubernetes Nodes</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># kubeadm join kube-lb01:6443 --token 6pkk9m.elns1eoxxxxxxx \</span></span><br><span class="line">    --discovery-token-ca-cert-hash sha256:eded5303dcb0001e6c1bbxxxxxxxxxxxxxxxxxxxxxxxxxx</span><br></pre></td></tr></table></figure>
-
-<img src="/kubernetes-ha/kube-ha-master-getNodes.jpg" class=""> 
-
-
-<h2 id="Kubernetes-HA常见问题"><a href="#Kubernetes-HA常见问题" class="headerlink" title="Kubernetes HA常见问题"></a>Kubernetes HA常见问题</h2><p>加入集群過程需要檢查kubelet服務，若遇到檢查失敗問題，建議先停用開機自動啟動kubelet服務，重開機後再手動執行啟動，然後再加入自動啟動</p>
-<pre><code class="bash"><span class="comment"># systemctl disable kubelet &amp;&amp; reboot</span>
-<span class="comment"># systemctl enable kubelet &amp;&amp; systemctl start kubelet</span></code></pre>
-<p>more info: <a href="https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/high-availability/" target="_blank" rel="noopener">Kubernetes HA cluster</a></p>
-<p><a href="https://www.howtoforge.com/tutorial/centos-kubernetes-docker-cluster/" target="_blank" rel="noopener">https://www.howtoforge.com/tutorial/centos-kubernetes-docker-cluster/</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -1223,13 +1220,13 @@ Then, open the URL obtained <span class="keyword">in</span> a browser.
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-count">25</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
-        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-count">30</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>

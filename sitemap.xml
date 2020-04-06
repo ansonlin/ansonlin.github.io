@@ -2,9 +2,72 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://ansonlin.github.io/gitlab-ci/</loc>
+    
+    <lastmod>2020-04-06T03:44:57.817Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://ansonlin.github.io/kubernetes-mongodb/</loc>
+    
+    <lastmod>2020-04-01T07:09:35.846Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://ansonlin.github.io/kubernetes-mariadb/</loc>
     
-    <lastmod>2020-03-13T09:01:20.943Z</lastmod>
+    <lastmod>2020-03-30T01:10:52.454Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://ansonlin.github.io/nexus-repo/</loc>
+    
+    <lastmod>2020-03-27T07:47:54.173Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://ansonlin.github.io/redhat8docker/</loc>
+    
+    <lastmod>2020-03-20T02:06:30.958Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://ansonlin.github.io/mail-telnet/</loc>
+    
+    <lastmod>2020-03-18T09:31:43.449Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://ansonlin.github.io/kubernetes-kafka/</loc>
+    
+    <lastmod>2020-03-18T02:27:25.488Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://ansonlin.github.io/wac/</loc>
+    
+    <lastmod>2020-03-16T08:11:58.224Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://ansonlin.github.io/minishift/</loc>
+    
+    <lastmod>2020-03-16T06:57:23.712Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://ansonlin.github.io/minikube/</loc>
+    
+    <lastmod>2020-03-16T06:38:08.522Z</lastmod>
     
   </url>
   
@@ -12,13 +75,6 @@
     <loc>https://ansonlin.github.io/kubernetes-windows-tools/</loc>
     
     <lastmod>2020-03-13T08:46:11.297Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://ansonlin.github.io/kubernetes-mongodb/</loc>
-    
-    <lastmod>2020-03-13T07:56:53.454Z</lastmod>
     
   </url>
   

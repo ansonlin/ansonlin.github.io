@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="zh-tw">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="manifest" href="/images/manifest.json">
+  <meta name="google-site-verification" content="vk-35kXC1s-Z1uHwRHcTm-fpdFp6yRJn4x3ypkq8hs4">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"ansonlin.github.io","root":"/","scheme":"Pisces","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="小小攻城獅技術宅">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Anson Tech Note">
+<meta property="og:url" content="https://ansonlin.github.io/page/3/index.html">
+<meta property="og:site_name" content="Anson Tech Note">
+<meta property="og:description" content="小小攻城獅技術宅">
+<meta property="og:locale" content="zh_TW">
+<meta property="article:author" content="Anson Lin">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://ansonlin.github.io/page/3/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : true,
+    isPost : false
+  };
+</script>
+
+  <title>Anson Tech Note</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Anson Tech Note</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-fw fa-sitemap"></i>Sitemap</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-tw">
+    <link itemprop="mainEntityOfPage" href="https://ansonlin.github.io/kubernetes-kubeadm/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/docker-icon.png">
+      <meta itemprop="name" content="Anson Lin">
+      <meta itemprop="description" content="小小攻城獅技術宅">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Anson Tech Note">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/kubernetes-kubeadm/" class="post-title-link" itemprop="url">使用kubeadm建立Kubernetes環境</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2019-11-29 00:00:00" itemprop="dateCreated datePublished" datetime="2019-11-29T00:00:00+08:00">2019-11-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-02-15 14:50:44" itemprop="dateModified" datetime="2020-02-15T14:50:44+08:00">2020-02-15</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <img src="/kubernetes-kubeadm/kubeadm-stacked-color.png" class=""> 
+
+<p>此篇介紹透過kubeadm來建立單一control plane角色的Kubernetes，關於HA集群請參考 <a href="../kubernetes-ha/">Kubernetes HA</a></p>
+<h2 id="安裝前必備"><a href="#安裝前必備" class="headerlink" title="安裝前必備"></a>安裝前必備</h2><ol>
+<li><p>Hardware<br> 至少有2 GB或以上的記憶體(依應用而定)、2顆 CPU、節點之間網路連接正常</p>
+</li>
+<li><p>OS<br> Redhat / CentOS 7.6、Minimum install</p>
+</li>
+<li><p>Container Runtime<br> 為擺脫單一 Container Runtime的依賴，後續多家推出各式各樣的 open source container runtime，但Docker還是普羅大眾最上手好用的，以下也以docker為例</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># yum install docker</span></span><br><span class="line"><span class="comment"># systemctl enable docker &amp;&amp; systemctl start docker</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>防火牆設置</p>
+</li>
+</ol>
+<p>以下描述不同角色，需要開放的Inbound Ports</p>
+<ol>
+<li>Control-plane node(s) ports<br>TCP  6443              ==&gt;     Kubernetes API Server<br>TCP  2379-2380        ==&gt;     etcd server client API<br>TCP  10250-10252    ==&gt;     Self</li>
+</ol>
+<p>指令如下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo firewall-cmd --add-port 6443/tcp,2379-2380/tcp,10250-10252/tcp,80/tcp,443/tcp --permanent </span><br><span class="line">$ sudo firewall-cmd --reload</span><br><span class="line">$ sudo firewall-cmd --list-all</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>Worker node(s) ports<br>TCP  10250            ==&gt;     Kubernetes API<br>TCP  30000-32767    ==&gt;     NodePort Service</li>
+</ol>
+<p>指令如下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo firewall-cmd --add-port 10250/tcp,30000-32767/tcp,80/tcp,443/tcp --permanent </span><br><span class="line">$ sudo firewall-cmd --reload</span><br><span class="line">$ sudo firewall-cmd --list-all</span><br></pre></td></tr></table></figure>
+
+<p>或直接停用防火牆(不推薦)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo systemctl <span class="built_in">disable</span> firewalld &amp;&amp; sudo systemctl stop firewalld</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="環境設置"><a href="#環境設置" class="headerlink" title="環境設置"></a>環境設置</h2><ol>
+<li>停用分頁Swap</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cat &lt;&lt;EOF &gt;  /etc/sysctl.d/k8s.conf</span></span><br><span class="line">net.bridge.bridge-nf-call-ip6tables = 1</span><br><span class="line">net.bridge.bridge-nf-call-iptables = 1</span><br><span class="line">net.ipv4_ip_forward = 1</span><br><span class="line">vm.swappiness = 0</span><br><span class="line">vm.max_map_count=262144</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line"><span class="comment"># sysctl --system</span></span><br><span class="line"><span class="comment"># sed  -i  '/ swap / s/^\(.*\)$/#\1/g'  /etc/fstab</span></span><br><span class="line"><span class="comment"># swapoff -a</span></span><br></pre></td></tr></table></figure>
+
+<p>Check br_netfilter module</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># lsmod | grep br_netfilter</span></span><br><span class="line"><span class="comment"># modprobe br_netfilter</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>停用安全增強Linux</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># setenforce  0</span></span><br><span class="line"><span class="comment"># sed  -i  's/^SELINUX=.*/SELINUX=disabled/g'   /etc/selinux/config</span></span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>其它檢查</li>
+</ol>
+<p>MAC地址</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ip link </span></span><br><span class="line">or</span><br><span class="line"><span class="comment"># ifconfig -a</span></span><br></pre></td></tr></table></figure>
+
+<p>UUID是否唯一</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cat /sys/class/dmi/id/product_uuid</span></span><br></pre></td></tr></table></figure>
+
+
+<h2 id="安裝kubeadm"><a href="#安裝kubeadm" class="headerlink" title="安裝kubeadm"></a>安裝kubeadm</h2><p>接著就是安裝啟動Kubernetes的主角Kubeadm，以下介紹三個角色：<br>kubeadm         ==&gt;        用來引導啟動整個集群<br>kubelet            ==&gt;        在所有節點上執行,用來控制啟動pod及容器<br>kubectl         ==&gt;        用來控制整個集群</p>
+<ol>
+<li><p>加入Kubernetes Repository </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ sudo su</span><br><span class="line"><span class="comment"># cat &lt;&lt;EOF &gt; /etc/yum.repos.d/kubernetes.repo</span></span><br><span class="line">[kubernetes]</span><br><span class="line">name=Kubernetes</span><br><span class="line">baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64</span><br><span class="line">enabled=1</span><br><span class="line">gpgcheck=1</span><br><span class="line">repo_gpgcheck=1</span><br><span class="line">gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安裝kubeadm</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes</span></span><br><span class="line"><span class="comment"># systemctl enable --now kubelet</span></span><br><span class="line"><span class="comment"># systemctl start kubelet</span></span><br></pre></td></tr></table></figure>
+<p>或者選擇要安裝的版本： yum list kubeadm –showduplicates –disableexcludes=kubernetes</p>
+</li>
+</ol>
+<h2 id="建立單一控制平面的Kubernetes環境"><a href="#建立單一控制平面的Kubernetes環境" class="headerlink" title="建立單一控制平面的Kubernetes環境"></a>建立單一控制平面的Kubernetes環境</h2><p>建立Master及網路插件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubeadm init --pod-network-cidr=192.168.0.0/16  --apiserver-advertise-address=0.0.0.0(depend on your network adapter)</span><br></pre></td></tr></table></figure>
+
+<p>配置kubectl環境</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p <span class="variable">$HOME</span>/.kube</span><br><span class="line">sudo cp -i /etc/kubernetes/admin.conf <span class="variable">$HOME</span>/.kube/config</span><br><span class="line">sudo chown $(id -u):$(id -g) <span class="variable">$HOME</span>/.kube/config</span><br></pre></td></tr></table></figure>
+
+<p>安裝pod network add-on(Calico)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># kubectl apply -f https://docs.projectcalico.org/v3.8/manifests/calico.yaml</span></span><br><span class="line"><span class="comment"># kubectl get pods --all-namespace</span></span><br></pre></td></tr></table></figure>
+
+
+<p>加入Kubernetes節點<br>加入節點</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubeadm join --token &lt;token&gt; &lt;control-plane-host&gt;:&lt;control-plane-port&gt; --discovery-token-ca-cert-hash sha256:&lt;<span class="built_in">hash</span>&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="其它常見操作"><a href="#其它常見操作" class="headerlink" title="其它常見操作"></a>其它常見操作</h2><p>Master主機加入分配資源(Develop only)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl taint nodes --all node-role.kubernetes.io/master-</span><br></pre></td></tr></table></figure>
+
+<p>token相關(在Master節點)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kubeadm token list</span><br><span class="line">kubeadm token create</span><br></pre></td></tr></table></figure>
+
+<p>產生hash(在Master節點)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">openssl x509 -pubkey -<span class="keyword">in</span> /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2&gt;/dev/null | \</span><br><span class="line">   openssl dgst -sha256 -hex | sed <span class="string">'s/^.* //'</span></span><br></pre></td></tr></table></figure>
+
+<p>從Master主機複製設定檔到節點主機</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">scp root@&lt;control-plane-host&gt;:/etc/kubernetes/admin.conf .</span><br><span class="line">kubectl --kubeconfig ./admin.conf get nodes</span><br></pre></td></tr></table></figure>
+
+<p>移除節點</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kubectl drain &lt;node name&gt; --delete-local-data --force --ignore-daemonsets</span><br><span class="line">kubectl delete node &lt;node name&gt;</span><br></pre></td></tr></table></figure>
+
+<p>重設kubernetes集群(在Master主機)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kubeadm reset</span><br><span class="line">iptables -F &amp;&amp; iptables -t nat -F &amp;&amp; iptables -t mangle -F &amp;&amp; iptables -X</span><br></pre></td></tr></table></figure>
+
+<p>備份etcd<br>資料放置在Master節點的/var/lib/etcd位置上</p>
+<p>more info: <a href="https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/" target="_blank" rel="noopener">Kubeadm bootraping Kubernetes</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-tw">
+    <link itemprop="mainEntityOfPage" href="https://ansonlin.github.io/vmware-harbor/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/docker-icon.png">
+      <meta itemprop="name" content="Anson Lin">
+      <meta itemprop="description" content="小小攻城獅技術宅">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Anson Tech Note">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/vmware-harbor/" class="post-title-link" itemprop="url">自建Docker Image倉庫 - VMware Harbor</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2019-11-28 00:00:00" itemprop="dateCreated datePublished" datetime="2019-11-28T00:00:00+08:00">2019-11-28</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-02-15 14:50:01" itemprop="dateModified" datetime="2020-02-15T14:50:01+08:00">2020-02-15</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <img src="/vmware-harbor/harbor_logo.png" class=""> 
+
+
+<h3 id="安裝前必備"><a href="#安裝前必備" class="headerlink" title="安裝前必備"></a>安裝前必備</h3><ol>
+<li>CentOS 7、docker、 <a href="https://docs.docker.com/compose/install/" target="_blank" rel="noopener">docker-compose</a></li>
+<li><a href="https://github.com/vmware/harbor/releases" target="_blank" rel="noopener">Download</a> Harbor Installer</li>
+</ol>
+<h3 id="設定檔"><a href="#設定檔" class="headerlink" title="設定檔"></a>設定檔</h3><p>修改harbor.cfg，推薦修改的項目有：hostname、db_password、harbor_admin_password 、clair_db_password</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vi harbor/harbor.cfg</span><br></pre></td></tr></table></figure>
+
+<h3 id="安裝並啟動Harbor"><a href="#安裝並啟動Harbor" class="headerlink" title="安裝並啟動Harbor"></a>安裝並啟動Harbor</h3><p>預設儲存位置為  /data</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ./installer.sh --with-clair</span><br></pre></td></tr></table></figure>
+
+<img src="/vmware-harbor/harbor-1.png" class=""> 
+
+
+<h3 id="其他維運問題"><a href="#其他維運問題" class="headerlink" title="其他維運問題"></a>其他維運問題</h3><p>備份 Clair DB</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ docker <span class="built_in">exec</span> clair-db /bin/bash -c  <span class="string">"pg_dump -U postgres -a -t feature \-t keyvalue -t namespace -t schema_migrations -t vulnerability \</span></span><br><span class="line"><span class="string">-t vulnerability_fixedin_feature"</span> &gt; vulnerability.sql$ docker <span class="built_in">exec</span> clair-db /bin/bash -c <span class="string">"pg_dump -U postgres -c -s"</span> &gt; clear.sql</span><br></pre></td></tr></table></figure>
+
+
+<p>還原 Clair DB</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ docker <span class="built_in">exec</span> -i clair-db psql -U postgres &lt; clear.sql</span><br><span class="line">$ docker <span class="built_in">exec</span> -i clair-db psql -U postgres &lt; vulnerability.sql</span><br></pre></td></tr></table></figure>
+
+
+<p>刪除Image後容量卻沒有下降</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span>  <span class="variable">$HARBOR_DIR</span></span><br><span class="line">$ docker-compose stop</span><br><span class="line">$ docker run -it --name gc --rm --volumes-from registry vmware/registry:2.6.2-photon garbage-collect  /etc/registry/config.yml</span><br><span class="line">$ docker-compose start</span><br></pre></td></tr></table></figure>
+
+
+
+
+<p>Docker Image複寫</p>
+<img src="/vmware-harbor/harbor-2.png" class=""> 
+
+
+
+<p>more info: <a href="https://github.com/goharbor/harbor" target="_blank" rel="noopener">Harbor</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-tw">
+    <link itemprop="mainEntityOfPage" href="https://ansonlin.github.io/minishift/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/docker-icon.png">
+      <meta itemprop="name" content="Anson Lin">
+      <meta itemprop="description" content="小小攻城獅技術宅">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Anson Tech Note">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/minishift/" class="post-title-link" itemprop="url">Openshift單機測試環境-Minishift on Windows</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2019-01-31 00:00:00" itemprop="dateCreated datePublished" datetime="2019-01-31T00:00:00+08:00">2019-01-31</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-03-16 14:57:23" itemprop="dateModified" datetime="2020-03-16T14:57:23+08:00">2020-03-16</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>此頁面顯示您如何安裝Minishift，運行在虛擬機中您個人計算機上的單節點集群Openshift的工具。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">注意1: Hyper-V可以在Windows 10的三個版本上運行：Windows 10 Enterprise，Windows 10 Professional和Windows 10 Education，無法安裝於 Windows 10 家用版。。</span><br><span class="line">注意2: 至少4GB可用記憶體。</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="啟用HyperV功能"><a href="#啟用HyperV功能" class="headerlink" title="啟用HyperV功能"></a>啟用HyperV功能</h2><p>以管理員身份打開PowerShell控制台，然後運行以下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All</span><br></pre></td></tr></table></figure>
+<p>或是手動啟用</p>
+<img src="/minishift/enable_Hyperv.jpg" class="">
+
+
+<h2 id="設定Driver-plug-in"><a href="#設定Driver-plug-in" class="headerlink" title="設定Driver plug-in"></a>設定Driver plug-in</h2><ol>
+<li><p>將目前使用者加入 Hyper-V administrators 群組</p>
+</li>
+<li><p>加入外部虛擬交換器 ，名稱為 External VM Switch</p>
+</li>
+</ol>
+<img src="/minishift/driver_plugin.jpg" class="">
+
+
+<ol start="3">
+<li>設定環境變數  HyperV_VIRTUAL_SWITCH<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">set</span>  HyperV_VIRTUAL_SWITCH= External VM Switch</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ol>
+<h2 id="啟動Minishift"><a href="#啟動Minishift" class="headerlink" title="啟動Minishift"></a>啟動Minishift</h2><p>下載最新版本minishift.exe，然後將其添加到您的路徑中。<br><a href="https://github.com/minishift/minishift/releases" target="_blank" rel="noopener">https://github.com/minishift/minishift/releases</a></p>
+<img src="/minishift/minishift_path.jpg" class="">
+
+
+<p>執行minishift</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">minishift  start</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="後語：一些除錯"><a href="#後語：一些除錯" class="headerlink" title="後語：一些除錯"></a>後語：一些除錯</h2><p>隔天想跑一个nginx，一直出现错误…..</p>
+<h3 id="Security-Context-Constraints"><a href="#Security-Context-Constraints" class="headerlink" title="Security Context Constraints"></a>Security Context Constraints</h3><p><a href="https://docs.openshift.com/enterprise/3.1/admin_guide/manage_scc.html" target="_blank" rel="noopener">https://docs.openshift.com/enterprise/3.1/admin_guide/manage_scc.html</a> </p>
+<p>Openshift预设安全機制docker  image執行時，須為非root权限…</p>
+<p>解決： 设定 oc 环境变数</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">minishift oc-env</span><br><span class="line">SET PATH=D:\Users\xxxxxx\.minishift\cache\oc\v3.6.0;</span><br><span class="line">oc login -u system:admin</span><br><span class="line">oc edit scc restricted</span><br></pre></td></tr></table></figure>
+
+
+
+<p>more info:<br><a href="https://docs.openshift.org/latest/minishift/index.html" target="_blank" rel="noopener">Minishift Install</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-tw">
+    <link itemprop="mainEntityOfPage" href="https://ansonlin.github.io/minikube/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/docker-icon.png">
+      <meta itemprop="name" content="Anson Lin">
+      <meta itemprop="description" content="小小攻城獅技術宅">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Anson Tech Note">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/minikube/" class="post-title-link" itemprop="url">Kubernetes單機測試環境-Minikube on Windows</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2019-01-15 00:00:00" itemprop="dateCreated datePublished" datetime="2019-01-15T00:00:00+08:00">2019-01-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-03-16 14:38:08" itemprop="dateModified" datetime="2020-03-16T14:38:08+08:00">2020-03-16</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>此頁面顯示您如何安裝Minikube，運行在虛擬機中您個人計算機上的單節點集群Kubernetes的工具。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">注意1: Hyper-V可以在Windows 10的三個版本上運行：Windows 10 Enterprise，Windows 10 Professional和Windows 10 Education，無法安裝於 Windows 10 家用版。。</span><br><span class="line">注意2: 至少4GB可用記憶體。</span><br></pre></td></tr></table></figure>
+
+<h1 id="預先安裝"><a href="#預先安裝" class="headerlink" title="預先安裝"></a>預先安裝</h1><p>預先安裝chocolate，可參考文章<a href="../kubernetes-windows-tools/">chocolate</a></p>
+<h2 id="安裝kubectl"><a href="#安裝kubectl" class="headerlink" title="安裝kubectl"></a>安裝kubectl</h2><h3 id="用choco安裝kubectl"><a href="#用choco安裝kubectl" class="headerlink" title="用choco安裝kubectl"></a>用choco安裝kubectl</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">choco install kubernetes-cli</span><br></pre></td></tr></table></figure>
+
+<h3 id="手動安裝binary"><a href="#手動安裝binary" class="headerlink" title="手動安裝binary"></a>手動安裝binary</h3><p>下載最新binary，並新增到PATH路徑</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://storage.googleapis.com/kubernetes-release/release/v1.17.0/bin/windows/amd64/kubectl.exe</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="安裝虛擬機監控程序-HyperV"><a href="#安裝虛擬機監控程序-HyperV" class="headerlink" title="安裝虛擬機監控程序-HyperV"></a>安裝虛擬機監控程序-HyperV</h2><p>以管理員身份打開PowerShell控制台，然後運行以下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All</span><br></pre></td></tr></table></figure>
+
+<p>或是透過 “開啟或關閉 Windows 功能” 啟用Hyper-V角色。</p>
+<img src="/minikube/enable_role_upd.png" class="">
+
+<h1 id="安裝Minikube"><a href="#安裝Minikube" class="headerlink" title="安裝Minikube"></a>安裝Minikube</h1><h2 id="使用Chocolatey安裝Minikube"><a href="#使用Chocolatey安裝Minikube" class="headerlink" title="使用Chocolatey安裝Minikube"></a>使用Chocolatey安裝Minikube</h2><p>在Windows上安裝Minikube的最簡單方法是使用Chocolatey（以管理員身份運行）：</p>
+<h3 id="用choco安裝minikube"><a href="#用choco安裝minikube" class="headerlink" title="用choco安裝minikube"></a>用choco安裝minikube</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">choco install minikube</span><br></pre></td></tr></table></figure>
+<p>Minikube完成安裝後，請關閉當前的CLI會話並重新啟動。Minikube應該已經自動添加到您的路徑中。</p>
+<h2 id="使用安裝程序可執行文件安裝Minikube"><a href="#使用安裝程序可執行文件安裝Minikube" class="headerlink" title="使用安裝程序可執行文件安裝Minikube"></a>使用安裝程序可執行文件安裝Minikube</h2><p>要使用Windows Installer在Windows上手動安裝Minikube ，請下載<a href="https://github.com/kubernetes/minikube/releases/latest/download/minikube-installer.exe並執行安裝程序。" target="_blank" rel="noopener">https://github.com/kubernetes/minikube/releases/latest/download/minikube-installer.exe並執行安裝程序。</a></p>
+<h2 id="通過直接下載安裝Minikube"><a href="#通過直接下載安裝Minikube" class="headerlink" title="通過直接下載安裝Minikube"></a>通過直接下載安裝Minikube</h2><p>要在Windows上手動安裝Minikube，請到<a href="https://github.com/kubernetes/minikube/releases/latest下載minikube-windows-amd64，將其重命名為minikube.exe，然後將其添加到您的路徑中。" target="_blank" rel="noopener">https://github.com/kubernetes/minikube/releases/latest下載minikube-windows-amd64，將其重命名為minikube.exe，然後將其添加到您的路徑中。</a></p>
+<img src="/minikube/minikube_path.png" class="">
+
+
+<h1 id="執行minikube"><a href="#執行minikube" class="headerlink" title="執行minikube"></a>執行minikube</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># minikube start --memory 4096 --vm-driver="hyperv" --hyperv-virtual-switch="Realtek Virtual Switch"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># minikube config set memory 4096  &amp;&amp; minikube config set cpus 4</span></span><br></pre></td></tr></table></figure>
+
+
+<h1 id="測試"><a href="#測試" class="headerlink" title="測試"></a>測試</h1><p>佈署完k8s環境後，當然構建一個應用程式來測試下，此處以nginx來作範例。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">cat &lt;&lt;EOF | kubectl apply -f -</span><br><span class="line">apiVersion: extensions/v1beta1</span><br><span class="line">kind: Deployment</span><br><span class="line">metadata:</span><br><span class="line">  name: nginx-deployment</span><br><span class="line">spec:</span><br><span class="line">  replicas: 2</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      labels:</span><br><span class="line">        app: nginx</span><br><span class="line">    spec:</span><br><span class="line">      containers:</span><br><span class="line">      - name: nginx</span><br><span class="line">        image: nginx:1.7.9</span><br><span class="line">        ports:</span><br><span class="line">        - containerPort: 80</span><br><span class="line">        resources:</span><br><span class="line">          requests:</span><br><span class="line">            cpu: 400m</span><br><span class="line">---</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Service</span><br><span class="line">metadata:</span><br><span class="line">  name: nginx</span><br><span class="line">  labels:</span><br><span class="line">    app: nginx</span><br><span class="line">spec:</span><br><span class="line">  <span class="built_in">type</span>: NodePort</span><br><span class="line">  selector:</span><br><span class="line">    app: nginx</span><br><span class="line">  ports:</span><br><span class="line">  - port: 80</span><br><span class="line">    targetPort: 80</span><br><span class="line">    nodePort: 30088</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<p>開啟瀏覽器  <a href="http://localhost:30088" target="_blank" rel="noopener">http://localhost:30088</a></p>
+<h1 id="狀態及除錯"><a href="#狀態及除錯" class="headerlink" title="狀態及除錯"></a>狀態及除錯</h1><p>顯示minkube狀態</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">minikube status</span><br></pre></td></tr></table></figure>
+
+<p>停止minkube</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">minikube stop</span><br></pre></td></tr></table></figure>
+
+
+
+<p>清除minkube本地狀態</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">minikube delete</span><br></pre></td></tr></table></figure>
+
+
+<p>more info:<br><a href="https://kubernetes.io/docs/tasks/tools/install-minikube/" target="_blank" rel="noopener">Minikube Install</a><br><a href="https://minikube.sigs.k8s.io/docs/reference/drivers/hyperv/" target="_blank" rel="noopener">Minikube HyperV</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-tw">
+    <link itemprop="mainEntityOfPage" href="https://ansonlin.github.io/wac/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/docker-icon.png">
+      <meta itemprop="name" content="Anson Lin">
+      <meta itemprop="description" content="小小攻城獅技術宅">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Anson Tech Note">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/wac/" class="post-title-link" itemprop="url">Windows伺服器管理工具-WindowsAdminCenter(WAC)</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-01-31 00:00:00" itemprop="dateCreated datePublished" datetime="2018-01-31T00:00:00+08:00">2018-01-31</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-03-16 16:11:58" itemprop="dateModified" datetime="2020-03-16T16:11:58+08:00">2020-03-16</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在此主要說明遇到的一些問題以供後續參考，需要詳細的介紹，可參考偉任在網管人的文章。<br><a href="https://www.weithenn.org/2018/10/netadmin153-windows-admin-center.html#Heading3-2" target="_blank" rel="noopener">Weithenn WAC</a></p>
+<h1 id="Windows-Admin-Center"><a href="#Windows-Admin-Center" class="headerlink" title="Windows Admin Center"></a>Windows Admin Center</h1><h2 id="下載安裝"><a href="#下載安裝" class="headerlink" title="下載安裝"></a>下載安裝</h2><p>請從 Microsoft 評估中心下載 <a href="https://www.microsoft.com/en-us/evalcenter/evaluate-windows-admin-center" target="_blank" rel="noopener">Windows Admin Center</a></p>
+<h2 id="新增管理伺服器"><a href="#新增管理伺服器" class="headerlink" title="新增管理伺服器"></a>新增管理伺服器</h2><p>新增 &gt;  新增伺服器連線 &gt;</p>
+<h3 id="於被管理主機上執行"><a href="#於被管理主機上執行" class="headerlink" title="於被管理主機上執行"></a>於被管理主機上執行</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">net  start   winrm </span><br><span class="line">winrm  qc</span><br></pre></td></tr></table></figure>
+
+<img src="/wac/WAC-ok.png" class=""> 
+
+
+<h1 id="Troubleshooting"><a href="#Troubleshooting" class="headerlink" title="Troubleshooting"></a>Troubleshooting</h1><p>萬一平常沒燒香或扶老太太過馬路，可能跟我一樣遇到坑…</p>
+<h2 id="if-OS為windows-2008-2012-7-8"><a href="#if-OS為windows-2008-2012-7-8" class="headerlink" title="if OS為windows 2008/2012/7/8"></a>if OS為windows 2008/2012/7/8</h2><p>必須先安裝<a href="https://docs.microsoft.com/zh-tw/powershell/wmf/5.1/install-configure" target="_blank" rel="noopener">WMF</a></p>
+<h2 id="winrm-qc錯誤-無法檢查防火牆的狀態。錯誤碼-0x80070002"><a href="#winrm-qc錯誤-無法檢查防火牆的狀態。錯誤碼-0x80070002" class="headerlink" title="winrm qc錯誤,無法檢查防火牆的狀態。錯誤碼:0x80070002"></a>winrm qc錯誤,無法檢查防火牆的狀態。錯誤碼:0x80070002</h2><p>取得目前winrm狀態</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Get-Item WSMan:\localhost\Client\TrustedHosts</span><br></pre></td></tr></table></figure>
+
+<h3 id="確認UAC狀態"><a href="#確認UAC狀態" class="headerlink" title="確認UAC狀態"></a>確認UAC狀態</h3><p>加入 LocalAccountTokenFilterPolicy (how-to-change-the-remote-uac-localaccounttokenfilterpolicy-registry-se)到登錄值 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\policies\system\LocalAccountTokenFilterPolicy  --&gt;  1</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="防火牆"><a href="#防火牆" class="headerlink" title="防火牆"></a>防火牆</h3><p>假若防火牆為啟用狀態，請加入TCP 5985</p>
+<p>more info:<br><a href="https://docs.microsoft.com/zh-tw/windows-server/manage/windows-admin-center/understand/windows-admin-center" target="_blank" rel="noopener">WAC</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+  </div>
+
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
+  </nav>
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Anson Lin"
+      src="/images/docker-icon.png">
+  <p class="site-author-name" itemprop="name">Anson Lin</p>
+  <div class="site-description" itemprop="description">小小攻城獅技術宅</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ansonlin" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ansonlin" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:ansonlin@digiwin.com" title="E-Mail → mailto:ansonlin@digiwin.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://linanson.blogspot.com/" title="Google → https:&#x2F;&#x2F;linanson.blogspot.com&#x2F;" rel="noopener" target="_blank"><i class="fa fa-fw fa-google"></i>Google</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ansonlin Ops-Lab.</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.7.2
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.getAttribute('pjax') !== null) {
+      script.setAttribute('pjax', '');
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+    </div>
+</body>
+</html>
