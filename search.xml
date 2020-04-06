@@ -43,9 +43,9 @@
             
             <tag> maven </tag>
             
-            <tag> docker </tag>
-            
             <tag> nexus </tag>
+            
+            <tag> docker </tag>
             
         </tags>
       
@@ -64,9 +64,9 @@
       
         <tags>
             
-            <tag> redhat </tag>
-            
             <tag> docker </tag>
+            
+            <tag> redhat </tag>
             
         </tags>
       
